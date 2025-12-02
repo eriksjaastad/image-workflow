@@ -667,9 +667,11 @@ Examples:
         content_dir = args.content_dir_positional
         dir_path = Path(content_dir)
         project_id = dir_path.name  # Use directory name as project ID
-        
+
         if args.project_id or args.content_dir:
-            print("❌ Error: Use either positional directory OR --project-id/--content-dir, not both")
+            print(
+                "❌ Error: Use either positional directory OR --project-id/--content-dir, not both"
+            )
             sys.exit(1)
 
     # If no arguments provided, run in interactive mode

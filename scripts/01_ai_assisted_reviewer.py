@@ -2144,9 +2144,10 @@ def build_app(
                 }
             )
 
-        except Exception as e:
+        except Exception:
             logger.exception("Unhandled error in /process-batch")
-            return jsonify({"status": "error", "message": str(e)}), 500
+            # Don't expose internal error details to client
+            return jsonify({"status": "error", "message": "An internal error occurred"}), 500
 
     @app.route("/submit", methods=["POST"])
     def submit():
@@ -2267,8 +2268,10 @@ def build_app(
                 img.save(buf, format="PNG", optimize=True)
                 buf.seek(0)
                 return Response(buf.read(), mimetype="image/png")
-        except Exception as e:
-            return f"Error loading image: {e}", 500
+        except Exception:
+            logger.exception("Error loading image")
+            # Don't expose internal error details to client
+            return "Error loading image", 500
 
     @app.route("/stats")
     def stats():

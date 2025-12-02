@@ -646,7 +646,10 @@ def create_app(output_dir):
         """Serve images from the directories."""
         from flask import send_file
 
-        image_path = output_path / directory / filename
+        # Validate path to prevent directory traversal attacks
+        image_path = (output_path / directory / filename).resolve()
+        if not image_path.is_relative_to(output_path.resolve()):
+            return "Invalid path", 403
         if image_path.exists():
             return send_file(str(image_path))
         return "Image not found", 404

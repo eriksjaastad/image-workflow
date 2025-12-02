@@ -147,7 +147,7 @@ def main():
     # Step 1: Generate bins
     print_section("Step 1: Generate Bins (Last 7 Days)")
 
-    success, output = run_command(
+    success, _ = run_command(
         [sys.executable, "scripts/data_pipeline/aggregate_to_15m.py", "--days", "7"],
         "Aggregating last 7 days to 15-minute bins",
     )

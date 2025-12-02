@@ -1,7 +1,7 @@
 """Timesheet Parser - Reads and aggregates timesheet CSV data for dashboard"""
 
 import csv
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -212,7 +212,7 @@ class TimesheetParser:
         try:
             return datetime.strptime(date_str, "%m/%d/%Y")
         except (ValueError, TypeError):
-            return datetime.min
+            return datetime.min.replace(tzinfo=UTC)
 
 
 if __name__ == "__main__":

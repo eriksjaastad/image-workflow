@@ -145,7 +145,7 @@ class QueueDataReader:
                 d = datetime.fromisoformat(t)
                 return d.astimezone(UTC).replace(tzinfo=None) if d.tzinfo else d
             except Exception:
-                return datetime.min
+                return datetime.min.replace(tzinfo=UTC)
 
         trends.sort(key=lambda x: _parse_naive_utc(x["timestamp"]))
 

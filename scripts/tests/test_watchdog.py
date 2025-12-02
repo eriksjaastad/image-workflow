@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 from scripts.utils.watchdog import Heartbeat, Watchdog
 
 
-def test_heartbeat_progress_and_watchdog_timeout(tmp_path: Path | None = None):
+def test_heartbeat_progress_and_watchdog_timeout():
     hb = Heartbeat()
     aborted = {"reason": None}
 

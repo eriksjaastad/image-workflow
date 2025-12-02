@@ -651,28 +651,27 @@ def create_app(left_dir, right_dir):
     @app.route("/image/<directory>/<filename>")
     def serve_image(directory, filename):
         """Serve image thumbnails from the directories."""
-        import os
         from flask import Response
+        from werkzeug.utils import secure_filename
 
-        # Validate inputs before constructing path to prevent directory traversal
-        if (
-            ".." in filename
-            or "/" in filename or "\\" in filename
-            or os.path.basename(filename) != filename
-        ):
-            return "Invalid path", 403
+        # Sanitize filename to prevent directory traversal
+        safe_filename = secure_filename(filename)
+        if not safe_filename or safe_filename != filename:
+            return "Invalid filename", 403
 
-        # Determine which directory to serve from
+        # Determine which trusted directory to serve from
         if directory == left_path.name:
-            base_path = left_path
+            trusted_path = left_path
         elif directory == right_path.name:
-            base_path = right_path
+            trusted_path = right_path
         else:
             return "Directory not found", 404
 
-        # Construct and validate final path
-        image_path = (base_path / filename).resolve()
-        if not image_path.is_relative_to(base_path.resolve()):
+        # Construct path using trusted base and sanitized filename
+        image_path = (trusted_path / safe_filename).resolve()
+
+        # Verify path is within trusted directory
+        if not image_path.is_relative_to(trusted_path.resolve()):
             return "Invalid path", 403
 
         if image_path.exists():
@@ -721,18 +720,17 @@ def create_app(left_dir, right_dir):
                 errors.append(f"Can only delete from right directory: {directory}")
                 continue
 
-            # Validate inputs before constructing path to prevent directory traversal
-            import os
-            if (
-                ".." in image
-                or "/" in image or "\\" in image
-                or os.path.basename(image) != image
-            ):
-                errors.append(f"Invalid path: {image}")
+            # Sanitize filename to prevent directory traversal
+            from werkzeug.utils import secure_filename
+            safe_image = secure_filename(image)
+            if not safe_image or safe_image != image:
+                errors.append(f"Invalid filename: {image}")
                 continue
 
-            # Construct and validate final path
-            source_path = (right_path / image).resolve()
+            # Construct path using trusted base and sanitized filename
+            source_path = (right_path / safe_image).resolve()
+
+            # Verify path is within trusted directory
             if not source_path.is_relative_to(right_path.resolve()):
                 errors.append(f"Invalid path: {image}")
                 continue

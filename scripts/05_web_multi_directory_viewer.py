@@ -600,41 +600,41 @@ def create_app(output_dir):
     @app.route("/image/<directory>/<filename>")
     def serve_image(directory, filename):
         """Serve image thumbnails from the directories."""
-        import os
         from flask import Response
+        from werkzeug.utils import secure_filename
 
-        # Validate inputs before constructing path to prevent directory traversal
-        if (
-            ".." in directory or ".." in filename
-            or "/" in filename or "\\" in filename
-            or os.path.basename(filename) != filename
-        ):
+        # Sanitize filename to prevent directory traversal
+        safe_filename = secure_filename(filename)
+        if not safe_filename or safe_filename != filename:
+            return "Invalid filename", 403
+
+        # Find the correct directory structure and get trusted path
+        valid_dir = next((d for d in directories if d["name"] == directory), None)
+        if not valid_dir:
+            return "Directory not found", 404
+
+        # Use trusted directory path (not user input)
+        trusted_path = valid_dir["path"]
+        image_path = (trusted_path / safe_filename).resolve()
+
+        # Verify path is within trusted directory
+        if not image_path.is_relative_to(trusted_path.resolve()):
             return "Invalid path", 403
 
-        # Find the correct directory structure
-        for dir_info in directories:
-            if dir_info["name"] == directory:
-                base_path = dir_info["path"]
-                # Construct and validate final path
-                image_path = (base_path / filename).resolve()
-                if not image_path.is_relative_to(base_path.resolve()):
-                    return "Invalid path", 403
-                if image_path.exists():
-                    try:
-                        # Generate thumbnail using shared function
-                        stat = image_path.stat()
-                        thumbnail_data = generate_thumbnail(
-                            str(image_path),
-                            int(stat.st_mtime_ns),
-                            stat.st_size,
-                            max_dim=THUMBNAIL_MAX_DIM,
-                            quality=85,
-                        )
-                        return Response(thumbnail_data, mimetype="image/jpeg")
-                    except Exception as e:
-                        print(f"[!] Error generating thumbnail for {filename}: {e}")
-                        return "Error generating thumbnail", 500
-                break
+        if image_path.exists():
+            try:
+                # Generate thumbnail using shared function
+                stat = image_path.stat()
+                thumbnail_data = generate_thumbnail(
+                    str(image_path),
+                    int(stat.st_mtime_ns),
+                    stat.st_size,
+                    max_dim=THUMBNAIL_MAX_DIM,
+                    quality=85,
+                )
+                return Response(thumbnail_data, mimetype="image/jpeg")
+            except Exception:
+                return "Error generating thumbnail", 500
 
         return "Image not found", 404
 
@@ -659,19 +659,25 @@ def create_app(output_dir):
                 errors.append(f"Invalid selection: {selection}")
                 continue
 
-            # Validate inputs before constructing path to prevent directory traversal
-            import os
-            if (
-                ".." in directory or ".." in image
-                or "/" in image or "\\" in image
-                or os.path.basename(image) != image
-            ):
-                errors.append(f"Invalid path: {image}")
+            # Sanitize filename to prevent directory traversal
+            from werkzeug.utils import secure_filename
+            safe_image = secure_filename(image)
+            if not safe_image or safe_image != image:
+                errors.append(f"Invalid filename: {image}")
                 continue
 
-            # Construct and validate final path
-            source_path = (output_path / directory / image).resolve()
-            if not source_path.is_relative_to(output_path.resolve()):
+            # Find the trusted directory path
+            valid_dir = next((d for d in directories if d["name"] == directory), None)
+            if not valid_dir:
+                errors.append(f"Invalid directory: {directory}")
+                continue
+
+            # Construct path using trusted base and sanitized filename
+            trusted_path = valid_dir["path"]
+            source_path = (trusted_path / safe_image).resolve()
+
+            # Verify path is within trusted directory
+            if not source_path.is_relative_to(trusted_path.resolve()):
                 errors.append(f"Invalid path: {image}")
                 continue
 

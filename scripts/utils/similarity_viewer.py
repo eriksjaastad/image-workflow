@@ -644,27 +644,31 @@ def create_app(output_dir):
     @app.route("/image/<directory>/<filename>")
     def serve_image(directory, filename):
         """Serve images from the directories."""
-        import os
         from flask import send_file
+        from werkzeug.utils import secure_filename
 
-        # Validate inputs before constructing path to prevent directory traversal
-        # Reject path separators, "..", and ensure basename matches
-        if (
-            ".." in directory or ".." in filename
-            or "/" in filename or "\\" in filename
-            or os.path.basename(filename) != filename
-        ):
-            return "Invalid path", 403
+        # Sanitize filename to prevent directory traversal
+        safe_filename = secure_filename(filename)
+        if not safe_filename or safe_filename != filename:
+            return "Invalid filename", 403
 
-        # Validate directory exists in our known list
+        # Validate directory exists in our known list and get trusted path
         valid_dir = next((d for d in directories if d["name"] == directory), None)
         if not valid_dir:
             return "Invalid directory", 403
 
-        # Construct and validate final path
-        image_path = (output_path / directory / filename).resolve()
-        if not image_path.is_relative_to(output_path.resolve()):
+        # Verify file exists in the known image list for this directory
+        if safe_filename not in valid_dir.get("images", []):
+            return "Image not found", 404
+
+        # Use the trusted directory path (not user input) to construct final path
+        trusted_path = valid_dir["path"]
+        image_path = (trusted_path / safe_filename).resolve()
+
+        # Final safety check
+        if not image_path.is_relative_to(trusted_path.resolve()):
             return "Invalid path", 403
+
         if image_path.exists():
             return send_file(str(image_path))
         return "Image not found", 404

@@ -43,7 +43,6 @@ def find_mismatched_files_recursive(root_directory):
     """Recursively find PNG files without matching metadata files and vice versa."""
     root_directory = Path(root_directory)
 
-    print(f"🔍 Recursively scanning: {root_directory}")
 
     # Get all PNG and metadata files recursively, organized by directory
     all_orphaned_pngs = []
@@ -51,7 +50,7 @@ def find_mismatched_files_recursive(root_directory):
     total_pairs = 0
     directories_scanned = 0
 
-    for current_dir in [root_directory] + list(root_directory.rglob("*/")):
+    for current_dir in [root_directory, *list(root_directory.rglob("*/"))]:
         if not current_dir.is_dir():
             continue
 
@@ -79,10 +78,7 @@ def find_mismatched_files_recursive(root_directory):
         pairs_in_dir = len(set(png_files.keys()) & set(metadata_files.keys()))
 
         if pngs_without_metadata or metadata_without_png or pairs_in_dir > 0:
-            print(
-                f"  📁 {current_dir.relative_to(root_directory) if current_dir != root_directory else '.'}: "
-                f"{pairs_in_dir} pairs, {len(pngs_without_metadata)} orphaned PNGs, {len(metadata_without_png)} orphaned metadata"
-            )
+            pass
 
         # Add to global lists
         all_orphaned_pngs.extend([png_files[stem] for stem in pngs_without_metadata])
@@ -91,7 +87,6 @@ def find_mismatched_files_recursive(root_directory):
         )
         total_pairs += pairs_in_dir
 
-    print(f"📊 Scanned {directories_scanned} directories")
 
     return {
         "orphaned_pngs": all_orphaned_pngs,
@@ -127,94 +122,68 @@ def cleanup_and_verify(directory, recursive=False):
     if recursive:
         results = find_mismatched_files_recursive(directory)
     else:
-        print(f"\n🔍 Scanning directory: {directory}")
         results = find_mismatched_files(directory)
 
     if not results["orphaned_metadata"] and not results["orphaned_pngs"]:
-        print("\n✅ All files are already properly paired!")
-        print(f"Total pairs: {results['total_pairs']}")
         return
 
     # Generate detailed report
-    print("\n📋 ORPHANED FILES REPORT:")
-    print(f"{'='*60}")
-    print(f"  • Total paired files: {results['total_pairs']}")
-    print(f"  • Orphaned PNG files: {len(results['orphaned_pngs'])}")
-    print(f"  • Orphaned metadata files: {len(results['orphaned_metadata'])}")
 
     # Show orphaned metadata files
     if results["orphaned_metadata"]:
-        print(f"\n🔸 ORPHANED METADATA FILES ({len(results['orphaned_metadata'])}):")
         # Group by directory for better readability
         metadata_by_dir = defaultdict(list)
         for f in results["orphaned_metadata"]:
             metadata_by_dir[f.parent].append(f)
 
-        for dir_path, files in sorted(metadata_by_dir.items()):
-            print(f"  📁 {dir_path}:")
+        for _dir_path, files in sorted(metadata_by_dir.items()):
             for f in sorted(files):
-                print(f"    • {f.name}")
+                pass
 
     # Show orphaned PNG files
     if results["orphaned_pngs"]:
-        print(f"\n🔸 ORPHANED PNG FILES ({len(results['orphaned_pngs'])}):")
         # Group by directory for better readability
         pngs_by_dir = defaultdict(list)
         for f in results["orphaned_pngs"]:
             pngs_by_dir[f.parent].append(f)
 
-        for dir_path, files in sorted(pngs_by_dir.items()):
-            print(f"  📁 {dir_path}:")
+        for _dir_path, files in sorted(pngs_by_dir.items()):
             for f in sorted(files):
-                print(f"    • {f.name}")
+                pass
 
-    print(f"\n{'='*60}")
 
     # Ask user what to do
-    total_orphans = len(results["orphaned_metadata"]) + len(results["orphaned_pngs"])
+    len(results["orphaned_metadata"]) + len(results["orphaned_pngs"])
     while True:
-        print(f"\nFound {total_orphans} orphaned files.")
         choice = input("Do you want to move them to trash? (y/n/q): ").lower().strip()
 
         if choice in ["y", "yes"]:
             perform_cleanup(results)
             break
         if choice in ["n", "no"]:
-            print("📋 Report complete. No files were moved.")
             break
         if choice in ["q", "quit"]:
-            print("👋 Exiting without making changes.")
             return
-        print("Please enter 'y' (yes), 'n' (no), or 'q' (quit)")
 
 
 def perform_cleanup(results):
     """Actually move the orphaned files to trash."""
     # Move orphaned metadata files to trash
     if results["orphaned_metadata"]:
-        print(
-            f"\n🗑️  Moving {len(results['orphaned_metadata'])} orphaned metadata files to trash:"
-        )
         for f in sorted(results["orphaned_metadata"]):
             try:
                 send2trash(str(f))
-                print(f"  ✓ {f.name}")
-            except Exception as e:
-                print(f"  ❌ Error moving {f.name} to trash: {e}")
+            except Exception:
+                pass
 
     # Move orphaned PNG files to trash as well
     if results["orphaned_pngs"]:
-        print(
-            f"\n🗑️  Moving {len(results['orphaned_pngs'])} orphaned PNG files to trash:"
-        )
         for f in sorted(results["orphaned_pngs"]):
             try:
                 send2trash(str(f))
-                print(f"  ✓ {f.name}")
-            except Exception as e:
-                print(f"  ❌ Error moving {f.name} to trash: {e}")
+            except Exception:
+                pass
 
-    print("\n✅ Cleanup complete! All orphaned files have been moved to trash.")
 
 
 def main():
@@ -243,16 +212,13 @@ Examples:
 
     directory = args.directory
     if not os.path.isdir(directory):
-        print(f"❌ Error: {directory} is not a directory")
         sys.exit(1)
 
     try:
         cleanup_and_verify(directory, recursive=args.recursive)
     except KeyboardInterrupt:
-        print("\n\n⏹️  Operation cancelled by user.")
         sys.exit(1)
-    except Exception as e:
-        print(f"\n❌ An error occurred: {e}")
+    except Exception:
         sys.exit(1)
 
 

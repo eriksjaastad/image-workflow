@@ -189,7 +189,7 @@ def test_all_consecutive_combinations():
 
     except Exception as e:
         print(f"❌ All consecutive combinations test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_same_stage_not_grouped():
@@ -239,7 +239,7 @@ def test_same_stage_not_grouped():
 
     except Exception as e:
         print(f"❌ Same stage not grouped test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_stage_progression_order():
@@ -304,7 +304,7 @@ def test_stage_progression_order():
 
     except Exception as e:
         print(f"❌ Stage progression order test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_backwards_stage_breaks_group():
@@ -367,7 +367,7 @@ def test_backwards_stage_breaks_group():
 
     except Exception as e:
         print(f"❌ Backwards stage breaks group test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_nearest_up_behavior_with_lookahead():
@@ -411,7 +411,7 @@ def test_nearest_up_behavior_with_lookahead():
         print("✅ Nearest-up behavior test PASSED")
     except Exception as e:
         print(f"❌ Nearest-up behavior test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_time_gap_breaks_group():
@@ -453,7 +453,7 @@ def test_time_gap_breaks_group():
         print("✅ Time gap breaks group test PASSED")
     except Exception as e:
         print(f"❌ Time gap breaks group test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_duplicate_stage_ends_run():
@@ -498,7 +498,7 @@ def test_duplicate_stage_ends_run():
         print("✅ Duplicate stage ends run test PASSED")
     except Exception as e:
         print(f"❌ Duplicate stage ends run test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def test_mojo1_expected_pair_grouped():
@@ -536,13 +536,13 @@ def test_mojo1_expected_pair_grouped():
         print("✅ Mojo1 expected pair grouped test PASSED")
     except Exception as e:
         print(f"❌ Mojo1 expected pair grouped test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
         print("✅ Backwards stage breaks group test PASSED")
 
     except Exception as e:
         print(f"❌ Backwards stage breaks group test FAILED: {e}")
-        assert False
+        raise AssertionError()
 
 
 def run_all_tests():
@@ -590,7 +590,7 @@ def run_all_tests():
         print("\n🎉 ALL TRIPLET DETECTION LOGIC TESTS PASSED")
     else:
         print(f"\n⚠️  {total - passed} tests failed")
-        assert False
+        raise AssertionError()
 
 
 if __name__ == "__main__":

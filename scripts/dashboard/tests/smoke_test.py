@@ -223,7 +223,7 @@ def test_contract_compliance():
 
         # Validate each tool has dates and counts
         all_valid = True
-        for tool, data in charts["by_script"].items():
+        for _tool, data in charts["by_script"].items():
             if "dates" not in data or "counts" not in data:
                 all_valid = False
                 break

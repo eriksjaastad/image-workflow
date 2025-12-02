@@ -78,7 +78,7 @@ class SimpleWebToolsTest:
 
             # Check if process is still running (didn't crash)
             if process.poll() is not None:
-                stdout, stderr = process.communicate()
+                _stdout, stderr = process.communicate()
                 print(f"❌ Character Sorter crashed: {stderr.decode()}")
                 return False
 
@@ -118,7 +118,7 @@ class SimpleWebToolsTest:
 
             # Check if process is still running (didn't crash)
             if process.poll() is not None:
-                stdout, stderr = process.communicate()
+                _stdout, stderr = process.communicate()
                 print(f"❌ Multi-Directory Viewer crashed: {stderr.decode()}")
                 return False
 

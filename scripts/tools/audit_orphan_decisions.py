@@ -127,7 +127,8 @@ def main() -> None:
     target_dir = (repo_root / args.target_dir).resolve()
 
     if not target_dir.exists():
-        raise SystemExit(f"Target directory not found: {target_dir}")
+        msg = f"Target directory not found: {target_dir}"
+        raise SystemExit(msg)
 
     decision_files = list(target_dir.glob("*.decision"))
     records: list[DecisionRecord] = []

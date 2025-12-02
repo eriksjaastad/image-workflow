@@ -89,7 +89,7 @@ def build_aggregate_for_day(events: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "by_script": script_stats,
         "by_operation": dict(by_operation),
-        "projects_touched": sorted(list(projects)),
+        "projects_touched": sorted(projects),
         "total_files_processed": sum(
             s["files_processed"] for s in script_stats.values()
         ),
@@ -101,12 +101,8 @@ def build_aggregate_for_day(events: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main():
     """Main entry point."""
-    print("Building daily aggregates from operation_events_v1 snapshot...")
-
     # Read from snapshot (which contains all historical data)
     if not SNAPSHOT_DIR.exists():
-        print(f"ERROR: Snapshot not found: {SNAPSHOT_DIR}")
-        print("   Run extract_operation_events_v1.py first!")
         return
 
     # Load events from all day partitions
@@ -130,9 +126,7 @@ def main():
                 except json.JSONDecodeError:
                     continue
 
-    total_events = sum(len(evts) for evts in by_day.values())
-    print(f"Loaded {total_events} events from {len(by_day)} days")
-    print(f"Processing {len(by_day)} days...")
+    sum(len(evts) for evts in by_day.values())
 
     # Create output directory
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -149,25 +143,14 @@ def main():
         with open(output_file, "w") as f:
             json.dump(aggregate, f, indent=2)
 
-        print(
-            f"  {day_str}: {aggregate['total_events']} events, "
-            f"{aggregate['total_files_processed']} files, "
-            f"{len(aggregate['by_script'])} scripts"
-        )
 
-    print(f"\nDone! Aggregates written to {OUTPUT_DIR}")
 
     # Show sample
     if by_day:
-        print("\nSample aggregate (most recent day):")
         last_day = sorted(by_day.keys())[-1]
         sample_file = OUTPUT_DIR / f"day={last_day}" / "aggregate.json"
         with open(sample_file) as f:
-            sample = json.load(f)
-        print(f"  Day: {last_day}")
-        print(f"  Total events: {sample['total_events']}")
-        print(f"  Total files: {sample['total_files_processed']}")
-        print(f"  Scripts: {list(sample['by_script'].keys())}")
+            json.load(f)
 
 
 if __name__ == "__main__":

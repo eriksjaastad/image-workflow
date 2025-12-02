@@ -73,10 +73,7 @@ def should_scan(path: Path) -> bool:
 
 
 def has_creation_link(text: str) -> bool:
-    for pat in CREATION_LINK_PATTERNS:
-        if pat.search(text):
-            return True
-    return False
+    return any(pat.search(text) for pat in CREATION_LINK_PATTERNS)
 
 
 def main() -> int:

@@ -22,7 +22,8 @@ def analyze_directory(content_dir):
     content_path = Path(content_dir)
 
     if not content_path.exists():
-        raise ValueError(f"Directory {content_dir} does not exist")
+        msg = f"Directory {content_dir} does not exist"
+        raise ValueError(msg)
 
     # Get all PNG files
     png_files = list(content_path.glob("*.png"))

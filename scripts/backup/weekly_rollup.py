@@ -36,7 +36,6 @@ def main():
 
     root = Path(args.root).expanduser()
     if not root.exists():
-        print(f"No backups found at {root}")
         return
 
     # Determine week range (today back 6 days)
@@ -45,7 +44,6 @@ def main():
     days = [(start + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
     existing_days = [d for d in days if (root / d).exists()]
     if not existing_days:
-        print("No daily folders to roll up")
         return
 
     rollup_dir = Path.home() / "project-data-archives" / "image-workflow" / "weekly"
@@ -114,7 +112,6 @@ def main():
             except Exception:
                 pass
 
-    print(f"✅ Weekly rollup created and uploaded: {tar_path}")
 
 
 if __name__ == "__main__":

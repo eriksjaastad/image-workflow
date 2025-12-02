@@ -41,9 +41,7 @@ STANDARD_TOOL_ORDER = ["Web Image Selector", "Web Character Sorter", "Multi Crop
 
 
 class DashboardAnalytics:
-    """
-    High-level analytics engine that orchestrates data collection and transformation.
-    """
+    """High-level analytics engine that orchestrates data collection and transformation."""
 
     def __init__(self, data_dir: Path):
         self.data_dir = Path(data_dir)
@@ -609,7 +607,7 @@ class DashboardAnalytics:
 
             # Sum from timing_data
             timing_data = raw_data.get("timing_data", {})
-            for tool, stats in timing_data.items():
+            for _tool, stats in timing_data.items():
                 total_work_minutes += stats.get("work_time_minutes", 0)
 
             # Sum from by_operation totals
@@ -1832,7 +1830,7 @@ def main():
 
     # Print sample chart data
     if data.get("charts", {}).get("by_script"):
-        sample_tool = list(data["charts"]["by_script"].keys())[0]
+        sample_tool = next(iter(data["charts"]["by_script"].keys()))
         sample_data = data["charts"]["by_script"][sample_tool]
         print(f"\n📊 Sample tool: {sample_tool}")
         print(f"   Dates: {len(sample_data['dates'])} labels")

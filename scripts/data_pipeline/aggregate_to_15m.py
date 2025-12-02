@@ -71,8 +71,7 @@ def parse_timestamp_to_utc(ts_str: str) -> datetime | None:
             # Convert to UTC
             dt = dt.astimezone(UTC)
         return dt
-    except Exception as e:
-        print(f"Warning: Failed to parse timestamp '{ts_str}': {e}")
+    except Exception:
         return None
 
 
@@ -155,8 +154,8 @@ def load_raw_logs_for_day(data_dir: Path, day_str: str) -> list[dict[str, Any]]:
                             records.append(record)
                     except json.JSONDecodeError:
                         continue
-        except Exception as e:
-            print(f"Warning: Failed to read {log_path}: {e}")
+        except Exception:
+            pass
 
     # Try archived logs
     archive_path = (
@@ -176,8 +175,8 @@ def load_raw_logs_for_day(data_dir: Path, day_str: str) -> list[dict[str, Any]]:
                             records.append(record)
                     except json.JSONDecodeError:
                         continue
-        except Exception as e:
-            print(f"Warning: Failed to read {archive_path}: {e}")
+        except Exception:
+            pass
 
     return records
 
@@ -250,10 +249,7 @@ def aggregate_to_bins(
 
             metrics = get_file_operation_metrics(events_for_metrics)
             work_seconds = float(metrics.get("work_time_minutes", 0) or 0) * 60.0
-        except Exception as e:
-            print(
-                f"Warning: Failed to calculate work_seconds for bin {bin_ts_str}: {e}"
-            )
+        except Exception:
             work_seconds = 0.0
 
         # Get first and last event timestamps
@@ -322,7 +318,6 @@ def write_bins_atomic(output_path: Path, bins: list[dict[str, Any]]) -> None:
 
     # Atomic rename
     shutil.move(str(tmp_path), str(output_path))
-    print(f"✓ Wrote {len(bins)} bins to {output_path}")
 
 
 def aggregate_day(
@@ -339,28 +334,19 @@ def aggregate_day(
     Returns:
         Number of bins created
     """
-    print(f"\nProcessing day: {day_str}")
-
     # Load raw logs
     records = load_raw_logs_for_day(data_dir, day_str)
     if not records:
-        print(f"  No records found for {day_str}")
         return 0
 
-    print(f"  Loaded {len(records)} records")
 
     # Aggregate to bins
     bins = aggregate_to_bins(records, bin_version=bin_version)
-    print(f"  Created {len(bins)} bins")
 
     if dry_run:
-        print(
-            f"  [DRY RUN] Would write to: data/aggregates/daily/day={day_str}/agg_15m.jsonl"
-        )
         # Show sample
         if bins:
-            print("\n  Sample bin:")
-            print(f"    {json.dumps(bins[0], indent=4)}")
+            pass
         return len(bins)
 
     # Write output
@@ -412,11 +398,8 @@ def main():
         data_dir = project_root / "data"
 
     if not data_dir.exists():
-        print(f"Error: Data directory not found: {data_dir}")
         sys.exit(1)
 
-    print(f"Data directory: {data_dir}")
-    print(f"Bin version: {args.bin_version}")
 
     if args.day:
         # Process single day
@@ -439,14 +422,11 @@ def main():
                 data_dir, day_str, bin_version=args.bin_version, dry_run=args.dry_run
             )
             total_bins += bin_count
-        except Exception as e:
-            print(f"Error processing {day_str}: {e}")
+        except Exception:
             import traceback
 
             traceback.print_exc()
 
-    print(f"\n{'[DRY RUN] ' if args.dry_run else ''}Total bins created: {total_bins}")
-    print("✓ Aggregation complete")
 
 
 if __name__ == "__main__":

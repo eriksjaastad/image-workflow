@@ -59,11 +59,14 @@ def test_all_production_scripts_have_mappings():
             unmapped_scripts.append(script)
 
     if unmapped_scripts:
-        raise AssertionError(
+        msg = (
             f"The following production scripts are NOT mapped in dashboard:\n"
             f"  {unmapped_scripts}\n\n"
             f"Add them to get_display_name() in data_engine.py!\n"
             f"This causes work to be invisible in the dashboard."
+        )
+        raise AssertionError(
+            msg
         )
 
 

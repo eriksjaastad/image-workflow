@@ -100,7 +100,7 @@ class TestProjectLifecycle(unittest.TestCase):
         }
 
         # Test each transition
-        for from_status, to_statuses in valid_transitions.items():
+        for _from_status, to_statuses in valid_transitions.items():
             for to_status in to_statuses:
                 # This would test actual transition logic
                 self.assertIn(to_status, ["active", "completed", "archived", None])

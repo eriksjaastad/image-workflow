@@ -165,7 +165,6 @@ class CropQueueProcessor:
         crops = batch["crops"]
 
         if self.preview_mode:
-            print(f"[Preview] Would process batch {batch_id} with {len(crops)} crops")
             return True
 
         # Update status to processing
@@ -215,13 +214,9 @@ class CropQueueProcessor:
                 session_id=batch["session_id"],
             )
 
-            print(
-                f"✓ Processed batch {batch_id} ({len(crops)} crops, {processing_time_ms}ms)"
-            )
             return True
 
         except Exception as e:
-            print(f"✗ Failed to process batch {batch_id}: {e}")
             self.queue_manager.update_batch_status(batch_id, "failed", error=str(e))
             return False
 
@@ -235,9 +230,6 @@ class CropQueueProcessor:
         errors = []
         warnings = []
 
-        print(f"\n{'='*80}")
-        print("PREFLIGHT VALIDATION")
-        print(f"{'='*80}\n")
 
         # Define allowed safe zones (strict whitelist)
         allowed_safe_zones = {
@@ -439,28 +431,20 @@ class CropQueueProcessor:
                     )
 
         # Print summary
-        print(
-            f"Validated {sum(len(b['crops']) for b in batches)} crop operations across {len(batches)} batches\n"
-        )
 
         if warnings:
-            print(f"⚠️  {len(warnings)} warnings:")
-            for warning in warnings[:10]:  # Show first 10
-                print(f"   {warning}")
+            for _warning in warnings[:10]:  # Show first 10
+                pass
             if len(warnings) > 10:
-                print(f"   ... and {len(warnings) - 10} more warnings")
-            print()
+                pass
 
         if errors:
-            print(f"❌ {len(errors)} errors:")
-            for error in errors[:10]:  # Show first 10
-                print(f"   {error}")
+            for _error in errors[:10]:  # Show first 10
+                pass
             if len(errors) > 10:
-                print(f"   ... and {len(errors) - 10} more errors")
-            print()
+                pass
             return False, errors
 
-        print("✅ Validation passed!\n")
         return True, []
 
     def run(self, limit: int | None = None, skip_confirmation: bool = False):
@@ -475,48 +459,33 @@ class CropQueueProcessor:
         pending_count = stats["pending"]
 
         if pending_count == 0:
-            print("No pending batches in queue.")
             return
 
-        print(f"\n{'='*80}")
-        print("CROP QUEUE PROCESSOR")
-        print(f"{'='*80}\n")
-        print(f"Pending batches: {pending_count}")
         if limit:
-            print(f"Limit: {limit} batches")
+            pass
         if self.timing_simulator:
-            print(f"Speed multiplier: {self.timing_simulator.speed_multiplier}x")
-            print(f"Breaks enabled: {self.timing_simulator.enable_breaks}")
-        print()
+            pass
 
         # Get pending batches
         pending_batches = self.queue_manager.get_pending_batches(limit=limit)
 
         # ALWAYS run preflight validation (built-in safety)
-        is_valid, validation_errors = self.preflight_validation(pending_batches)
+        is_valid, _validation_errors = self.preflight_validation(pending_batches)
 
         if not is_valid:
-            print("❌ Preflight validation failed. Fix errors and try again.")
             return
 
         # Interactive confirmation (unless skipped with --yes)
         if not skip_confirmation and not self.preview_mode:
-            total_crops = sum(len(b["crops"]) for b in pending_batches)
-            print(
-                f"Ready to process {len(pending_batches)} batches ({total_crops} crops)."
-            )
-            print("⚠️  This will modify files. Proceed? [y/N]: ", end="", flush=True)
+            sum(len(b["crops"]) for b in pending_batches)
 
             try:
                 response = input().strip().lower()
                 if response not in ("y", "yes"):
-                    print("\n❌ Cancelled by user.")
                     return
             except (KeyboardInterrupt, EOFError):
-                print("\n\n❌ Cancelled by user.")
                 return
 
-            print()  # Blank line after confirmation
 
         if self.timing_simulator:
             self.timing_simulator.start_session()
@@ -527,8 +496,7 @@ class CropQueueProcessor:
             # Check if we should take a break
             if self.timing_simulator and self.timing_simulator.should_take_break():
                 break_duration = self.timing_simulator.get_break_duration()
-                break_minutes = break_duration / 60
-                print(f"\n[Break] Taking a {break_minutes:.1f} minute break...")
+                break_duration / 60
                 if not self.preview_mode:
                     time.sleep(break_duration)
                 self.timing_simulator.start_session()
@@ -549,9 +517,6 @@ class CropQueueProcessor:
             if limit and processed >= limit:
                 break
 
-        print(f"\n{'='*80}")
-        print(f"Processed {processed} batches")
-        print(f"{'='*80}\n")
 
 
 def main():
@@ -595,9 +560,7 @@ def main():
                 enable_breaks=(not args.no_breaks),
             )
         else:
-            print(f"Warning: Timing patterns file not found at {timing_file}")
-            print("Run analyze_human_patterns.py first to generate timing data.")
-            print("Proceeding without timing simulation...\n")
+            pass
 
     # Create processor
     processor = CropQueueProcessor(

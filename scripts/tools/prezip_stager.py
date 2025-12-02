@@ -97,16 +97,17 @@ def load_allowlist(
     if allowlist_json is None:
         allowlist_json = Path("data/projects") / f"{project_id}_allowed_ext.json"
     if not allowlist_json.exists():
-        raise FileNotFoundError(f"Allowlist JSON not found: {allowlist_json}")
+        msg = f"Allowlist JSON not found: {allowlist_json}"
+        raise FileNotFoundError(msg)
     data = json.loads(allowlist_json.read_text(encoding="utf-8"))
-    allowed = set(
+    allowed = {
         e.lower() for e in data.get("allowedExtensions", []) if isinstance(e, str)
-    )
-    overrides = set(
+    }
+    overrides = {
         e.lower()
         for e in data.get("clientWhitelistOverrides", [])
         if isinstance(e, str)
-    )
+    }
     return allowed, overrides
 
 
@@ -136,11 +137,7 @@ def is_hidden(name: str) -> bool:
 
 
 def matches_banned_patterns(name: str, patterns: list[re.Pattern]) -> bool:
-    for pat in patterns:
-        # Use search to allow unanchored patterns naturally
-        if pat.search(name):
-            return True
-    return False
+    return any(pat.search(name) for pat in patterns)
 
 
 def relpath_under(root: Path, p: Path) -> Path:
@@ -261,7 +258,7 @@ def prezip_stage(cfg: StagerConfig) -> dict:
         "byExtIncluded": by_ext_included,
         "excludedCounts": {k: int(v) for k, v in excluded.items()},
         "excludedUniqueNames": {
-            k: sorted(list(v)) for k, v in excluded_unique_names.items()
+            k: sorted(v) for k, v in excluded_unique_names.items()
         },
         "incomingByExt": incoming_by_ext,
     }
@@ -275,7 +272,7 @@ def prezip_stage(cfg: StagerConfig) -> dict:
             should_have = {
                 e for e in all_exts if e in allow_set and e not in banned_ext
             }
-            missing = sorted(list(should_have - included_exts))
+            missing = sorted(should_have - included_exts)
             if missing:
                 companion_issues.append(
                     {"stem": st, "missingAllowedCompanions": missing}

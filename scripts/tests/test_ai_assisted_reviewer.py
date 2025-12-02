@@ -167,7 +167,7 @@ def test_model_loading():
 
     # Check CLIP loaded
     assert clip_info is not None, "CLIP info should be loaded"
-    clip_model, preprocess, device = clip_info
+    clip_model, _preprocess, device = clip_info
     assert clip_model is not None, "CLIP model should be loaded"
 
     print(f"   ✅ Models loaded successfully on device: {device}")

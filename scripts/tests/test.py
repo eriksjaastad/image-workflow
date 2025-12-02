@@ -29,7 +29,7 @@ def main():
         sys.exit(1)
 
     # Pass all arguments to the actual test runner
-    cmd = [sys.executable, str(test_runner_path)] + sys.argv[1:]
+    cmd = [sys.executable, str(test_runner_path), *sys.argv[1:]]
 
     try:
         result = subprocess.run(cmd, cwd=project_root, check=False)

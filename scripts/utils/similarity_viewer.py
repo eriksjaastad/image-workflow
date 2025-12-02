@@ -180,7 +180,6 @@ def find_image_directories(output_dir):
         output_path = Path(output_dir)
 
     if not output_path.exists():
-        print(f"❌ Directory not found: {output_path}")
         return []
 
     directories = []
@@ -591,9 +590,9 @@ def create_app(output_dir):
 
     # Convert to absolute path from script's parent directory
     if not Path(output_dir).is_absolute():
-        output_path = Path(__file__).parent.parent / output_dir
+        Path(__file__).parent.parent / output_dir
     else:
-        output_path = Path(output_dir)
+        Path(output_dir)
 
     # Load similarity data
     nodes, edges, neighbors = load_similarity_data(output_dir)
@@ -602,29 +601,21 @@ def create_app(output_dir):
     directories = find_image_directories(output_dir)
 
     # Sort images within each directory by similarity
-    print("🔄 Applying similarity-based spatial layout...")
     for directory in directories:
         original_order = directory["images"].copy()
         directory["images"] = similarity_sort_images(directory["images"], neighbors)
 
         # Count how many images moved positions
-        moved_count = sum(
+        sum(
             1
             for i, img in enumerate(directory["images"])
             if i >= len(original_order) or img != original_order[i]
         )
-        print(
-            f"   • {directory['name']}: {moved_count}/{directory['count']} images repositioned"
-        )
 
     total_images = sum(d["count"] for d in directories)
 
-    print(f"📁 Found {len(directories)} directories with {total_images} total images")
-    print(
-        f"📊 Loaded similarity data: {len(nodes)} nodes, {len(edges)} edges, {len(neighbors)} neighbor sets"
-    )
-    for d in directories:
-        print(f"   • {d['name']}: {d['count']} images")
+    for _d in directories:
+        pass
 
     @app.route("/")
     def index():
@@ -707,7 +698,6 @@ def main():
     args = parser.parse_args()
 
     if not Path(args.output_dir).exists():
-        print(f"❌ Error: Directory '{args.output_dir}' not found")
         sys.exit(1)
 
     # Check for similarity map files
@@ -716,17 +706,12 @@ def main():
     missing_files = [f for f in required_files if not (output_path / f).exists()]
 
     if missing_files:
-        print(f"❌ Missing similarity map files: {missing_files}")
-        print("   Run hybrid_grouper.py with --emit-map to generate these files")
         sys.exit(1)
 
-    print("🚀 Starting Similarity-Enhanced Image Viewer...")
-    print(f"📂 Analyzing: {args.output_dir}")
 
     app = create_app(args.output_dir)
 
     url = f"http://localhost:{args.port}"
-    print(f"🌐 Server starting at: {url}")
 
     if not args.no_browser:
         threading.Thread(target=open_browser, args=(url,), daemon=True).start()
@@ -734,7 +719,7 @@ def main():
     try:
         app.run(host="0.0.0.0", port=args.port, debug=False)
     except KeyboardInterrupt:
-        print("\n👋 Server stopped")
+        pass
 
 
 if __name__ == "__main__":

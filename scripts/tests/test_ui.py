@@ -65,7 +65,8 @@ class ImageSelectorUITest:
             )
         except Exception as e:
             self.cleanup()
-            raise Exception(f"Failed to setup browser: {e}")
+            msg = f"Failed to setup browser: {e}"
+            raise Exception(msg)
 
     def cleanup(self):
         """Clean up test environment"""
@@ -245,7 +246,8 @@ class ImageSelectorUITest:
             print("  JavaScript errors found:")
             for error in js_errors:
                 print(f"    {error['message']}")
-            raise AssertionError(f"Found {len(js_errors)} JavaScript errors")
+            msg = f"Found {len(js_errors)} JavaScript errors"
+            raise AssertionError(msg)
 
         print("  ✓ No JavaScript errors detected")
 

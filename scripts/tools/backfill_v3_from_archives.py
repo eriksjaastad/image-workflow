@@ -300,8 +300,8 @@ class HistoricalBackfillProcessor:
     def _load_images(self, directory: Path) -> list[Path]:
         """Load PNG images from directory (optionally recursive)."""
         if self.recursive:
-            return sorted([f for f in directory.rglob("*.png")])
-        return sorted([f for f in directory.glob("*.png")])
+            return sorted(directory.rglob("*.png"))
+        return sorted(directory.glob("*.png"))
 
     def _load_manifest_metadata(self, manifest_path: Path) -> dict | None:
         """Load project metadata from a project manifest JSON file."""
@@ -508,7 +508,7 @@ class HistoricalBackfillProcessor:
             result = cv2.matchTemplate(
                 original_gray, cropped_gray, cv2.TM_CCOEFF_NORMED
             )
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+            _min_val, max_val, _min_loc, max_loc = cv2.minMaxLoc(result)
 
             # Extract coordinates
             x1, y1 = max_loc

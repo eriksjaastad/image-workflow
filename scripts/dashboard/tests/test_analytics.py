@@ -317,12 +317,12 @@ class TestContractCompliance:
         assert "by_operation" in charts
 
         # Each tool should have dates and counts
-        for tool, data in charts["by_script"].items():
+        for _tool, data in charts["by_script"].items():
             assert "dates" in data
             assert "counts" in data
             assert len(data["dates"]) == len(data["counts"])
 
-        for op, data in charts["by_operation"].items():
+        for _op, data in charts["by_operation"].items():
             assert "dates" in data
             assert "counts" in data
             assert len(data["dates"]) == len(data["counts"])
@@ -338,7 +338,7 @@ class TestContractCompliance:
         timing_data = response["timing_data"]
 
         # Each tool should have work_time_minutes and timing_method
-        for tool, stats in timing_data.items():
+        for _tool, stats in timing_data.items():
             assert "work_time_minutes" in stats
             assert "timing_method" in stats
             assert stats["timing_method"] in [

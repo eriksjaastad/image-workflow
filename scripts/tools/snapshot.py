@@ -47,7 +47,8 @@ def restore_snapshot(root: Path, in_path: Path) -> None:
     root = root.resolve()
     in_path = in_path.resolve()
     if not in_path.exists():
-        raise FileNotFoundError(f"Snapshot not found: {in_path}")
+        msg = f"Snapshot not found: {in_path}"
+        raise FileNotFoundError(msg)
 
     # Ensure root exists
     root.mkdir(parents=True, exist_ok=True)
@@ -116,7 +117,8 @@ def _assert_under_root(path: Path, root: Path) -> None:
     try:
         path.resolve().relative_to(root.resolve())
     except Exception:
-        raise RuntimeError(f"Refusing to operate outside sandbox root: {path}")
+        msg = f"Refusing to operate outside sandbox root: {path}"
+        raise RuntimeError(msg)
 
 
 def save_baseline(root: Path, out_tar: Path) -> None:
@@ -124,7 +126,8 @@ def save_baseline(root: Path, out_tar: Path) -> None:
     _assert_under_root(root, root)
     out_tar = out_tar.resolve()
     if not root.exists():
-        raise FileNotFoundError(f"Sandbox root not found: {root}")
+        msg = f"Sandbox root not found: {root}"
+        raise FileNotFoundError(msg)
 
     exclude = {"metrics", "reports", "runs", "logs"}
     # Ensure parent exists
@@ -172,7 +175,8 @@ def restore_baseline(root: Path, in_tar: Path) -> None:
     _assert_under_root(root, root)
     in_tar = in_tar.resolve()
     if not in_tar.exists():
-        raise FileNotFoundError(f"Baseline tar not found: {in_tar}")
+        msg = f"Baseline tar not found: {in_tar}"
+        raise FileNotFoundError(msg)
 
     preserve = {"metrics", "reports", "runs", "logs", in_tar.name}
     _safe_remove_tree(root, preserve)

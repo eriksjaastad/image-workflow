@@ -47,7 +47,7 @@ def extract_file_from_branch(file_path, branch):
 
     # Extract file from git
     cmd = f'git show {branch}:"{file_path}" > "{full_path}"'
-    code, stdout, stderr = run_command(cmd)
+    code, _stdout, stderr = run_command(cmd)
 
     if code == 0:
         print("    ✓ Recovered")
@@ -62,7 +62,7 @@ def extract_directory_from_branch(dir_path, branch):
 
     # Get list of all files in this directory from the branch
     cmd = f'git ls-tree -r --name-only {branch} "{dir_path}"'
-    code, stdout, stderr = run_command(cmd)
+    code, stdout, _stderr = run_command(cmd)
 
     if code != 0:
         print("    ⚠ Directory not found in backup")
@@ -94,7 +94,7 @@ def main():
 
     # Verify backup branch exists
     cmd = f"git rev-parse --verify {BACKUP_BRANCH}"
-    code, stdout, stderr = run_command(cmd)
+    code, _stdout, _stderr = run_command(cmd)
     if code != 0:
         print(f"\n✗ ERROR: Backup branch not found: {BACKUP_BRANCH}")
         return 1

@@ -64,8 +64,7 @@ class ProjectArchiver:
         try:
             with open(manifest_path) as f:
                 return json.load(f)
-        except Exception as e:
-            print(f"Error loading manifest: {e}")
+        except Exception:
             return None
 
     def collect_project_bins(
@@ -87,8 +86,7 @@ class ProjectArchiver:
         try:
             start_dt = datetime.fromisoformat(started_at.replace("Z", "+00:00")).date()
             end_dt = datetime.fromisoformat(finished_at.replace("Z", "+00:00")).date()
-        except Exception as e:
-            print(f"Error parsing dates: {e}")
+        except Exception:
             return []
 
         # Collect bins from each day in range
@@ -110,8 +108,8 @@ class ProjectArchiver:
                                     project_bins.append(bin_record)
                             except json.JSONDecodeError:
                                 continue
-                except Exception as e:
-                    print(f"Warning: Error reading {bin_path}: {e}")
+                except Exception:
+                    pass
 
             current_date += timedelta(days=1)
 
@@ -200,10 +198,6 @@ class ProjectArchiver:
         archive_dir = self.archives_dir / project_id
 
         if dry_run:
-            print(f"  [DRY RUN] Would create archive at: {archive_dir}")
-            print(f"  [DRY RUN] Bins: {len(bins)}")
-            print(f"  [DRY RUN] Total files: {summary['totals']['file_count']}")
-            print(f"  [DRY RUN] Total work hours: {summary['totals']['work_hours']}")
             return archive_dir
 
         # Create archive directory
@@ -240,10 +234,6 @@ class ProjectArchiver:
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
 
-        print(f"  ✓ Archived to: {archive_dir}")
-        print(f"    - {len(bins)} bins")
-        print(f"    - {summary['totals']['file_count']} files")
-        print(f"    - {summary['totals']['work_hours']} work hours")
 
         return archive_dir
 
@@ -274,8 +264,8 @@ class ProjectArchiver:
                             existing_keys.add(dedupe_key)
                         except json.JSONDecodeError:
                             continue
-            except Exception as e:
-                print(f"Warning: Error reading existing overall bins: {e}")
+            except Exception:
+                pass
 
         # Add new bins (skip duplicates)
         new_bins_added = 0
@@ -292,13 +282,9 @@ class ProjectArchiver:
             new_bins_added += 1
 
         if duplicate_keys:
-            print(
-                f"  ⚠️  Skipped {len(duplicate_keys)} duplicate bins (already in overall)"
-            )
+            pass
 
         if dry_run:
-            print(f"  [DRY RUN] Would merge {new_bins_added} new bins into overall")
-            print(f"  [DRY RUN] Overall would have {len(existing_bins)} total bins")
             return
 
         # Sort by bin timestamp
@@ -315,8 +301,6 @@ class ProjectArchiver:
 
         shutil.move(str(tmp_path), str(overall_path))
 
-        print(f"  ✓ Merged into overall: {new_bins_added} new bins")
-        print(f"    Total overall bins: {len(existing_bins)}")
 
     def archive_project(
         self, project_id: str, dry_run: bool = False, skip_merge: bool = False
@@ -331,14 +315,9 @@ class ProjectArchiver:
         Returns:
             True if successful
         """
-        print(f"\n{'='*70}")
-        print(f"Archiving project: {project_id}")
-        print(f"{'='*70}")
-
         # Load project manifest
         manifest = self.load_project_manifest(project_id)
         if not manifest:
-            print(f"✗ Error: Project manifest not found for {project_id}")
             return False
 
         # Check if project is finished
@@ -346,54 +325,35 @@ class ProjectArchiver:
         finished_at = manifest.get("finishedAt")
 
         if status not in ("finished", "archived"):
-            print(
-                f"✗ Error: Project status is '{status}', not 'finished' or 'archived'"
-            )
             return False
 
         if not finished_at:
-            print("✗ Error: Project has no finishedAt timestamp")
             return False
 
         started_at = manifest.get("startedAt")
         if not started_at:
-            print("✗ Error: Project has no startedAt timestamp")
             return False
 
-        print(f"  Status: {status}")
-        print(f"  Started: {started_at}")
-        print(f"  Finished: {finished_at}")
 
         # Collect project bins
-        print("\n  Collecting bins...")
         bins = self.collect_project_bins(project_id, started_at, finished_at)
 
         if not bins:
-            print("  ⚠️  Warning: No bins found for project")
-            print("  This may indicate:")
-            print("    - Bins not yet generated (run aggregate_to_15m.py first)")
-            print("    - Project has no file operations")
             if not dry_run:
-                print("\n  Skipping archive (no data to archive)")
                 return False
         else:
-            print(f"  ✓ Found {len(bins)} bins")
+            pass
 
         # Create summary
         summary = self.create_project_summary(project_id, manifest, bins)
 
         # Write archive
-        print("\n  Writing archive...")
         self.write_project_archive(project_id, bins, summary, dry_run=dry_run)
 
         # Merge into overall (unless skipped)
         if not skip_merge and bins:
-            print("\n  Merging into overall aggregate...")
             self.merge_into_overall(project_id, bins, dry_run=dry_run)
 
-        print(f"\n{'='*70}")
-        print("✅ Archive complete")
-        print(f"{'='*70}\n")
 
         return True
 
@@ -407,14 +367,9 @@ class ProjectArchiver:
         Returns:
             True if successful
         """
-        print(f"\n{'='*70}")
-        print(f"Rolling back project: {project_id}")
-        print(f"{'='*70}")
-
         overall_path = self.overall_dir / "agg_15m_cumulative.jsonl"
 
         if not overall_path.exists():
-            print(f"✗ Error: Overall aggregate not found: {overall_path}")
             return False
 
         # Load overall bins
@@ -432,24 +387,14 @@ class ProjectArchiver:
                             overall_bins.append(bin_record)
                     except json.JSONDecodeError:
                         continue
-        except Exception as e:
-            print(f"✗ Error reading overall bins: {e}")
+        except Exception:
             return False
 
         if project_bins_found == 0:
-            print(
-                f"  ℹ️  Project {project_id} not found in overall aggregate (already rolled back?)"
-            )
             return True
 
-        print(f"  Found {project_bins_found} bins for project {project_id}")
-        print(f"  Overall will have {len(overall_bins)} bins after rollback")
 
         if dry_run:
-            print(f"\n  [DRY RUN] Would remove {project_bins_found} bins from overall")
-            print(
-                f"  [DRY RUN] Archive directory would remain at: {self.archives_dir / project_id}"
-            )
             return True
 
         # Write updated overall (without project bins)
@@ -463,15 +408,7 @@ class ProjectArchiver:
 
         shutil.move(str(tmp_path), str(overall_path))
 
-        print(f"\n  ✓ Removed {project_bins_found} bins from overall")
-        print(
-            f"  Note: Archive directory still exists at: {self.archives_dir / project_id}"
-        )
-        print("        (Delete manually if needed)")
 
-        print(f"\n{'='*70}")
-        print("✅ Rollback complete")
-        print(f"{'='*70}\n")
 
         return True
 
@@ -510,7 +447,6 @@ def main():
         data_dir = project_root / "data"
 
     if not data_dir.exists():
-        print(f"Error: Data directory not found: {data_dir}")
         sys.exit(2)
 
     # Create archiver

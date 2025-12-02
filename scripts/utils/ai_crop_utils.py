@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-AI Crop Utilities - Helper functions for AI crop coordinate handling.
-"""
+"""AI Crop Utilities - Helper functions for AI crop coordinate handling."""
 
 from pathlib import Path
 
@@ -135,17 +133,20 @@ def headless_crop(
         ValueError: If crop coordinates are invalid
     """
     if Image is None:
-        raise RuntimeError("PIL (Pillow) is required for image cropping")
+        msg = "PIL (Pillow) is required for image cropping"
+        raise RuntimeError(msg)
 
     source_path = Path(source_path)
     if not source_path.exists():
-        raise FileNotFoundError(f"Source image not found: {source_path}")
+        msg = f"Source image not found: {source_path}"
+        raise FileNotFoundError(msg)
 
     x1, y1, x2, y2 = crop_rect
 
     # Validate crop coordinates
     if x1 < 0 or y1 < 0 or x2 <= x1 or y2 <= y1:
-        raise ValueError(f"Invalid crop coordinates: ({x1}, {y1}, {x2}, {y2})")
+        msg = f"Invalid crop coordinates: ({x1}, {y1}, {x2}, {y2})"
+        raise ValueError(msg)
 
     # Load image, crop, and save in place (trusted path)
     with Image.open(source_path) as img:
@@ -153,8 +154,9 @@ def headless_crop(
 
         # Final validation against image dimensions
         if x2 > width or y2 > height:
+            msg = f"Crop coordinates ({x1}, {y1}, {x2}, {y2}) exceed image dimensions ({width}, {height})"
             raise ValueError(
-                f"Crop coordinates ({x1}, {y1}, {x2}, {y2}) exceed image dimensions ({width}, {height})"
+                msg
             )
 
         # Perform crop

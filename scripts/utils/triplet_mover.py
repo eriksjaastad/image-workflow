@@ -92,10 +92,8 @@ def move_triplet_with_yamls(triplet: tuple[Path, Path, Path], dest_dir: Path) ->
     # First check for conflicts
     conflicts = check_conflicts(triplet, dest_dir)
     if conflicts:
-        print("❌ CONFLICT DETECTED! Files would be overwritten:")
-        for conflict in conflicts:
-            print(f"  🚫 {conflict}")
-        print("❌ STOPPING - triplet move cancelled to prevent overwriting")
+        for _conflict in conflicts:
+            pass
         return False
 
     moved_files = []
@@ -106,12 +104,10 @@ def move_triplet_with_yamls(triplet: tuple[Path, Path, Path], dest_dir: Path) ->
                 png_path, dest_dir, dry_run=False
             )
             moved_files.extend(files_moved)
-            print(f"✓ Moved {len(files_moved)} files for: {png_path.name}")
 
         return True
 
-    except Exception as e:
-        print(f"❌ Error moving triplet: {e}")
+    except Exception:
         # Try to move back any files we already moved
         for moved_file in moved_files:
             try:
@@ -141,70 +137,50 @@ def main():
     dest_dir = Path(args.dest_dir).expanduser().resolve()
 
     if not source_dir.exists() or not source_dir.is_dir():
-        print(f"[!] Source directory not found: {source_dir}")
         sys.exit(1)
 
     if not dest_dir.exists():
-        print(f"[!] Destination directory not found: {dest_dir}")
         sys.exit(1)
 
-    print(f"🔍 Scanning for triplets in: {source_dir}")
     files = scan_images_recursive(source_dir)
-    print(f"📁 Found {len(files)} PNG files total")
 
     triplets = find_triplets(files)
-    print(f"🎯 Found {len(triplets)} complete triplets")
 
     if not triplets:
-        print("No triplets found!")
         return
 
     if args.dry_run:
-        print("\n📋 DRY RUN - Would move these triplets:")
-        for i, triplet in enumerate(triplets, 1):
-            print(f"\nTriplet {i}:")
+        for _i, triplet in enumerate(triplets, 1):
             for png_path in triplet:
-                print(f"  📄 {png_path.name}")
                 yaml_path = png_path.parent / f"{png_path.stem}.yaml"
                 if yaml_path.exists():
-                    print(f"  📄 {yaml_path.name}")
-        print(f"\nTotal: {len(triplets)} triplets would be moved")
+                    pass
         return
 
     # Confirm before moving
     response = input(f"\nMove {len(triplets)} triplets to {dest_dir}? (y/n): ").lower()
     if response != "y":
-        print("Cancelled.")
         return
 
-    print(f"\n📦 Moving {len(triplets)} triplets to: {dest_dir}")
     moved_count = 0
 
-    for i, triplet in enumerate(triplets, 1):
-        print(f"\n--- Moving triplet {i}/{len(triplets)} ---")
+    for _i, triplet in enumerate(triplets, 1):
         if move_triplet_with_yamls(triplet, dest_dir):
             moved_count += 1
         else:
-            print(
-                f"❌ Failed to move triplet {i} - STOPPING operation to prevent conflicts"
-            )
             break
 
     if moved_count == len(triplets):
-        print(f"\n✅ Successfully moved {moved_count}/{len(triplets)} triplets")
+        pass
     else:
-        print(
-            f"\n⚠️ Operation stopped after {moved_count}/{len(triplets)} triplets due to conflicts"
-        )
+        pass
 
     # Clean up empty directories
-    print("\n🧹 Cleaning up empty directories...")
-    for root, dirs, files in source_dir.walk(top_down=False):
+    for root, _dirs, files in source_dir.walk(top_down=False):
         if root != source_dir:  # Don't remove the source directory itself
             try:
                 if not any(root.iterdir()):  # Directory is empty
                     root.rmdir()
-                    print(f"🗑️ Removed empty directory: {root.name}")
             except Exception:
                 pass  # Directory not empty or permission error
 

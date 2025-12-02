@@ -57,7 +57,7 @@ def test_moves_all_same_name_extensions_and_group_decision() -> bool:
         moved = move_file_with_all_companions(img, dst, dry_run=False)
         moved_set = set(moved)
 
-        expected = {p.name for p in [img, decision] + companions}
+        expected = {p.name for p in [img, decision, *companions]}
         assert moved_set == expected, f"Expected moved {expected}, got {moved_set}"
 
         # Ensure files moved from src to dst

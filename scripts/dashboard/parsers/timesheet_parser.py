@@ -1,6 +1,4 @@
-"""
-Timesheet Parser - Reads and aggregates timesheet CSV data for dashboard
-"""
+"""Timesheet Parser - Reads and aggregates timesheet CSV data for dashboard"""
 
 import csv
 from datetime import datetime

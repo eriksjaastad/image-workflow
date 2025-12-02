@@ -31,7 +31,8 @@ class WebImageSelectorTest:
         self.test_data_dir = Path("scripts/tests/data/test_images_medium")
 
         if not self.test_data_dir.exists():
-            raise FileNotFoundError(f"Test data not found: {self.test_data_dir}")
+            msg = f"Test data not found: {self.test_data_dir}"
+            raise FileNotFoundError(msg)
 
         # Start server in background
         cmd = [

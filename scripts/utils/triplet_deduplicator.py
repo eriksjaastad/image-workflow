@@ -29,7 +29,6 @@ def build_completed_database(completed_dir):
     completed_timestamps = set()
 
     if not completed_path.exists():
-        print(f"⚠️  Completed directory not found: {completed_dir}")
         return completed_timestamps
 
     # Find all PNG files in completed directory
@@ -40,7 +39,6 @@ def build_completed_database(completed_dir):
         if base_timestamp:
             completed_timestamps.add(base_timestamp)
 
-    print(f"📊 Found {len(completed_timestamps)} unique timestamps in completed work")
     return completed_timestamps
 
 
@@ -75,11 +73,11 @@ def remove_triplet_files(triplet_files):
     """Remove all files in a triplet (PNG + ALL companion files)."""
     removed_files = []
 
-    for stage, png_file in triplet_files.items():
+    for _stage, png_file in triplet_files.items():
         if png_file and png_file.exists():
             # Find ALL companion files (YAML, caption, etc.)
             all_companions = find_all_companion_files(png_file)
-            all_files = [png_file] + all_companions
+            all_files = [png_file, *all_companions]
 
             # Remove PNG + all companions using centralized utility
             try:
@@ -88,9 +86,8 @@ def remove_triplet_files(triplet_files):
                 )
                 for deleted_path in deleted_paths:
                     removed_files.append(deleted_path.name)
-                    print(f"    🗑️  {deleted_path.name}")
-            except Exception as e:
-                print(f"    ❌ Error removing {png_file.name} and companions: {e}")
+            except Exception:
+                pass
 
     return removed_files
 
@@ -117,29 +114,21 @@ def main():
 
     new_images_path = Path(args.new_images_dir)
     if not new_images_path.exists():
-        print(f"❌ New images directory not found: {args.new_images_dir}")
         return
 
-    print("🔍 Scanning for duplicates...")
-    print(f"   📂 New images: {args.new_images_dir}")
-    print(f"   📂 Completed work: {args.completed_dir}")
 
     # Build database of completed work
     completed_timestamps = build_completed_database(args.completed_dir)
 
     if not completed_timestamps:
-        print("✅ No completed work found - no deduplication needed")
         return
 
     # Find triplets in new images
-    print("\n🔍 Analyzing triplets in new images...")
     new_triplets = find_triplets_in_directory(args.new_images_dir)
 
     if not new_triplets:
-        print("✅ No triplets found in new images")
         return
 
-    print(f"📊 Found {len(new_triplets)} potential triplets in new images")
 
     # Check for duplicates
     duplicates_found = []
@@ -149,37 +138,29 @@ def main():
             duplicates_found.append((base_timestamp, triplet_files))
 
     if not duplicates_found:
-        print("✅ No duplicates found!")
         return
 
-    print(f"\n⚠️  Found {len(duplicates_found)} duplicate triplets:")
 
     total_removed = 0
 
     for base_timestamp, triplet_files in duplicates_found:
-        print(f"\n🔍 Duplicate triplet: {base_timestamp}")
 
         if args.dry_run:
-            print("    💡 DRY RUN - would remove:")
-            for stage, png_file in triplet_files.items():
+            for _stage, png_file in triplet_files.items():
                 if png_file and png_file.exists():
                     # Show PNG + ALL companion files
                     all_companions = find_all_companion_files(png_file)
-                    all_files = [png_file] + all_companions
-                    for file_to_remove in all_files:
-                        print(f"    🗑️  {file_to_remove.name}")
+                    all_files = [png_file, *all_companions]
+                    for _file_to_remove in all_files:
+                        pass
         else:
-            print("    🗑️  Removing:")
             removed_files = remove_triplet_files(triplet_files)
             total_removed += len(removed_files)
 
     if args.dry_run:
-        print(f"\n💡 DRY RUN: Would remove {len(duplicates_found)} duplicate triplets")
+        pass
     else:
-        print(
-            f"\n✅ Removed {len(duplicates_found)} duplicate triplets ({total_removed} files)"
-        )
-        print("🎯 New images directory is now deduplicated against completed work!")
+        pass
 
 
 if __name__ == "__main__":

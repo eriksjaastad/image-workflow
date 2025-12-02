@@ -393,32 +393,19 @@ class BinValidator:
 
     def print_report(self):
         """Print validation report."""
-        print(f"\n{'='*70}")
-        print(f"Validation Report: {self.day_str}")
-        print(f"{'='*70}")
-
-        print("\nData Summary:")
-        print(f"  Raw records:  {len(self.raw_records)}")
-        print(f"  Bins:         {len(self.bins)}")
-
         if self.errors:
-            print(f"\n❌ Errors ({len(self.errors)}):")
-            for error in self.errors:
-                print(error)
+            for _error in self.errors:
+                pass
 
         if self.warnings:
-            print(f"\n⚠️  Warnings ({len(self.warnings)}):")
-            for warning in self.warnings:
-                print(warning)
+            for _warning in self.warnings:
+                pass
 
-        if not self.errors and not self.warnings:
-            print("\n✅ All validation checks passed!")
-        elif not self.errors:
-            print("\n✅ All critical checks passed (warnings only)")
+        if (not self.errors and not self.warnings) or not self.errors:
+            pass
         else:
-            print(f"\n❌ Validation failed with {len(self.errors)} error(s)")
+            pass
 
-        print(f"\n{'='*70}\n")
 
 
 def validate_day(data_dir: Path, day_str: str, verbose: bool = False) -> bool:
@@ -433,7 +420,7 @@ def validate_day(data_dir: Path, day_str: str, verbose: bool = False) -> bool:
     if verbose or not passed or validator.warnings:
         validator.print_report()
     elif passed:
-        print(f"✓ {day_str}: Validation passed")
+        pass
 
     return passed
 
@@ -474,10 +461,8 @@ def main():
         data_dir = project_root / "data"
 
     if not data_dir.exists():
-        print(f"Error: Data directory not found: {data_dir}")
         sys.exit(2)
 
-    print(f"Data directory: {data_dir}\n")
 
     if args.day:
         # Validate single day
@@ -502,8 +487,7 @@ def main():
             if not passed:
                 all_passed = False
                 failed_days.append(day_str)
-        except Exception as e:
-            print(f"✗ {day_str}: Error during validation: {e}")
+        except Exception:
             import traceback
 
             traceback.print_exc()
@@ -511,14 +495,11 @@ def main():
             failed_days.append(day_str)
 
     # Summary
-    print(f"\n{'='*70}")
     if all_passed:
-        print(f"✅ All {len(days)} day(s) passed validation")
         sys.exit(0)
     else:
-        print(f"❌ {len(failed_days)} of {len(days)} day(s) failed validation:")
         for day in failed_days:
-            print(f"  - {day}")
+            pass
         sys.exit(1)
 
 

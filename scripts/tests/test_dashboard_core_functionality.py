@@ -203,7 +203,7 @@ class TestDashboardCoreFunctionality(unittest.TestCase):
         records = engine.load_file_operations()
 
         # Should have records from multiple dates
-        dates = set(str(r["date"]) for r in records if r.get("date"))
+        dates = {str(r["date"]) for r in records if r.get("date")}
         self.assertGreater(len(dates), 1, "Should have data from multiple dates")
 
         # Should have data from September (historical)
@@ -228,7 +228,7 @@ class TestDashboardCoreFunctionality(unittest.TestCase):
         records = engine.load_file_operations()
 
         # Should have records from multiple scripts
-        scripts = set(r["script"] for r in records if r.get("script"))
+        scripts = {r["script"] for r in records if r.get("script")}
         self.assertGreater(len(scripts), 1, "Should have data from multiple scripts")
 
         # Should have expected scripts
@@ -255,7 +255,7 @@ class TestDashboardCoreFunctionality(unittest.TestCase):
         records = engine.load_file_operations()
 
         # Should have records from multiple operation types
-        operations = set(r["operation"] for r in records if r.get("operation"))
+        operations = {r["operation"] for r in records if r.get("operation")}
         self.assertGreater(len(operations), 1, "Should have multiple operation types")
 
         # Should have expected operations
@@ -338,11 +338,11 @@ class TestDashboardDataIntegrity(unittest.TestCase):
         )
 
         # Should have data from multiple days
-        dates = set(str(r["date"]) for r in records if r.get("date"))
+        dates = {str(r["date"]) for r in records if r.get("date")}
         self.assertGreater(len(dates), 10, "Should have data from many days")
 
         # Should have data from multiple scripts
-        scripts = set(r["script"] for r in records if r.get("script"))
+        scripts = {r["script"] for r in records if r.get("script")}
         self.assertGreater(len(scripts), 5, "Should have data from many scripts")
 
     def test_dashboard_performance(self):

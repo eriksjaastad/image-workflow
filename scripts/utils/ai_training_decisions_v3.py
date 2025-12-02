@@ -71,7 +71,8 @@ def init_decision_db(project_id: str) -> Path:
     # Apply schema
     schema_path = Path("data/schema/ai_training_decisions_v3.sql")
     if not schema_path.exists():
-        raise FileNotFoundError(f"Schema file not found: {schema_path}")
+        msg = f"Schema file not found: {schema_path}"
+        raise FileNotFoundError(msg)
 
     with open(schema_path) as f:
         schema_sql = f.read()
@@ -81,7 +82,6 @@ def init_decision_db(project_id: str) -> Path:
     conn.commit()
     conn.close()
 
-    print(f"[SQLite] Initialized decision database: {db_path}")
     return db_path
 
 
@@ -174,25 +174,30 @@ def log_ai_decision(
     """
     # Validation
     if not images or len(images) < 2 or len(images) > 4:
+        msg = f"Invalid images list: must have 2-4 images, got {len(images)}"
         raise ValueError(
-            f"Invalid images list: must have 2-4 images, got {len(images)}"
+            msg
         )
 
     if user_action not in ("approve", "crop", "reject"):
-        raise ValueError(f"Invalid user_action: {user_action}")
+        msg = f"Invalid user_action: {user_action}"
+        raise ValueError(msg)
 
     if not (0 <= ai_selected_index < len(images)):
+        msg = f"Invalid ai_selected_index: {ai_selected_index} (must be 0-{len(images)-1})"
         raise ValueError(
-            f"Invalid ai_selected_index: {ai_selected_index} (must be 0-{len(images)-1})"
+            msg
         )
 
     if not (0 <= user_selected_index < len(images)):
+        msg = f"Invalid user_selected_index: {user_selected_index} (must be 0-{len(images)-1})"
         raise ValueError(
-            f"Invalid user_selected_index: {user_selected_index} (must be 0-{len(images)-1})"
+            msg
         )
 
     if image_width <= 0 or image_height <= 0:
-        raise ValueError(f"Invalid dimensions: {image_width}x{image_height}")
+        msg = f"Invalid dimensions: {image_width}x{image_height}"
+        raise ValueError(msg)
 
     if timestamp is None:
         timestamp = datetime.utcnow().isoformat() + "Z"
@@ -274,14 +279,16 @@ def update_decision_with_crop(
     """
     # Validation
     if len(final_crop_coords) != 4:
+        msg = f"Invalid crop coords: must be [x1, y1, x2, y2], got {final_crop_coords}"
         raise ValueError(
-            f"Invalid crop coords: must be [x1, y1, x2, y2], got {final_crop_coords}"
+            msg
         )
 
     x1, y1, x2, y2 = final_crop_coords
     if not (0 <= x1 < x2 <= 1 and 0 <= y1 < y2 <= 1):
+        msg = f"Invalid crop coords: {final_crop_coords} (must be in [0,1] with x1<x2, y1<y2)"
         raise ValueError(
-            f"Invalid crop coords: {final_crop_coords} (must be in [0,1] with x1<x2, y1<y2)"
+            msg
         )
 
     if crop_timestamp is None:
@@ -301,7 +308,8 @@ def update_decision_with_crop(
 
     if not row:
         conn.close()
-        raise ValueError(f"Group ID not found: {group_id}")
+        msg = f"Group ID not found: {group_id}"
+        raise ValueError(msg)
 
     ai_crop_json = row[0]
     crop_match = None

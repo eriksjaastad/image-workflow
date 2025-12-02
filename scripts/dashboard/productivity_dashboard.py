@@ -92,7 +92,7 @@ class ProductivityDashboard:
                 )
                 resp.headers["Pragma"] = "no-cache"
                 return resp
-            except Exception as e:
+            except Exception:
                 # Log full traceback for debugging
                 import traceback
 
@@ -131,7 +131,7 @@ class ProductivityDashboard:
                     lookback_days=60,  # 60 days to show archived projects
                 )
                 return jsonify(raw_data)
-            except Exception as e:
+            except Exception:
                 return error_response("An internal error occurred", 500)
 
     def transform_for_charts(self, data):

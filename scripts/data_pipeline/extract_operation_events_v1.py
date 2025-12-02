@@ -70,7 +70,8 @@ def parse_timestamp(
     except ValueError:
         pass
 
-    raise ValueError(f"Could not parse timestamp: {ts_str}")
+    msg = f"Could not parse timestamp: {ts_str}"
+    raise ValueError(msg)
 
 
 def generate_event_id(event: dict[str, Any]) -> str:
@@ -190,17 +191,14 @@ def extract_from_log_file(log_path: Path) -> list[dict[str, Any]]:
                                 events.append(normalized)
                         except json.JSONDecodeError:
                             continue
-    except Exception as e:
-        print(f"  ⚠️  Error reading {log_path}: {e}")
+    except Exception:
+        pass
 
     return events
 
 
 def main():
     """Main entry point."""
-    print("Extracting operation events...")
-    print(f"Lookback: {LOOKBACK_DAYS} days")
-
     # Collect all log files
     log_files = []
 
@@ -211,7 +209,6 @@ def main():
     if ARCHIVES_DIR.exists():
         log_files.extend(ARCHIVES_DIR.glob("*.gz"))
 
-    print(f"Found {len(log_files)} log files")
 
     # Extract and group by day
     by_day = defaultdict(list)
@@ -219,7 +216,6 @@ def main():
     duplicate_count = 0
 
     for log_file in sorted(log_files):
-        print(f"  Processing {log_file.name}...")
         events = extract_from_log_file(log_file)
 
         for event in events:
@@ -234,10 +230,6 @@ def main():
             day = event["day"]
             by_day[day].append(event)
 
-    print(
-        f"\nExtracted {len(seen_event_ids)} unique events ({duplicate_count} duplicates skipped)"
-    )
-    print(f"Days: {len(by_day)}")
 
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -257,18 +249,13 @@ def main():
                 f.write(json.dumps(event) + "\n")
 
         total_written += len(day_events)
-        print(f"  {day_str}: {len(day_events)} events")
 
-    print(f"\n✅ Done! {total_written} events written to {OUTPUT_DIR}")
 
     # Show sample
     if by_day:
         first_day = sorted(by_day.keys())[0]
-        print(f"\nSample events from {first_day} (first 3):")
         for event in by_day[first_day][:3]:
-            print(
-                f"  {event['event_id']}: {event['event_type']} by {event['script_id']}"
-            )
+            pass
 
 
 if __name__ == "__main__":

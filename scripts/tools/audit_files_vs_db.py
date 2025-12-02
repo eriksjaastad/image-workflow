@@ -89,7 +89,8 @@ def load_expected_from_db(
 ) -> tuple[list[ExpectedFile], dict[str, int]]:
     db_path = db_root / f"{project_id}.db"
     if not db_path.exists():
-        raise FileNotFoundError(f"Decisions DB not found: {db_path}")
+        msg = f"Decisions DB not found: {db_path}"
+        raise FileNotFoundError(msg)
 
     conn = sqlite3.connect(str(db_path))
     cur = conn.cursor()
@@ -300,7 +301,7 @@ def main() -> int:
 
     # Load expected from DB
     db_root = Path("data") / "training" / "ai_training_decisions"
-    expected, by_action_db = load_expected_from_db(project_id, db_root)
+    expected, _by_action_db = load_expected_from_db(project_id, db_root)
 
     # Index disk once
     disk_index = index_disk(scan_dirs)

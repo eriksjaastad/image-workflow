@@ -64,7 +64,7 @@ def debug_project(project_id=None):
         for script, ops in sorted(
             proj_by_script.items(), key=lambda x: len(x[1]), reverse=True
         ):
-            dates = sorted(set(str(o.get("date", "N/A")) for o in ops))
+            dates = sorted({str(o.get("date", "N/A")) for o in ops})
             file_counts = [o.get("file_count", 0) for o in ops if o.get("file_count")]
             total_files = sum(file_counts) if file_counts else 0
             print(f"  {script}: {len(ops)} operations, {total_files} files")

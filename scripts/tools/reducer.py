@@ -502,7 +502,7 @@ def cmd_run(args):
                 thumb_size = int(getattr(args, "qa_thumb_size", 256))
                 clip_thr = float(getattr(args, "qa_clip_threshold", 0.02))
                 # compute metrics for all in group
-                candidates = [winner_path] + list(losers)
+                candidates = [winner_path, *list(losers)]
                 metrics = []
                 for pth in candidates:
                     try:

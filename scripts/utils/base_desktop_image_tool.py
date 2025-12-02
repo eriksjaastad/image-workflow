@@ -21,12 +21,9 @@ matplotlib.rcParams["toolbar"] = "None"
 
 try:
     matplotlib.use("Qt5Agg", force=True)
-    print("[*] Using Qt5Agg backend (PyQt5) - full interactivity available")
     backend_interactive = True
-except Exception as e:
-    print(f"[!] Qt5Agg backend failed: {e}")
+except Exception:
     matplotlib.use("Agg", force=True)
-    print("[!] Using Agg backend - limited interactivity")
     backend_interactive = False
 
 import matplotlib.pyplot as plt
@@ -165,7 +162,6 @@ class BaseDesktopImageTool:
         self.fig.subplots_adjust(
             left=left, right=right, top=0.92, bottom=0.10, wspace=wspace
         )
-        print(f"🔧 Layout set: left={left}, right={right}, wspace={wspace}")
 
         # Also try resizing/moving the native window to fit available space (Qt5Agg)
         try:
@@ -200,14 +196,14 @@ class BaseDesktopImageTool:
             minspany=5,
             spancoords="pixels",
             interactive=True,
-            props=dict(facecolor="none", edgecolor="red", linewidth=2, alpha=0.8),
-            handle_props=dict(
-                markersize=48,
-                markerfacecolor="none",
-                markeredgecolor="red",
-                markeredgewidth=3,
-                alpha=0.8,
-            ),
+            props={"facecolor": "none", "edgecolor": "red", "linewidth": 2, "alpha": 0.8},
+            handle_props={
+                "markersize": 48,
+                "markerfacecolor": "none",
+                "markeredgecolor": "red",
+                "markeredgewidth": 3,
+                "alpha": 0.8,
+            },
             drag_from_anywhere=False,
             use_data_coordinates=False,
             grab_range=120,
@@ -222,42 +218,38 @@ class BaseDesktopImageTool:
         self, image_idx: int, x1: int, x2: int, y1: int, y2: int
     ):
         """Avoid ghost/stacked handles by toggling visibility/active during updates."""
-        t0 = time.perf_counter()
+        time.perf_counter()
 
         if image_idx >= len(self.selectors) or not self.selectors[image_idx]:
             return
         sel = self.selectors[image_idx]
 
-        t1 = time.perf_counter()
+        time.perf_counter()
         try:
             sel.set_active(False)
             sel.set_visible(False)
         except Exception:
             pass
-        t2 = time.perf_counter()
+        time.perf_counter()
 
         sel.extents = (x1, x2, y1, y2)
-        t3 = time.perf_counter()
+        time.perf_counter()
 
         try:
             sel.set_visible(True)
             sel.set_active(True)
         except Exception:
             pass
-        t4 = time.perf_counter()
+        time.perf_counter()
 
         # PERFORMANCE: Use draw_idle() instead of draw() for async updates
         # This avoids blocking the UI thread during drag operations
         self.fig.canvas.draw_idle()
-        t5 = time.perf_counter()
+        time.perf_counter()
 
         # Performance logging
         if not getattr(self, "suppress_perf_logs", False):
-            print(
-                f"[PERF _set_selector_extents_safely] Total: {(t5 - t0) * 1000:.1f}ms | "
-                f"Disable: {(t2 - t1) * 1000:.1f}ms | Set extents: {(t3 - t2) * 1000:.1f}ms | "
-                f"Enable: {(t4 - t3) * 1000:.1f}ms | Draw: {(t5 - t4) * 1000:.1f}ms"
-            )
+            pass
 
     def on_crop_select(self, eclick, erelease, image_idx: int):
         """Handle crop rectangle selection for a specific image."""
@@ -266,7 +258,6 @@ class BaseDesktopImageTool:
 
         # Skip crop selection for failed images
         if self.current_images[image_idx].get("image") is None:
-            print(f"Cannot crop image {image_idx + 1}: Load failed")
             return
 
         # Get crop coordinates
@@ -313,7 +304,6 @@ class BaseDesktopImageTool:
 
         # Auto-select this image when cropping (crop tool = "keep this image")
         self.image_states[image_idx]["status"] = "selected"
-        print(f"🔍 DEBUG: Auto-selected image {image_idx + 1} for cropping")
 
         self.has_pending_changes = True
 
@@ -323,11 +313,10 @@ class BaseDesktopImageTool:
 
     def on_key_press(self, event):
         """Handle keyboard input - common keys handled here, specific keys delegated to subclasses."""
-        print(f"[DEBUG on_key_press] Key pressed: '{event.key}'")
         key = event.key.lower()
 
         # Common global controls
-        if key == "q" or key == "escape":
+        if key in {"q", "escape"}:
             self.handle_quit()
             return
         if key == "enter":
@@ -346,14 +335,9 @@ class BaseDesktopImageTool:
     def handle_quit(self):
         """Handle quit with confirmation for uncommitted changes."""
         if self.has_pending_changes and not self.quit_confirmed:
-            print("\n⚠️  WARNING: You have uncommitted changes!")
-            print("   - You've made crop selections or set actions (skip/delete)")
-            print("   - These changes will be LOST if you quit now")
-            print("   - Press [Enter] to commit changes, or [Q] again to quit anyway")
             self.quit_confirmed = True
             return
 
-        print(f"Quitting {self.tool_name}...")
         plt.close("all")
         sys.exit(0)
 
@@ -380,7 +364,6 @@ class BaseDesktopImageTool:
 
         # Skip reset for failed images
         if image_info.get("image") is None:
-            print(f"Cannot reset image {image_idx + 1}: Load failed")
             return
 
         img = Image.open(image_info["path"])
@@ -423,7 +406,6 @@ class BaseDesktopImageTool:
                 f"No-op crop; skipped save ({x1},{y1},{x2},{y2})",
                 [png_path.name],
             )
-            print(f"No-op crop; skipped saving: {png_path.name}")
         else:
             # Perform real crop and save in place
             cropped_img = img.crop((x1, y1, x2, y2))
@@ -438,7 +420,6 @@ class BaseDesktopImageTool:
                 f"Cropped in place to ({x1},{y1},{x2},{y2})",
                 [png_path.name],
             )
-            print(f"Cropped and saved in place: {png_path.name}")
 
     def safe_delete(self, png_path: Path, yaml_path: Path):
         """Move image and ALL companion files to __delete_staging/ for review."""
@@ -462,7 +443,6 @@ class BaseDesktopImageTool:
                 [f.name for f in moved_files],
             )
 
-        print(f"Moved to delete staging: {png_path.name}")
 
     def move_to_cropped(self, png_path: Path, yaml_path: Path, reason: str):
         """Mark files as processed (skipped) but leave them in original directory."""
@@ -482,7 +462,6 @@ class BaseDesktopImageTool:
             files,
         )
 
-        print(f"Skipped (left in place): {png_path.name} ({reason})")
 
     def load_image_safely(self, png_path: Path, image_idx: int) -> bool:
         """Load an image safely and handle errors."""
@@ -539,8 +518,6 @@ class BaseDesktopImageTool:
             return True
 
         except Exception as e:
-            print(f"\n[ERROR] Failed to load image {image_idx + 1}: {png_path.name}")
-            print(f"[ERROR] {type(e).__name__}: {e}")
             import traceback
 
             traceback.print_exc()
@@ -578,7 +555,7 @@ class BaseDesktopImageTool:
                 fontsize=10,
                 color="red",
                 transform=ax.transAxes,
-                bbox=dict(boxstyle="round,pad=0.3", facecolor="yellow", alpha=0.7),
+                bbox={"boxstyle": "round,pad=0.3", "facecolor": "yellow", "alpha": 0.7},
             )
             ax.set_title(
                 f"Image {image_idx + 1}: LOAD ERROR - {format_image_display_name(png_path.name, context='desktop')}",
@@ -663,12 +640,15 @@ class BaseDesktopImageTool:
     # Abstract methods that subclasses must implement
     def submit_batch(self):
         """Submit current batch - must be implemented by subclasses."""
-        raise NotImplementedError("Subclasses must implement submit_batch()")
+        msg = "Subclasses must implement submit_batch()"
+        raise NotImplementedError(msg)
 
     def go_back(self):
         """Go back to previous item - must be implemented by subclasses."""
-        raise NotImplementedError("Subclasses must implement go_back()")
+        msg = "Subclasses must implement go_back()"
+        raise NotImplementedError(msg)
 
     def run(self):
         """Main execution loop - must be implemented by subclasses."""
-        raise NotImplementedError("Subclasses must implement run()")
+        msg = "Subclasses must implement run()"
+        raise NotImplementedError(msg)

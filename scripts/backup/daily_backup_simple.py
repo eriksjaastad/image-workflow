@@ -25,25 +25,22 @@ except ImportError:
     def get_error_monitor(script_name="backup"):
         class MockMonitor:
             def critical_error(self, msg, exc=None):
-                print(f"CRITICAL BACKUP ERROR: {msg}", file=sys.stderr)
                 if exc:
-                    print(f"Exception: {exc}", file=sys.stderr)
+                    pass
 
         return MockMonitor()
 
     def fatal_error(msg, exc=None):
         import sys
 
-        print(f"FATAL BACKUP ERROR: {msg}", file=sys.stderr)
         if exc:
-            print(f"Exception: {exc}", file=sys.stderr)
+            pass
         sys.exit(1)
 
 
 def log(message, level="INFO"):
     """Log to both stdout and backup log file."""
     timestamp = datetime.now().isoformat()
-    print(f"[{timestamp}] {message}", flush=True)
 
     # Also log to file
     log_file = Path("~/project-data-archives/image-workflow/backup.log").expanduser()

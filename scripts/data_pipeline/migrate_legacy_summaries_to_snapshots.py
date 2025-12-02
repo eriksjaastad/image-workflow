@@ -161,7 +161,7 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
     return {
         "by_script": script_stats,
         "by_operation": dict(by_operation),
-        "projects_touched": sorted(list(projects_touched)),
+        "projects_touched": sorted(projects_touched),
         "total_files_processed": sum(
             s["files_processed"] for s in script_stats.values()
         ),
@@ -184,26 +184,14 @@ def main():
     args = parser.parse_args()
 
     if not LEGACY_DIR.exists():
-        print(f"❌ Legacy directory not found: {LEGACY_DIR}")
         return
 
     # Find all legacy summary files
     legacy_files = sorted(LEGACY_DIR.glob("daily_summary_*.json"))
 
     if not legacy_files:
-        print(f"❌ No legacy summary files found in {LEGACY_DIR}")
         return
 
-    print(f"{'=' * 70}")
-    print("Legacy Daily Summaries → Snapshot Migration")
-    print(f"{'=' * 70}")
-    print(f"Found: {len(legacy_files)} legacy summary files")
-    print(f"Source: {LEGACY_DIR}")
-    print(f"Target: {OUTPUT_DIR}")
-    print(
-        f"Mode: {'DRY RUN (no files written)' if args.dry_run else 'LIVE (will write files)'}"
-    )
-    print(f"{'=' * 70}\n")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -222,7 +210,6 @@ def main():
             snapshot_file = snapshot_dir / "aggregate.json"
 
             if snapshot_file.exists():
-                print(f"  ⏭️  {day}: Already exists in snapshots (skipping)")
                 skipped_count += 1
                 continue
 
@@ -235,37 +222,16 @@ def main():
                 with open(snapshot_file, "w") as f:
                     json.dump(snapshot, f, indent=2)
 
-            print(
-                f"  ✅ {day}: Migrated ({snapshot['total_events']} events, {snapshot['total_files_processed']} files, {len(snapshot['by_script'])} scripts)"
-            )
             migrated_count += 1
 
-        except Exception as e:
-            print(f"  ❌ {legacy_file.name}: Error - {e}")
+        except Exception:
             error_count += 1
 
-    print(f"\n{'=' * 70}")
-    print("Migration Summary")
-    print(f"{'=' * 70}")
-    print(f"✅ Migrated: {migrated_count}")
-    print(f"⏭️  Skipped (already exists): {skipped_count}")
-    print(f"❌ Errors: {error_count}")
-    print(f"{'=' * 70}\n")
 
     if args.dry_run:
-        print(
-            "🔍 DRY RUN: No files were written. Run without --dry-run to perform migration."
-        )
+        pass
     else:
-        print(
-            "✅ Migration complete! All legacy daily summaries converted to snapshot format."
-        )
-        print("\nNext steps:")
-        print("  1. Verify dashboard loads all data correctly")
-        print("  2. Run tests to ensure data integrity")
-        print(
-            "  3. Once verified, legacy data/daily_summaries/ can be archived/deleted"
-        )
+        pass
 
 
 if __name__ == "__main__":

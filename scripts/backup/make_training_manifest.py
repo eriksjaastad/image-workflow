@@ -77,8 +77,6 @@ def build_manifest() -> dict[str, Any]:
     out_path = manifests_dir / f"{manifest['date']}.json"
     with out_path.open("w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
-    print(f"[*] Manifest written: {out_path}")
-    print(f"[*] Files listed: {len(files)}")
 
     return manifest
 

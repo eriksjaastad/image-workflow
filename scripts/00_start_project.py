@@ -5,28 +5,30 @@ Creates a new project manifest with all required fields, proper timestamps,
 and automatic image counting.
 
 Usage:
+    # RECOMMENDED: Auto-derive project ID from directory name (for automation/CI/CD)
+    python scripts/00_start_project.py sandbox/TEST-mojo1
+
     # Interactive mode (prompts for all inputs)
     python scripts/00_start_project.py
-
-    # Recommended: Auto-derive project ID from directory name (for automation/CI/CD)
-    python scripts/00_start_project.py sandbox/TEST-mojo1
 
     # Alternative: Explicit flags for special cases where ID ≠ directory name
     python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3
 
 When to use each approach:
-    - INTERACTIVE (no args):
-      * Manual, one-off project setup
-      * When you want to customize the project title
-      * First time setting up a project
-
-    - POSITIONAL ARG (recommended):
+    - POSITIONAL ARG (recommended - use this most of the time):
       * Sandbox testing with TEST- prefixed directories
       * Automation scripts and CI/CD pipelines
       * Batch processing multiple projects
       * Keeps project ID and directory in sync automatically
+      * Simplest, least error-prone approach
 
-    - EXPLICIT FLAGS (special cases):
+    - INTERACTIVE (when you need flexibility):
+      * Manual, one-off project setup
+      * When you want to customize the project title
+      * First time setting up a project
+      * Helpful prompts guide you through setup
+
+    - EXPLICIT FLAGS (special cases only):
       * Legacy scripts that need specific naming
       * When project ID differs from directory name by design
       * Advanced scenarios with complex directory structures

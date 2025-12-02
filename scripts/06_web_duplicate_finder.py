@@ -746,10 +746,9 @@ def create_app(left_dir, right_dir):
                         _ = safe_delete_image_and_yaml(
                             source_path, hard_delete=False, tracker=tracker
                         )
-                    except Exception as e:
-                        errors.append(
-                            f"send2trash not available or delete failed for {image}: {e}"
-                        )
+                    except Exception:
+                        logger.exception(f"Delete failed for {image}")
+                        errors.append(f"Delete failed for {image}")
                         continue
 
                     # Log training data for duplicate detection

@@ -195,7 +195,7 @@ def sandbox_root() -> Path:
 
 
 @contextmanager
-def test_sandbox(enabled: bool, cleanup: bool = False):
+def test_sandbox(enabled: bool, cleanup: bool):
     """Context manager for sandbox mode using environment variables.
 
     Legacy function. New code should use SandboxConfig instead.

@@ -2228,7 +2228,7 @@ def build_app(
 
             return jsonify({"status": "ok", "message": msg})
 
-        except Exception:
+        except Exception as e:
             logger.exception("Unhandled error in /submit")
             return jsonify({"status": "error", "message": "An internal error occurred"}), 500
 

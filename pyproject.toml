@@ -108,14 +108,12 @@ ignore = [
   # Pytest - flexible testing styles
   "PT017",    # pytest.raises broad exception
   "PT018",    # pytest.raises composite assertion
-  "PT028",    # pytest.raises match regex
 
   # Other pragmatic exceptions
   "PLW0603",  # Global statement (sometimes needed in scripts)
   "PLW1509",  # Preexec_fn in subprocess (intentional)
   "PLC0206",  # Dict iteration extracting keys (sometimes clearer)
   "RUF012",   # Mutable class attribute (intentional in many cases)
-  "DTZ901",   # datetime.datetime with timezone (false positives)
   "DTZ011",   # datetime.date.today() (OK for dates without time)
   "DTZ012",   # datetime.date.fromtimestamp (OK for dates)
   "DTZ004",   # datetime.utcfromtimestamp (legacy code)

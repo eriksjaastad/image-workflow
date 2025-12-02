@@ -75,9 +75,7 @@ class ActivitySession:
 
 
 class ActivityTimer:
-    """
-    Activity timer with intelligent idle detection and cross-script reporting
-    """
+    """Activity timer with intelligent idle detection and cross-script reporting"""
 
     def __init__(self, script_name: str, idle_threshold: int = 60):  # 1 minute default
         self.script_name = script_name
@@ -115,9 +113,6 @@ class ActivityTimer:
         self.last_activity = self.session_start
         self.is_active = True
 
-        print(f"🕐 Activity Timer Started: {self.script_name}")
-        print(f"   Session ID: {self.session_id}")
-        print(f"   Idle threshold: {self.idle_threshold//60} minutes")
 
         # Start background monitoring
         self._start_monitoring()
@@ -137,7 +132,6 @@ class ActivityTimer:
             else:
                 # Was idle, add idle time
                 self.idle_time += time_diff
-                print(f"⏸️  Resumed after {time_diff//60:.0f}m {time_diff%60:.0f}s idle")
 
         self.last_activity = current_time
         self.is_active = True
@@ -156,7 +150,6 @@ class ActivityTimer:
         self.current_session.batches.append(batch_data)
         self.current_batch = batch_name
 
-        print(f"📦 Batch Started: {batch_name}")
         self._save_session_data()
 
     def end_batch(self, summary: str = ""):
@@ -171,15 +164,12 @@ class ActivityTimer:
                 )
                 last_batch["summary"] = summary
 
-                print(
-                    f"📦 Batch Completed: {self.current_batch} ({last_batch['duration']:.1f}s)"
-                )
 
         self.current_batch = None
         self._save_session_data()
 
     def log_operation(
-        self, operation_type: str, file_count: int = None, details: str = ""
+        self, operation_type: str, file_count: int | None = None, details: str = ""
     ):
         """Log a specific operation (crop, delete, move, etc.)"""
         self.mark_activity()
@@ -235,20 +225,8 @@ class ActivityTimer:
 
     def print_live_stats(self):
         """Print current session statistics"""
-        stats = self.get_current_stats()
+        self.get_current_stats()
 
-        print(f"\n📊 Live Session Stats - {self.script_name}")
-        print(
-            f"   Active Time: {stats['active_time']//60:.0f}m {stats['active_time']%60:.0f}s"
-        )
-        print(
-            f"   Total Time: {stats['total_time']//60:.0f}m {stats['total_time']%60:.0f}s"
-        )
-        print(f"   Efficiency: {stats['efficiency']:.1f}%")
-        print(f"   Files Processed: {stats['files_processed']}")
-        print(f"   Operations: {stats['total_operations']}")
-        print(f"   Batches: {stats['batches_completed']}")
-        print(f"   Status: {'🟢 Active' if stats['is_active'] else '🔴 Idle'}")
 
     def end_session(self):
         """End the current activity session"""
@@ -280,18 +258,7 @@ class ActivityTimer:
         self._save_daily_summary()
 
         # Print final stats
-        stats = self.get_current_stats()
-        print(f"\n🏁 Session Complete - {self.script_name}")
-        print(
-            f"   Total Active Time: {stats['active_time']//60:.0f}m {stats['active_time']%60:.0f}s"
-        )
-        print(
-            f"   Total Session Time: {stats['total_time']//60:.0f}m {stats['total_time']%60:.0f}s"
-        )
-        print(f"   Work Efficiency: {stats['efficiency']:.1f}%")
-        print(f"   Files Processed: {stats['files_processed']}")
-        print(f"   Operations Performed: {stats['total_operations']}")
-        print(f"   Batches Completed: {stats['batches_completed']}")
+        self.get_current_stats()
 
     def _start_monitoring(self):
         """Start background monitoring thread"""
@@ -304,9 +271,6 @@ class ActivityTimer:
                     if time_since_activity > self.idle_threshold:
                         self.is_active = False
                         self.idle_time += time_since_activity
-                        print(
-                            f"⏸️  Idle detected ({time_since_activity//60:.0f}m {time_since_activity%60:.0f}s)"
-                        )
 
         self._monitor_thread = threading.Thread(target=monitor, daemon=True)
         self._monitor_thread.start()
@@ -316,8 +280,8 @@ class ActivityTimer:
         try:
             with open(self.session_file, "w") as f:
                 json.dump(asdict(self.current_session), f, indent=2)
-        except Exception as e:
-            print(f"Warning: Could not save session data: {e}")
+        except Exception:
+            pass
 
     def _save_daily_summary(self):
         """Save session to daily summary file"""
@@ -331,20 +295,18 @@ class ActivityTimer:
 
             with open(self.daily_file, "w") as f:
                 json.dump(daily_data, f, indent=2)
-        except Exception as e:
-            print(f"Warning: Could not save daily summary: {e}")
+        except Exception:
+            pass
 
 
 class TimerReporter:
-    """
-    Reporting system for activity timer data
-    """
+    """Reporting system for activity timer data"""
 
     def __init__(self):
         self.data_dir = Path(__file__).parent.parent.parent / "data" / "timer_data"
         self.data_dir.mkdir(exist_ok=True)
 
-    def daily_summary(self, date: str = None) -> dict[str, Any]:
+    def daily_summary(self, date: str | None = None) -> dict[str, Any]:
         """Get daily summary for specified date (default: today)"""
         if not date:
             date = datetime.now().strftime("%Y%m%d")
@@ -352,7 +314,6 @@ class TimerReporter:
         daily_file = self.data_dir / f"daily_{date}.json"
 
         if not daily_file.exists():
-            print(f"No data found for {date}")
             return {}
 
         try:
@@ -409,44 +370,23 @@ class TimerReporter:
 
             return summary
 
-        except Exception as e:
-            print(f"Error reading daily summary: {e}")
+        except Exception:
             return {}
 
-    def print_daily_summary(self, date: str = None):
+    def print_daily_summary(self, date: str | None = None):
         """Print formatted daily summary"""
         summary = self.daily_summary(date)
 
         if not summary:
             return
 
-        print(f"\n📊 Daily Summary - {summary['date']}")
-        print("=" * 50)
-        print(
-            f"Total Active Time: {summary['total_active_time']//3600:.0f}h {(summary['total_active_time']%3600)//60:.0f}m"
-        )
-        print(
-            f"Total Session Time: {summary['total_session_time']//3600:.0f}h {(summary['total_session_time']%3600)//60:.0f}m"
-        )
-        print(f"Work Efficiency: {summary['efficiency']:.1f}%")
-        print(f"Files Processed: {summary['total_files_processed']}")
-        print(f"Total Operations: {summary['total_operations']}")
-        print(f"Sessions: {summary['session_count']}")
 
-        print("\n📋 Script Breakdown:")
-        for script, stats in summary["script_breakdown"].items():
-            efficiency = (
+        for _script, stats in summary["script_breakdown"].items():
+            (
                 (stats["active_time"] / stats["total_time"] * 100)
                 if stats["total_time"] > 0
                 else 0
             )
-            print(f"  {script}:")
-            print(
-                f"    Active: {stats['active_time']//60:.0f}m {stats['active_time']%60:.0f}s"
-            )
-            print(f"    Efficiency: {efficiency:.1f}%")
-            print(f"    Files: {stats['files_processed']}")
-            print(f"    Sessions: {stats['sessions']}")
 
     def cross_script_totals(self, days: int = 7) -> dict[str, Any]:
         """Get cross-script totals for the last N days"""
@@ -496,49 +436,29 @@ class TimerReporter:
         """Print cross-script summary for the last N days"""
         totals = self.cross_script_totals(days)
 
-        print(f"\n🔄 Cross-Script Summary - Last {days} Days")
-        print("=" * 50)
-        print(
-            f"Total Active Time: {totals['total_active_time']//3600:.0f}h {(totals['total_active_time']%3600)//60:.0f}m"
-        )
-        print(
-            f"Total Session Time: {totals['total_session_time']//3600:.0f}h {(totals['total_session_time']%3600)//60:.0f}m"
-        )
 
         if totals["total_session_time"] > 0:
-            efficiency = (
+            (
                 totals["total_active_time"] / totals["total_session_time"] * 100
             )
-            print(f"Overall Efficiency: {efficiency:.1f}%")
 
-        print(f"Total Files Processed: {totals['total_files_processed']}")
-        print(f"Total Operations: {totals['total_operations']}")
 
-        print("\n📊 Script Performance:")
-        for script, stats in totals["script_totals"].items():
-            efficiency = (
+        for _script, stats in totals["script_totals"].items():
+            (
                 (stats["active_time"] / stats["total_time"] * 100)
                 if stats["total_time"] > 0
                 else 0
             )
-            files_per_hour = (
+            (
                 (stats["files_processed"] / (stats["active_time"] / 3600))
                 if stats["active_time"] > 0
                 else 0
             )
 
-            print(f"  {script}:")
-            print(
-                f"    Active Time: {stats['active_time']//3600:.0f}h {(stats['active_time']%3600)//60:.0f}m"
-            )
-            print(f"    Efficiency: {efficiency:.1f}%")
-            print(f"    Files Processed: {stats['files_processed']}")
-            print(f"    Files/Hour: {files_per_hour:.1f}")
-            print(f"    Sessions: {stats['sessions']}")
 
 
 # Convenience functions for quick reporting
-def daily_report(date: str = None):
+def daily_report(date: str | None = None):
     """Quick daily report"""
     reporter = TimerReporter()
     reporter.print_daily_summary(date)
@@ -567,7 +487,6 @@ def cleanup_old_data(days_to_keep: int = 30):
 
                 if file_date < cutoff_date:
                     file.unlink()
-                    print(f"Cleaned up old data: {file.name}")
 
             except (ValueError, IndexError):
                 continue  # Skip files that don't match expected format

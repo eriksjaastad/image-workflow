@@ -266,7 +266,7 @@ def _calculate_distance_band(X: np.ndarray) -> tuple[float, float]:
     dists, _ = nn.kneighbors(X, return_distance=True)
     nn3 = dists[:, 3]
     nn4 = dists[:, 4]
-    q10, q25, q50 = np.quantile(np.concatenate([nn3, nn4]), [0.10, 0.25, 0.50])
+    q10, _q25, q50 = np.quantile(np.concatenate([nn3, nn4]), [0.10, 0.25, 0.50])
     return max(0.04, q10), min(0.60, q50)
 
 
@@ -394,7 +394,7 @@ def second_pass_unknowns(
     if len(unk_idx) < min_cluster_size:
         return labels
     Xu = X[unk_idx]
-    labs_u, used = cluster_with_backoff(
+    labs_u, _used = cluster_with_backoff(
         Xu, min_cluster_size, start_thresh=start_thresh, min_thresh=0.06, step=0.01
     )
     keep_u = [u for u in np.unique(labs_u) if u != -1]

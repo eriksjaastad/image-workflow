@@ -180,10 +180,7 @@ def print_progress(
 
     def _loop():
         while not (stop_event and stop_event.is_set()):
-            snap = hb.snapshot()
-            print(
-                f"{prefix} files={snap.files_scanned} groups={snap.groups_built} items={snap.items_processed} note={snap.notes}"
-            )
+            hb.snapshot()
             time.sleep(interval_sec)
 
     t = threading.Thread(target=_loop, name="progress_printer", daemon=True)

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Tests for centralized sorting determinism (timestamp then stage).
-"""
+"""Tests for centralized sorting determinism (timestamp then stage)."""
 
 import sys
 import tempfile

@@ -56,7 +56,8 @@ except ImportError as e:
 
         # For now, just check that import works
         if "error" in result.stderr.lower():
-            raise Exception(f"JavaScript/Import error: {result.stderr}")
+            msg = f"JavaScript/Import error: {result.stderr}"
+            raise Exception(msg)
 
     print("  ✓ JavaScript syntax appears valid")
 
@@ -76,7 +77,8 @@ def test_key_binding_definitions():
 
     for key in expected_keys:
         if key not in content:
-            raise Exception(f"Missing key binding: {key}")
+            msg = f"Missing key binding: {key}"
+            raise Exception(msg)
 
     # Check for expected functions
     expected_functions = [
@@ -90,7 +92,8 @@ def test_key_binding_definitions():
 
     for func in expected_functions:
         if func not in content:
-            raise Exception(f"Missing function: {func}")
+            msg = f"Missing function: {func}"
+            raise Exception(msg)
 
     print("  ✓ All expected key bindings and functions found")
 
@@ -123,7 +126,8 @@ def test_css_button_classes():
 
     for css_class in expected_classes:
         if css_class not in content:
-            raise Exception(f"Missing CSS class: {css_class}")
+            msg = f"Missing CSS class: {css_class}"
+            raise Exception(msg)
 
     print("  ✓ All expected CSS classes found")
 
@@ -141,7 +145,8 @@ def test_keyboard_mapping_consistency():
     # Extract the keyboard switch statement
     switch_match = re.search(r"switch\(key\)\s*\{(.*?)\}", content, re.DOTALL)
     if not switch_match:
-        raise Exception("Could not find keyboard switch statement")
+        msg = "Could not find keyboard switch statement"
+        raise Exception(msg)
 
     switch_content = switch_match.group(1)
 
@@ -164,7 +169,8 @@ def test_keyboard_mapping_consistency():
     if not re.search(
         r"case 'enter'.*?scrollIntoView", switch_content, re.IGNORECASE | re.DOTALL
     ):
-        raise Exception("Enter key should scroll to next group")
+        msg = "Enter key should scroll to next group"
+        raise Exception(msg)
 
     print("  ✓ Keyboard mapping is consistent with expected behavior")
 
@@ -184,7 +190,8 @@ def test_help_text_accuracy():
     # Find the help text
     help_match = re.search(r"<p>Use right sidebar or keys: ([^<]+)</p>", content)
     if not help_match:
-        raise Exception("Could not find help text")
+        msg = "Could not find help text"
+        raise Exception(msg)
 
     help_text = help_match.group(1)
 
@@ -193,11 +200,13 @@ def test_help_text_accuracy():
 
     for part in expected_help_parts:
         if part not in help_text:
-            raise Exception(f"Help text missing: {part}")
+            msg = f"Help text missing: {part}"
+            raise Exception(msg)
 
     # Make sure old spacebar reference is gone
     if "Space" in help_text or "Spacebar" in help_text:
-        raise Exception("Help text still references old Spacebar key")
+        msg = "Help text still references old Spacebar key"
+        raise Exception(msg)
 
     print("  ✓ Help text matches actual key bindings")
 

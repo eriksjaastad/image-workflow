@@ -233,7 +233,7 @@ def main() -> None:
         print(f"{bin_dir.name} — {len(pngs)} images")
 
         results = analyze_directory(bin_dir, field_extractors)
-        for field_name in field_extractors.keys():
+        for field_name in field_extractors:
             counts = results.get(field_name, Counter())
             total = sum(counts.values()) or 0
             if total == 0:

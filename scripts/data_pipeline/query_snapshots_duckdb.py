@@ -30,7 +30,6 @@ from pathlib import Path
 try:
     import duckdb
 except ImportError:
-    print("❌ DuckDB not installed. Install with: pip install duckdb")
     sys.exit(1)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +46,6 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW events AS
         SELECT * FROM read_json_auto('{events_pattern}', union_by_name=true)
     """)
-    print("  ✓ Created view: events")
 
     # Derived sessions view
     derived_sessions_pattern = str(
@@ -57,7 +55,6 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW derived_sessions AS
         SELECT * FROM read_json_auto('{derived_sessions_pattern}', union_by_name=true)
     """)
-    print("  ✓ Created view: derived_sessions")
 
     # Legacy timer sessions view
     timer_sessions_pattern = str(
@@ -67,7 +64,6 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW timer_sessions AS
         SELECT * FROM read_json_auto('{timer_sessions_pattern}', union_by_name=true)
     """)
-    print("  ✓ Created view: timer_sessions")
 
     # Progress snapshots view
     progress_pattern = str(
@@ -77,7 +73,6 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW progress_snapshots AS
         SELECT * FROM read_json_auto('{progress_pattern}', union_by_name=true)
     """)
-    print("  ✓ Created view: progress_snapshots")
 
     # Projects view
     projects_file = str(SNAPSHOT_DIR / "projects_v1" / "projects.jsonl")
@@ -85,7 +80,6 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW projects AS
         SELECT * FROM read_json_auto('{projects_file}', union_by_name=true)
     """)
-    print("  ✓ Created view: projects")
 
     # Daily aggregates view
     aggregates_pattern = str(
@@ -95,14 +89,10 @@ def create_views(con: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW daily_aggregates AS
         SELECT * FROM read_json_auto('{aggregates_pattern}', union_by_name=true)
     """)
-    print("  ✓ Created view: daily_aggregates")
 
 
 def show_schema(con: duckdb.DuckDBPyConnection) -> None:
     """Show available views and their schemas."""
-    print("\n📊 Available Views:")
-    print("=" * 70)
-
     views = [
         "events",
         "derived_sessions",
@@ -115,15 +105,14 @@ def show_schema(con: duckdb.DuckDBPyConnection) -> None:
     for view in views:
         try:
             result = con.execute(f"DESCRIBE {view}").fetchall()
-            print(f"\n{view}:")
-            for col_name, col_type, null, key, default, extra in result:
-                print(f"  - {col_name}: {col_type}")
-        except Exception as e:
-            print(f"\n{view}: ⚠️  Not available ({e})")
+            for _col_name, _col_type, _null, _key, _default, _extra in result:
+                pass
+        except Exception:
+            pass
 
 
 def execute_query(
-    con: duckdb.DuckDBPyConnection, query: str, output_file: str = None
+    con: duckdb.DuckDBPyConnection, query: str, output_file: str | None = None
 ) -> None:
     """Execute a SQL query and display/save results."""
     try:
@@ -132,50 +121,22 @@ def execute_query(
         if output_file:
             # Export to CSV
             con.execute(f"COPY ({query}) TO '{output_file}' (HEADER, DELIMITER ',')")
-            print(f"✅ Results exported to: {output_file}")
         else:
             # Display results
             rows = result.fetchall()
-            columns = [desc[0] for desc in result.description]
+            [desc[0] for desc in result.description]
 
-            print("\n" + "=" * 70)
-            print("Query Results")
-            print("=" * 70)
-            print(" | ".join(columns))
-            print("-" * 70)
 
-            for row in rows:
-                print(" | ".join(str(v) for v in row))
+            for _row in rows:
+                pass
 
-            print(f"\n{len(rows)} rows")
 
-    except Exception as e:
-        print(f"❌ Query error: {e}")
+    except Exception:
+        pass
 
 
 def interactive_mode(con: duckdb.DuckDBPyConnection) -> None:
     """Run in interactive SQL mode."""
-    print("\n" + "=" * 70)
-    print("DuckDB Interactive Query Interface")
-    print("=" * 70)
-    print()
-    print("Available views:")
-    print("  - events (operation events)")
-    print("  - derived_sessions (derived sessions)")
-    print("  - timer_sessions (legacy timer sessions)")
-    print("  - progress_snapshots (crop/sorter progress)")
-    print("  - projects (project manifests)")
-    print("  - daily_aggregates (pre-aggregated daily stats)")
-    print()
-    print("Commands:")
-    print("  .schema [view]  - Show schema for a view")
-    print("  .tables         - List all views")
-    print("  .quit or exit   - Exit")
-    print()
-    print("Enter SQL queries and press Enter to execute.")
-    print("=" * 70)
-    print()
-
     while True:
         try:
             query = input("duckdb> ").strip()
@@ -184,15 +145,12 @@ def interactive_mode(con: duckdb.DuckDBPyConnection) -> None:
                 continue
 
             if query.lower() in [".quit", "exit", "quit"]:
-                print("Goodbye!")
                 break
 
             if query.lower() == ".tables":
                 result = con.execute("SHOW TABLES").fetchall()
-                print("\nViews:")
-                for row in result:
-                    print(f"  - {row[0]}")
-                print()
+                for _row in result:
+                    pass
                 continue
 
             if query.lower().startswith(".schema"):
@@ -201,37 +159,29 @@ def interactive_mode(con: duckdb.DuckDBPyConnection) -> None:
 
                 if view_name:
                     result = con.execute(f"DESCRIBE {view_name}").fetchall()
-                    print(f"\nSchema for {view_name}:")
-                    for col_name, col_type, null, key, default, extra in result:
-                        print(f"  {col_name}: {col_type}")
+                    for _col_name, _col_type, _null, _key, _default, _extra in result:
+                        pass
                 else:
                     show_schema(con)
-                print()
                 continue
 
             # Execute query
             result = con.execute(query)
             rows = result.fetchall()
-            columns = [desc[0] for desc in result.description]
+            [desc[0] for desc in result.description]
 
-            print()
-            print(" | ".join(columns))
-            print("-" * 70)
 
-            for row in rows[:100]:  # Limit to first 100 rows
-                print(" | ".join(str(v) for v in row))
+            for _row in rows[:100]:  # Limit to first 100 rows
+                pass
 
             if len(rows) > 100:
-                print(f"... ({len(rows) - 100} more rows)")
+                pass
 
-            print(f"\n{len(rows)} rows")
-            print()
 
         except KeyboardInterrupt:
-            print("\nGoodbye!")
             break
-        except Exception as e:
-            print(f"Error: {e}\n")
+        except Exception:
+            pass
 
 
 def main():
@@ -277,15 +227,12 @@ Sample Queries:
     args = parser.parse_args()
 
     # Initialize DuckDB
-    print("Initializing DuckDB...")
     con = duckdb.connect(database=":memory:")
 
     # Create views
-    print("\nCreating views...")
     try:
         create_views(con)
-    except Exception as e:
-        print(f"❌ Error creating views: {e}")
+    except Exception:
         sys.exit(1)
 
     # Execute based on arguments

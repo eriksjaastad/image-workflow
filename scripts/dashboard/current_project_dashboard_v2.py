@@ -177,8 +177,7 @@ def get_directory_status(project: dict[str, Any]) -> dict[str, Any]:
             for child in project_root.iterdir():
                 name = child.name.lower()
                 if child.is_dir() and (
-                    name.startswith("character_group")
-                    or name.startswith("__character_group_")
+                    name.startswith(("character_group", "__character_group_"))
                 ):
                     sort_images += len(list(child.glob("*.png")))
             status["sort_images"] = sort_images
@@ -377,9 +376,7 @@ def classify_operation_phase(op: dict[str, Any]) -> str:
             return "selection"
 
         # Sort phase: moved to character_group_* or __character_group_*
-        if dest_base.startswith("character_group") or dest_base.startswith(
-            "__character_group_"
-        ):
+        if dest_base.startswith(("character_group", "__character_group_")):
             return "sort"
 
     return "unknown"
@@ -793,9 +790,8 @@ def create_app() -> Flask:
             (not force)
             and _progress_cache["data"] is not None
             and _progress_cache["ts"] is not None
-        ):
-            if (now - _progress_cache["ts"]).total_seconds() < 300:
-                return jsonify(_progress_cache["data"])  # Cached
+        ) and (now - _progress_cache["ts"]).total_seconds() < 300:
+            return jsonify(_progress_cache["data"])  # Cached
         progress_state.update(
             {"phase": "start", "detail": "locating project", "current": 0, "total": 0}
         )
@@ -926,7 +922,7 @@ def create_app() -> Flask:
         allocated_hours = (
             compute_phase_hours_by_active_days(ts_project, active_days_map)
             if ts_project
-            else {p: 0.0 for p in phases}
+            else dict.fromkeys(phases, 0.0)
         )
         for idx, phase in enumerate(phases, start=1):
             metrics = compute_phase_metrics(ops, phase)

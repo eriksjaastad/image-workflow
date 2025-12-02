@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 Data Consolidation Cron Job
 ==========================
 Processes file operation logs from 2 days ago to create daily summaries.
@@ -46,9 +46,9 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
         dry_run: If True, don't actually archive files, just test consolidation
     """
     if dry_run:
-        print(f"🧪 DRY RUN: Consolidating data for {target_date}")
+        pass
     else:
-        print(f"🔄 Consolidating data for {target_date}")
+        pass
 
     # Paths (allow test override via EM_TEST_DATA_ROOT)
     override = (
@@ -213,23 +213,19 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
     with open(summary_file, "w") as f:
         json.dump(daily_summary, f, indent=2)
 
-    print(f"✅ Created summary: {summary_file}")
-    print(
-        f"📊 Processed {len(operations)} operations across {len(script_summaries)} scripts"
-    )
 
     # CRITICAL: Verify dashboard can read the consolidated data
     # If no operations (e.g., empty day), skip verification but keep summary
     if operations:
-        print("🔍 Verifying dashboard can read consolidated data...")
         try:
             # Test dashboard data engine (use module-level import for testability)
             engine = DashboardDataEngine(data_dir=str(data_dir.parent))
             test_records = engine.load_file_operations(target_date, target_date)
 
             if not test_records:
+                msg = "Dashboard cannot read consolidated data - no records found"
                 raise Exception(
-                    "Dashboard cannot read consolidated data - no records found"
+                    msg
                 )
 
             # Verify we have data for the target date
@@ -249,21 +245,18 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
                 if r.get("date") and normalize_date(r["date"]) == target_date
             ]
             if not date_records:
+                msg = f"Dashboard cannot find data for target date {target_date}"
                 raise Exception(
-                    f"Dashboard cannot find data for target date {target_date}"
+                    msg
                 )
 
-            print(
-                f"✅ Dashboard verification successful: {len(test_records)} records loaded"
-            )
 
         except Exception as e:
-            print(f"❌ CRITICAL ERROR: Dashboard verification failed: {e}")
-            print("🛑 Stopping consolidation to prevent data loss")
             # Remove the summary file since it's invalid
             if summary_file.exists():
                 summary_file.unlink()
-            raise Exception(f"Dashboard verification failed: {e}")
+            msg = f"Dashboard verification failed: {e}"
+            raise Exception(msg)
 
     # Archive old detailed logs (keep 2 days) - only if not dry run
     if not dry_run:
@@ -286,9 +279,8 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
                             shutil.copyfileobj(f_in, f_out)
 
                     log_file.unlink()
-                    print(f"📦 Archived: {log_file.name} → {archive_file.name}")
     else:
-        print("🧪 DRY RUN: Would archive old logs (skipped)")
+        pass
 
 
 def main():
@@ -309,11 +301,10 @@ def main():
     try:
         consolidate_daily_data(args.process_date, dry_run=args.dry_run)
         if args.dry_run:
-            print("🧪 DRY RUN completed successfully - no files were modified")
+            pass
         else:
-            print("🎉 Daily consolidation completed successfully")
-    except Exception as e:
-        print(f"❌ Error during consolidation: {e}")
+            pass
+    except Exception:
         sys.exit(1)
 
 

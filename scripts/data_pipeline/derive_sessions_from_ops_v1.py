@@ -125,7 +125,7 @@ def _build_session(script: str, events: list[dict[str, Any]]) -> dict[str, Any]:
         "active_seconds": round(active_seconds, 1),
         "files_processed": files_processed,
         "ops_by_type": dict(ops_by_type),
-        "projects_touched": sorted(list(projects_touched)),
+        "projects_touched": sorted(projects_touched),
         "event_count": len(events),
         "params": {
             "gap_min": GAP_MIN_MINUTES,
@@ -136,14 +136,8 @@ def _build_session(script: str, events: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main():
     """Main entry point."""
-    print(f"Deriving sessions from operation events (last {LOOKBACK_DAYS} days)...")
-    print(
-        f"Config: gap_min={GAP_MIN_MINUTES}min, max_gap_contrib={MAX_GAP_CONTRIB_SECONDS}s"
-    )
-
     # Read all events
     if not LOG_PATH.exists():
-        print(f"ERROR: Log file not found: {LOG_PATH}")
         return
 
     events = []
@@ -152,7 +146,6 @@ def main():
             if line.strip():
                 events.append(json.loads(line))
 
-    print(f"Loaded {len(events)} events from log")
 
     # Filter to last N days and group by day
     cutoff = datetime.now(UTC) - timedelta(days=LOOKBACK_DAYS)
@@ -169,7 +162,6 @@ def main():
         day_str = ts.strftime("%Y%m%d")
         by_day[day_str].append(event)
 
-    print(f"Processing {len(by_day)} days...")
 
     # Create output directory
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -189,13 +181,10 @@ def main():
                 f.write(json.dumps(session) + "\n")
 
         total_sessions += len(sessions)
-        print(f"  {day_str}: {len(sessions)} sessions from {len(day_events)} events")
 
-    print(f"\nDone! {total_sessions} sessions written to {OUTPUT_DIR}")
 
     # Show sample
     if total_sessions > 0:
-        print("\nSample sessions (first 3):")
         first_day = sorted(by_day.keys())[0]
         sample_file = OUTPUT_DIR / f"day={first_day}" / "sessions.jsonl"
         with open(sample_file) as f:
@@ -203,10 +192,6 @@ def main():
                 if i >= 3:
                     break
                 session = json.loads(line)
-                print(
-                    f"  {session['session_id']}: {session['script_id']}, "
-                    f"{session['active_seconds']}s, {session['files_processed']} files"
-                )
 
 
 if __name__ == "__main__":

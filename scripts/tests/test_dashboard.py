@@ -127,7 +127,7 @@ class DashboardTest:
 
             # Wait for server to start
             max_wait = 20
-            for i in range(max_wait):
+            for _i in range(max_wait):
                 status, _ = _http_get(f"{self.base_url}/", timeout=2)
                 if status == 200:
                     print(
@@ -199,9 +199,9 @@ class DashboardTest:
                     )
                     if status == 200:
                         try:
-                            data = json.loads(body.decode("utf-8", errors="ignore"))
+                            json.loads(body.decode("utf-8", errors="ignore"))
                         except Exception:
-                            data = {}
+                            pass
                         print(f"  ✓ {time_slice} API endpoint: ok")
                     else:
                         print(f"  ❌ {time_slice} API endpoint failed: {status}")
@@ -321,7 +321,7 @@ class DashboardTest:
 
         try:
             # Test invalid time slice
-            status, body = _http_get(
+            status, _body = _http_get(
                 f"{self.base_url}/api/data/invalid_slice", timeout=5
             )
             if status in [

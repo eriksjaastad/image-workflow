@@ -363,7 +363,6 @@ def print_recent_activity(hours: int = 24):
     now = datetime.now(UTC)
     cutoff = now - timedelta(hours=hours)
 
-    print(f"\n=== File Activity (Last {hours} hours) ===")
 
     for entry in entries:
         try:
@@ -371,39 +370,23 @@ def print_recent_activity(hours: int = 24):
             if timestamp < cutoff:
                 continue
 
-            time_str = timestamp.strftime("%H:%M:%S")
+            timestamp.strftime("%H:%M:%S")
 
             if entry["type"] == "file_operation":
                 op = entry["operation"]
-                source = entry.get("source_dir", "")
-                dest = entry.get("dest_dir", "")
-                count = entry.get("file_count", "?")
+                entry.get("source_dir", "")
+                entry.get("dest_dir", "")
+                entry.get("file_count", "?")
 
-                if op == "move":
-                    print(
-                        f"{time_str} [{entry['script']}] MOVED {count} files: {source} → {dest}"
-                    )
-                elif op == "delete":
-                    print(
-                        f"{time_str} [{entry['script']}] DELETED {count} files from {source}"
-                    )
-                elif op == "copy":
-                    print(
-                        f"{time_str} [{entry['script']}] COPIED {count} files: {source} → {dest}"
-                    )
+                if op in {"move", "delete"} or op == "copy":
+                    pass
 
-            elif entry["type"] == "batch_start":
-                print(
-                    f"{time_str} [{entry['script']}] BATCH START: {entry['batch_name']}"
-                )
-
-            elif entry["type"] == "session_start":
-                print(f"{time_str} [{entry['script']}] SESSION START")
+            elif entry["type"] == "batch_start" or entry["type"] == "session_start":
+                pass
 
         except (KeyError, ValueError):  # Specific exceptions for timestamp parsing
             continue
 
-    print("=" * 50)
 
 
 if __name__ == "__main__":

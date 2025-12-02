@@ -59,28 +59,17 @@ class AdvancedTimerReporter(TimerReporter):
         totals = self.cross_script_totals(days)
 
         if not totals["script_totals"]:
-            print("📊 No productivity data available")
             return
 
-        print(f"\n📈 Productivity Metrics - Last {days} Days")
-        print("=" * 60)
 
         # Overall metrics
         total_hours = totals["total_active_time"] / 3600
         if total_hours > 0:
             files_per_hour = totals["total_files_processed"] / total_hours
-            operations_per_hour = totals["total_operations"] / total_hours
+            totals["total_operations"] / total_hours
 
-            print("Overall Performance:")
-            print(f"  Total Active Hours: {total_hours:.1f}h")
-            print(f"  Files per Hour: {files_per_hour:.1f}")
-            print(f"  Operations per Hour: {operations_per_hour:.1f}")
-            print(
-                f"  Average Efficiency: {totals['total_active_time']/totals['total_session_time']*100:.1f}%"
-            )
 
         # Script-specific metrics
-        print("\n📋 Script Performance Ranking:")
         script_metrics = []
 
         for script, stats in totals["script_totals"].items():
@@ -103,12 +92,8 @@ class AdvancedTimerReporter(TimerReporter):
         # Sort by files per hour
         script_metrics.sort(key=lambda x: x["files_per_hour"], reverse=True)
 
-        for i, metrics in enumerate(script_metrics, 1):
-            print(f"  {i}. {metrics['script']}:")
-            print(f"     Files/Hour: {metrics['files_per_hour']:.1f}")
-            print(f"     Efficiency: {metrics['efficiency']:.1f}%")
-            print(f"     Total Files: {metrics['total_files']}")
-            print(f"     Active Time: {metrics['active_hours']:.1f}h")
+        for _i, _metrics in enumerate(script_metrics, 1):
+            pass
 
     def trend_analysis(self, days: int = 14):
         """Analyze productivity trends over time"""
@@ -128,37 +113,22 @@ class AdvancedTimerReporter(TimerReporter):
                 )
 
         if not daily_data:
-            print("📊 No trend data available")
             return
 
-        print(f"\n📈 Productivity Trends - Last {days} Days")
-        print("=" * 60)
 
         # Calculate averages
-        avg_active = sum(d["active_time"] for d in daily_data) / len(daily_data) / 3600
-        avg_efficiency = sum(d["efficiency"] for d in daily_data) / len(daily_data)
-        avg_files = sum(d["files_processed"] for d in daily_data) / len(daily_data)
+        sum(d["active_time"] for d in daily_data) / len(daily_data) / 3600
+        sum(d["efficiency"] for d in daily_data) / len(daily_data)
+        sum(d["files_processed"] for d in daily_data) / len(daily_data)
 
-        print("Daily Averages:")
-        print(f"  Active Time: {avg_active:.1f}h")
-        print(f"  Efficiency: {avg_efficiency:.1f}%")
-        print(f"  Files Processed: {avg_files:.0f}")
 
         # Show recent days
-        print("\nRecent Activity:")
         for data in daily_data[:7]:  # Last 7 days
-            date_formatted = datetime.strptime(data["date"], "%Y%m%d").strftime("%m/%d")
-            active_hours = data["active_time"] / 3600
-            print(
-                f"  {date_formatted}: {active_hours:.1f}h active, {data['efficiency']:.0f}% efficient, {data['files_processed']} files"
-            )
+            datetime.strptime(data["date"], "%Y%m%d").strftime("%m/%d")
+            data["active_time"] / 3600
 
     def live_monitoring(self):
         """Live monitoring of current sessions"""
-        print("🔴 Live Session Monitor")
-        print("Press Ctrl+C to stop")
-        print("=" * 40)
-
         try:
             while True:
                 # Look for active session files
@@ -179,29 +149,20 @@ class AdvancedTimerReporter(TimerReporter):
                         continue
 
                 # Clear screen and show active sessions
-                print("\033[2J\033[H")  # Clear screen
-                print("🔴 Live Session Monitor")
-                print(f"Updated: {datetime.now().strftime('%H:%M:%S')}")
-                print("=" * 40)
 
                 if active_sessions:
                     for session in active_sessions:
-                        script = session.get("script_name", "unknown")
+                        session.get("script_name", "unknown")
                         start_time = session.get("start_time", 0)
-                        duration = current_time - start_time
+                        current_time - start_time
 
-                        print(f"📱 {script}")
-                        print(f"   Duration: {duration//60:.0f}m {duration%60:.0f}s")
-                        print(f"   Operations: {len(session.get('operations', []))}")
-                        print(f"   Batches: {len(session.get('batches', []))}")
-                        print()
                 else:
-                    print("💤 No active sessions")
+                    pass
 
                 time.sleep(5)  # Update every 5 seconds
 
         except KeyboardInterrupt:
-            print("\n👋 Live monitoring stopped")
+            pass
 
     def export_data(self, days: int = 30, format: str = "json"):
         """Export timer data for external analysis"""
@@ -227,15 +188,8 @@ class AdvancedTimerReporter(TimerReporter):
             with open(export_file, "w") as f:
                 json.dump(export_data, f, indent=2)
         else:
-            print(f"❌ Unsupported format: {format}")
             return
 
-        print(f"📤 Data exported to: {export_file}")
-        print(f"   Days included: {days}")
-        print(f"   Daily summaries: {len(export_data['daily_summaries'])}")
-        print(
-            f"   Scripts tracked: {len(export_data['cross_script_totals']['script_totals'])}"
-        )
 
 
 def main():
@@ -297,12 +251,9 @@ def main():
         reporter.trend_analysis(args.days)
     else:
         # Default: show today's summary
-        print("📊 Activity Timer Report")
-        print("=" * 40)
         reporter.print_daily_summary()
 
         # Also show quick productivity summary
-        print("\n" + "=" * 40)
         reporter.productivity_metrics(7)
 
 

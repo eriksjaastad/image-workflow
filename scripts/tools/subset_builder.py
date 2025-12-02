@@ -41,7 +41,7 @@ def deterministic_group_filter(
 ) -> list[list[Path]]:
     modulus = max(1, int(modulus))
     # Convert fraction to a threshold in [0, modulus)
-    threshold = max(0, min(modulus, int(round(fraction * modulus))))
+    threshold = max(0, min(modulus, round(fraction * modulus)))
     selected: list[list[Path]] = []
     for g in groups:
         if not g:
@@ -115,7 +115,7 @@ def challenge_group_filter(
         return groups
     scored = [(g, _score_group_fast(g, thumb_size=thumb_size)) for g in groups if g]
     scored.sort(key=lambda t: t[1], reverse=True)
-    k = max(1, int(round(len(scored) * fraction)))
+    k = max(1, round(len(scored) * fraction))
     return [g for g, s in scored[:k]]
 
 

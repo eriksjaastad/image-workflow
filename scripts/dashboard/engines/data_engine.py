@@ -208,7 +208,7 @@ class DashboardDataEngine:
                 except Exception as e:
                     print(f"Warning: Could not read {log_file}: {e}")
 
-        return sorted(list(scripts))
+        return sorted(scripts)
 
     def load_activity_data(
         self, start_date: str | None = None, end_date: str | None = None
@@ -520,7 +520,7 @@ class DashboardDataEngine:
                 if not project_id:
                     continue
 
-                if status == "finished" or status == "archived":
+                if status in {"finished", "archived"}:
                     finished_projects[project_id] = project
                 else:
                     active_projects[project_id] = project
@@ -945,10 +945,7 @@ class DashboardDataEngine:
                 # Check for exact match or word-boundary match (separated by / or _)
                 # This prevents "dalia" from matching "dalia_hannah"
                 if (
-                    f"/{pid_lower}/" in f"/{src}/"
-                    or f"/{pid_lower}/" in f"/{dst}/"
-                    or src == pid_lower
-                    or dst == pid_lower
+                    f"/{pid_lower}/" in f"/{src}/" or f"/{pid_lower}/" in f"/{dst}/" or pid_lower in (src, dst)
                 ):
                     project_id = pid
                     break
@@ -1237,7 +1234,7 @@ class DashboardDataEngine:
         self,
         time_slice: str = "D",
         lookback_days: int = 30,
-        production_scripts: list[str] = None,
+        production_scripts: list[str] | None = None,
         project_id: str | None = None,
     ) -> dict[str, Any]:
         """

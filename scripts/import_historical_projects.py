@@ -280,42 +280,29 @@ def main():
     # Validate CSV file
     csv_path = Path(args.csv_file).expanduser()
     if not csv_path.exists():
-        print(f"❌ Error: CSV file not found: {csv_path}")
         return 1
 
     # Get workspace root
     workspace_root = Path(__file__).parent.parent
 
-    print(f"{'='*70}")
-    print("Import Historical Projects from Timesheet")
-    print(f"{'='*70}")
-    print(f"CSV file: {csv_path}")
-    print(f"Mode: {'DRY RUN (preview only)' if dry_run else 'COMMIT (creating files)'}")
-    print(f"{'='*70}\n")
 
     # Parse CSV
-    print("📋 Parsing CSV...")
     try:
         projects = parse_csv_to_projects(csv_path)
-        print(f"   Found {len(projects)} projects\n")
-    except Exception as e:
-        print(f"❌ Error parsing CSV: {e}")
+    except Exception:
         return 1
 
     # Apply manual fixes for known data issues
-    print("🔧 Applying data fixes...")
     for project in projects:
         project_id = sanitize_project_id(project["project_id"])
 
         # Slender Kiara: missing initial images (ballpark ~2100)
         if project_id == "slender_kiara" and not project.get("initial_images"):
             project["initial_images"] = 2100
-            print(f"   Fixed: {project_id} initial images set to 2100 (estimated)")
 
         # Dalia: 10 minutes rounded to 0, bump to 0.5h
         if project_id == "dalia" and project["total_hours"] < 0.5:
             project["total_hours"] = 0.5
-            print(f"   Fixed: {project_id} hours rounded up to 0.5h (10 min → 0.5h)")
 
     # Filter out future projects (no final images, no hours, or explicitly mojo3)
     filtered_projects = []
@@ -323,37 +310,26 @@ def main():
         project_id = sanitize_project_id(p["project_id"])
         # Skip mojo3 (future project) and any project with no data
         if project_id == "mojo3":
-            print(f"   Skipped: {project_id} (future project, not started yet)")
             continue
         if not p.get("final_images") and p["total_hours"] == 0:
-            print(f"   Skipped: {project_id} (no data)")
             continue
         filtered_projects.append(p)
 
     projects = filtered_projects
-    print(f"   → {len(projects)} projects ready to import\n")
 
     # Show project summary
-    print("Projects Found:")
-    print(f"{'-'*70}")
-    for i, project in enumerate(projects, 1):
+    for _i, project in enumerate(projects, 1):
         project_id = sanitize_project_id(project["project_id"])
-        start = project["start_date"].strftime("%Y-%m-%d")
-        end = project["end_date"].strftime("%Y-%m-%d")
-        days = len(project["rows"])
-        hours = project["total_hours"]
-        initial = project.get("initial_images") or 0
-        final = project.get("final_images") or 0
+        project["start_date"].strftime("%Y-%m-%d")
+        project["end_date"].strftime("%Y-%m-%d")
+        len(project["rows"])
+        project["total_hours"]
+        project.get("initial_images") or 0
+        project.get("final_images") or 0
 
-        print(
-            f"{i:2d}. {project_id:20s} | {start} → {end} | {days}d | {hours:4.1f}h | {initial:5d} → {final:5d} imgs"
-        )
 
-    print(f"{'-'*70}\n")
 
     # Create manifests
-    print("Creating Manifests:")
-    print(f"{'-'*70}")
 
     success_count = 0
     skip_count = 0
@@ -361,7 +337,6 @@ def main():
 
     for project in projects:
         success, message = create_project_manifest(project, workspace_root, dry_run)
-        print(f"  {message}")
 
         if success:
             if "SKIP" in message:
@@ -371,17 +346,11 @@ def main():
         else:
             error_count += 1
 
-    print(f"{'-'*70}")
-    print("\n📊 Summary:")
-    print(f"   Total projects: {len(projects)}")
-    print(f"   Created: {success_count}")
-    print(f"   Skipped: {skip_count}")
-    print(f"   Errors: {error_count}")
 
     if dry_run:
-        print("\n💡 This was a DRY RUN. To create manifests, run with --commit")
+        pass
     else:
-        print("\n✅ Import complete!")
+        pass
 
     return 0 if error_count == 0 else 1
 

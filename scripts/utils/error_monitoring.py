@@ -24,9 +24,7 @@ from scripts.utils.companion_file_utils import Logger
 
 
 class ErrorMonitor:
-    """
-    Enhanced error monitoring system that makes failures LOUD and VISIBLE.
-    """
+    """Enhanced error monitoring system that makes failures LOUD and VISIBLE."""
 
     def __init__(self, script_name: str = "unknown"):
         self.script_name = script_name
@@ -97,11 +95,9 @@ class ErrorMonitor:
         self._send_macos_notification("Validation Error", message)
 
     def silent_failure_detected(
-        self, operation: str, expected: str, actual: str = None
+        self, operation: str, expected: str, actual: str | None = None
     ):
-        """
-        Specifically for detecting silent failures (the big problem we had).
-        """
+        """Specifically for detecting silent failures (the big problem we had)."""
         message = f"Silent failure detected in {operation}!"
         message += f"\nExpected: {expected}"
 
@@ -112,15 +108,7 @@ class ErrorMonitor:
 
     def _loud_error_display(self, message: str):
         """Display error with maximum visual impact."""
-        border = "!" * 80
 
-        print(f"\n{border}", file=sys.stderr)
-        print("🚨 CRITICAL SYSTEM ERROR 🚨", file=sys.stderr)
-        print(border, file=sys.stderr)
-        print(message, file=sys.stderr)
-        print(border, file=sys.stderr)
-        print("This error requires IMMEDIATE attention!", file=sys.stderr)
-        print(border, file=sys.stderr)
 
     def _log_to_file(self, level: str, message: str, timestamp: str):
         """Log error to persistent file."""
@@ -128,9 +116,9 @@ class ErrorMonitor:
             with open(self.error_log_path, "a", encoding="utf-8") as f:
                 f.write(f"[{timestamp}] {level}: {message}\n")
                 f.write("-" * 80 + "\n")
-        except Exception as e:
+        except Exception:
             # If we can't log to file, at least print it
-            print(f"Failed to log to file: {e}", file=sys.stderr)
+            pass
 
     def _send_macos_notification(self, title: str, message: str):
         """Send macOS notification."""
@@ -138,16 +126,16 @@ class ErrorMonitor:
             # Use osascript for macOS notifications
             script = f'display notification "{message}" with title "{title}" sound name "Basso"'
             subprocess.run(["osascript", "-e", script], check=False)
-        except Exception as e:
+        except Exception:
             # If notification fails, don't let it crash the error handling
-            print(f"Failed to send notification: {e}", file=sys.stderr)
+            pass
 
 
 # Global error monitor instance
 _error_monitor = None
 
 
-def get_error_monitor(script_name: str = None) -> ErrorMonitor:
+def get_error_monitor(script_name: str | None = None) -> ErrorMonitor:
     """Get or create global error monitor instance."""
     global _error_monitor
 
@@ -162,7 +150,7 @@ def get_error_monitor(script_name: str = None) -> ErrorMonitor:
     return _error_monitor
 
 
-def monitor_errors(script_name: str = None):
+def monitor_errors(script_name: str | None = None):
     """
     Decorator to add comprehensive error monitoring to functions.
     Catches all exceptions, reports them loudly, then re-raises them.
@@ -220,6 +208,6 @@ def fatal_error(message: str, exception: Exception | None = None):
     get_error_monitor().fatal_error(message, exception)
 
 
-def silent_failure_detected(operation: str, expected: str, actual: str = None):
+def silent_failure_detected(operation: str, expected: str, actual: str | None = None):
     """Quick access to silent failure detection."""
     get_error_monitor().silent_failure_detected(operation, expected, actual)

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Recover files from Cursor's local history (Oct 24-25 work)
-"""
+"""Recover files from Cursor's local history (Oct 24-25 work)"""
 
 import json
 import shutil
@@ -48,7 +46,7 @@ def get_latest_file_from_history(history_dir: str) -> str:
     return latest.get("id")
 
 
-def recover_file(history_dir: str, resource_url: str, latest_file_id: str = None):
+def recover_file(history_dir: str, resource_url: str, latest_file_id: str | None = None):
     """Recover a file from Cursor history"""
     history_path = (
         Path.home() / "Library/Application Support/Cursor/User/History" / history_dir

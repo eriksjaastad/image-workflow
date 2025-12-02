@@ -34,7 +34,6 @@ try:
     import pyarrow as pa
     import pyarrow.parquet as pq
 except ImportError:
-    print("❌ PyArrow/Pandas not installed. Install with: pip install pyarrow pandas")
     sys.exit(1)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -108,24 +107,18 @@ def convert_dataset(
         True if successful
     """
     if dataset_name not in DATASETS:
-        print(f"❌ Unknown dataset: {dataset_name}")
         return False
 
     config = DATASETS[dataset_name]
 
-    print(f"\n{'=' * 70}")
-    print(f"Converting: {dataset_name}")
-    print(f"{'=' * 70}")
 
     # Find all JSONL/JSON files
     pattern = config["jsonl_pattern"]
     jsonl_files = list(SNAPSHOT_DIR.glob(pattern))
 
     if not jsonl_files:
-        print(f"  ⚠️  No files found matching: {pattern}")
         return False
 
-    print(f"  Found {len(jsonl_files)} files")
 
     # Read all records
     all_records = []
@@ -142,21 +135,17 @@ def convert_dataset(
                 records = [record]
 
             all_records.extend(records)
-        except Exception as e:
-            print(f"    ⚠️  Error reading {jsonl_file}: {e}")
+        except Exception:
             continue
 
     if not all_records:
-        print("  ⚠️  No records found")
         return False
 
-    print(f"  Loaded {len(all_records)} records")
 
     # Convert to DataFrame
     try:
         df = pd.DataFrame(all_records)
-    except Exception as e:
-        print(f"  ❌ Error creating DataFrame: {e}")
+    except Exception:
         return False
 
     # Output directory
@@ -178,32 +167,24 @@ def convert_dataset(
                 use_dictionary=True,  # Dictionary encoding for string columns
                 row_group_size=row_group_size,
             )
-            print(f"  ✅ Wrote partitioned Parquet to: {output_dir}")
         else:
             # Write single file
             output_file = output_dir / f"{dataset_name}.parquet"
             df.to_parquet(
                 output_file, compression=compression, index=False, engine="pyarrow"
             )
-            print(f"  ✅ Wrote Parquet to: {output_file}")
 
         # Show size comparison
         jsonl_size = sum(f.stat().st_size for f in jsonl_files)
         parquet_files = list(output_dir.rglob("*.parquet"))
         parquet_size = sum(f.stat().st_size for f in parquet_files)
 
-        compression_ratio = jsonl_size / parquet_size if parquet_size > 0 else 0
+        jsonl_size / parquet_size if parquet_size > 0 else 0
 
-        print("  📊 Size comparison:")
-        print(f"     JSONL:   {jsonl_size / 1024 / 1024:.2f} MB")
-        print(
-            f"     Parquet: {parquet_size / 1024 / 1024:.2f} MB ({compression_ratio:.1f}x compression)"
-        )
 
         return True
 
-    except Exception as e:
-        print(f"  ❌ Error writing Parquet: {e}")
+    except Exception:
         return False
 
 
@@ -262,7 +243,6 @@ Examples:
     args = parser.parse_args()
 
     if not args.all and not args.dataset:
-        print("❌ Specify --all or --dataset")
         sys.exit(1)
 
     # Determine datasets to convert
@@ -271,13 +251,6 @@ Examples:
     else:
         datasets_to_convert = args.dataset
 
-    print("=" * 70)
-    print("Convert to Parquet v1")
-    print("=" * 70)
-    print(f"Datasets:    {', '.join(datasets_to_convert)}")
-    print(f"Compression: {args.compression}")
-    print(f"Row groups:  {args.row_group_size} rows")
-    print("=" * 70)
 
     # Convert datasets
     failed = []
@@ -291,20 +264,13 @@ Examples:
             failed.append(dataset_name)
 
     # Summary
-    print("\n" + "=" * 70)
-    print("Conversion Summary")
-    print("=" * 70)
 
     if failed:
-        print(f"❌ {len(failed)} datasets failed:")
         for dataset_name in failed:
-            print(f"  - {dataset_name}")
+            pass
     else:
-        print(f"✅ All {len(datasets_to_convert)} datasets converted successfully!")
+        pass
 
-    print("\n📝 Note: Parquet files are in *_parquet directories.")
-    print("Update your code to read from Parquet for better performance.")
-    print("=" * 70)
 
     sys.exit(0 if not failed else 1)
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Crop Queue Manager - handles queuing and status tracking for batch crop operations.
-"""
+"""Crop Queue Manager - handles queuing and status tracking for batch crop operations."""
 
 import fcntl
 import json

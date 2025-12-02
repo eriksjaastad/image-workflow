@@ -26,7 +26,6 @@ model.eval()
 # Load embeddings
 embeddings = {}
 cache_file = Path("data/ai_data/cache/processed_images.jsonl")
-print("[*] Loading embeddings...")
 with open(cache_file) as f:
     for line in f:
         data = json.loads(line)
@@ -35,7 +34,6 @@ with open(cache_file) as f:
         if emb_file.exists():
             embeddings[img_path] = np.load(emb_file)
 
-print(f"[*] Loaded {len(embeddings)} embeddings\n")
 
 # Load training log
 log_file = Path("data/training/selection_only_log.csv")
@@ -43,7 +41,6 @@ log_file = Path("data/training/selection_only_log.csv")
 # Find cases where Erik chose LOWER stage
 anomaly_cases = []
 
-print("[*] Finding cases where you chose a LOWER stage...\n")
 
 with open(log_file) as f:
     reader = csv.DictReader(f)
@@ -103,22 +100,16 @@ with open(log_file) as f:
                         }
                     )
 
-print(f"[*] Found {len(anomaly_cases)} cases where you chose LOWER stage\n")
-print("=" * 70)
-print("TEST: Did AI also detect these anomalies?")
-print("=" * 70)
 
 if len(anomaly_cases) == 0:
-    print("\n⚠️  No cases found where you chose a lower stage!")
-    print("   (This might mean the pattern is even stronger than expected)")
+    pass
 else:
     # Test AI on these anomaly cases
     ai_correct = 0
     ai_wrong = 0
 
-    print(f"\nTesting AI on {len(anomaly_cases)} anomaly cases:\n")
 
-    for i, case in enumerate(anomaly_cases[:20]):  # Show first 20
+    for _i, case in enumerate(anomaly_cases[:20]):  # Show first 20
         winner_emb = torch.from_numpy(case["winner_emb"]).float().unsqueeze(0)
         loser_emb = torch.from_numpy(case["loser_emb"]).float().unsqueeze(0)
 
@@ -135,32 +126,12 @@ else:
             ai_wrong += 1
             result = "❌ WRONG"
 
-        print(f"{i+1:2d}. {result}")
-        print(
-            f"    Erik:     {case['erik_choice'][:50]:<50} (stage {case['erik_stage']}) ← YOUR CHOICE"
-        )
-        print(
-            f"    Rejected: {case['rejected'][:50]:<50} (stage {case['rejected_stage']}) ← Higher stage!"
-        )
-        print(
-            f"    AI scores: Your choice={winner_score:.3f}, Rejected={loser_score:.3f}"
-        )
-        print()
 
     if len(anomaly_cases) > 20:
-        print(f"... and {len(anomaly_cases) - 20} more cases")
+        pass
 
-    print("=" * 70)
-    print("RESULTS:")
-    print("=" * 70)
-    print(
-        f"AI correctly detected anomaly: {ai_correct}/{len(anomaly_cases)} ({ai_correct/len(anomaly_cases)*100:.1f}%)"
-    )
-    print(
-        f"AI failed to detect anomaly:   {ai_wrong}/{len(anomaly_cases)} ({ai_wrong/len(anomaly_cases)*100:.1f}%)"
-    )
 
     if ai_correct / len(anomaly_cases) > 0.5:
-        print("\n✅ AI learned anomaly detection! Not just picking highest stage.")
+        pass
     else:
-        print("\n⚠️  AI might be overfitting to stage numbers.")
+        pass

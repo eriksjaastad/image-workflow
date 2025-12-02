@@ -12,6 +12,7 @@ Usage:
 
 import argparse
 import shutil
+import sys
 from pathlib import Path
 
 
@@ -181,7 +182,8 @@ def create_performance_test_data(output_dir, size="large", with_subdirs=False):
     elif size == "huge":
         triplets, pairs, singletons = 500, 50, 10  # Stress test
     else:
-        raise ValueError(f"Unknown size: {size}")
+        msg = f"Unknown size: {size}"
+        raise ValueError(msg)
 
     return create_mixed_test_data(
         output_path, triplets, pairs, singletons, with_subdirs
@@ -402,4 +404,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"❌ Error creating test data: {e}")
-        exit(1)
+        sys.exit(1)

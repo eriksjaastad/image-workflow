@@ -40,9 +40,12 @@ def validate_port(port: int) -> int:
         ValueError: If port is outside valid range (1024-65535)
     """
     if not (1024 <= port <= 65535):
-        raise ValueError(
+        msg = (
             f"Port must be between 1024-65535 (got {port}). "
             f"Ports below 1024 require root privileges."
+        )
+        raise ValueError(
+            msg
         )
     return port
 
@@ -60,17 +63,22 @@ def validate_data_dir(path: Path) -> Path:
         ValueError: If directory doesn't exist or has invalid structure
     """
     if not path.exists():
-        raise ValueError(f"Data directory does not exist: {path}")
+        msg = f"Data directory does not exist: {path}"
+        raise ValueError(msg)
 
     if not path.is_dir():
-        raise ValueError(f"Data directory path is not a directory: {path}")
+        msg = f"Data directory path is not a directory: {path}"
+        raise ValueError(msg)
 
     # Check for expected 'data' subdirectory (core requirement for dashboard)
     data_subdir = path / "data"
     if not data_subdir.exists():
-        raise ValueError(
+        msg = (
             f"Invalid project structure: Missing 'data/' subdirectory in {path}\n"
             f"Expected structure: <project_root>/data/"
+        )
+        raise ValueError(
+            msg
         )
 
     return path

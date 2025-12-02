@@ -106,22 +106,17 @@ def normalize_project(
 
         return normalized
 
-    except Exception as e:
-        print(f"  ⚠️  Error normalizing {source_file}: {e}")
+    except Exception:
         return None
 
 
 def main():
     """Main entry point."""
-    print("Extracting projects...")
-
     if not PROJECTS_DIR.exists():
-        print(f"Projects directory not found: {PROJECTS_DIR}")
         return
 
     # Collect all project manifests
     project_files = list(PROJECTS_DIR.glob("*.project.json"))
-    print(f"Found {len(project_files)} project files")
 
     # Extract projects
     projects = []
@@ -129,13 +124,11 @@ def main():
     duplicate_count = 0
 
     for project_file in sorted(project_files):
-        print(f"  Processing {project_file.name}...")
 
         try:
             with open(project_file, encoding="utf-8") as f:
                 raw_project = json.load(f)
-        except Exception as e:
-            print(f"    ⚠️  Error reading file: {e}")
+        except Exception:
             continue
 
         normalized = normalize_project(raw_project, project_file.name)
@@ -146,16 +139,12 @@ def main():
 
         # Dedupe (keep first occurrence)
         if project_id in seen_project_ids:
-            print(f"    ⚠️  Duplicate project ID: {project_id}")
             duplicate_count += 1
             continue
 
         seen_project_ids.add(project_id)
         projects.append(normalized)
 
-    print(
-        f"\nExtracted {len(projects)} unique projects ({duplicate_count} duplicates skipped)"
-    )
 
     # Write output (single file)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -165,17 +154,12 @@ def main():
         for project in sorted(projects, key=lambda p: p["project_id"]):
             f.write(json.dumps(project) + "\n")
 
-    print(f"\n✅ Done! {len(projects)} projects written to {output_file}")
 
     # Show sample
     if projects:
-        print("\nSample projects (first 3):")
         for project in projects[:3]:
-            status = project["status"]
-            images = project.get("initial_images", "?")
-            print(
-                f"  {project['project_id']}: {project['title']} ({status}, {images} images)"
-            )
+            project["status"]
+            project.get("initial_images", "?")
 
 
 if __name__ == "__main__":

@@ -176,11 +176,7 @@ class SandboxConfig:
         test data will be stored. Only prints if sandbox is enabled.
         """
         if self.enabled:
-            print("=" * 60)
-            print("🧪 SANDBOX MODE - Test data will be isolated")
-            print(f"   Projects: {self.projects_dir}")
-            print(f"   Logs: {self.logs_dir}")
-            print("=" * 60)
+            pass
 
 
 # -------------------- Legacy Functions (Backward Compatibility) --------------------
@@ -222,12 +218,10 @@ def test_sandbox(enabled: bool, cleanup: bool = False):
             os.environ["APP_MODE"] = "TEST"
             root = sandbox_root()
             root.mkdir(parents=True, exist_ok=True)
-            print(f"🧪 TEST MODE — sandbox: {root}")
         yield root  # may be None if disabled
     finally:
         if enabled and cleanup and root and root.exists():
             shutil.rmtree(root, ignore_errors=True)
-            print(f"🧹 cleaned up sandbox: {root}")
 
 
 def in_test_mode() -> bool:
@@ -274,8 +268,6 @@ def safe_write_text(
     """
     target = rebase_path(path, sandbox_base)
     if dry_run:
-        print(f"[DRY-RUN] would write: {target} ({len(content)} bytes)")
         return
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8")
-    print(f"📝 wrote: {target}")

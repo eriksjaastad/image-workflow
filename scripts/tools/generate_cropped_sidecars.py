@@ -41,7 +41,8 @@ def main() -> None:
 
     root = Path(args.dir).resolve()
     if not root.exists() or not root.is_dir():
-        raise SystemExit(f"[!] Not a directory: {root}")
+        msg = f"[!] Not a directory: {root}"
+        raise SystemExit(msg)
 
     n = create_sidecars(root)
     print(f"[*] Created/updated {n} .cropped sidecars under {root}")

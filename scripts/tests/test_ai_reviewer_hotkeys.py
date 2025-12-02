@@ -225,23 +225,26 @@ class AIReviewerHotkeyTester:
                     )
 
                     if resp.status_code != 200:
-                        raise AssertionError(f"HTTP {resp.status_code}: {resp.data}")
+                        msg = f"HTTP {resp.status_code}: {resp.data}"
+                        raise AssertionError(msg)
 
                     data = resp.get_json()
                     if data.get("status") != "ok":
-                        raise AssertionError(f"API error: {data}")
+                        msg = f"API error: {data}"
+                        raise AssertionError(msg)
 
                     # Check that files were moved to expected location
                     found_correct_move = False
 
-                    for src, dest in moved_files:
+                    for _src, dest in moved_files:
                         if expected_dest in dest:
                             found_correct_move = True
                             break
 
                     if not found_correct_move:
+                        msg = f"No files moved to {expected_dest}. Moves: {moved_files}"
                         raise AssertionError(
-                            f"No files moved to {expected_dest}. Moves: {moved_files}"
+                            msg
                         )
 
                     print(

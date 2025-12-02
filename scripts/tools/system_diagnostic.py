@@ -151,7 +151,7 @@ def check_file_system():
     for dir_name in data_dirs:
         full_path = repo_root / dir_name
         if full_path.exists():
-            code, result, _ = run_command(f"git check-ignore {dir_name}")
+            code, _result, _ = run_command(f"git check-ignore {dir_name}")
             ignored = "✓ ignored" if code == 0 else "⚠ NOT IGNORED"
 
             # Get size

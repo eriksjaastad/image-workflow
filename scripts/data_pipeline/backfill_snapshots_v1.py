@@ -38,12 +38,8 @@ def run_extractor(script_name: str) -> bool:
     script_path = PROJECT_ROOT / "scripts" / "data_pipeline" / script_name
 
     if not script_path.exists():
-        print(f"  ⚠️  Script not found: {script_name}")
         return False
 
-    print(f"\n{'=' * 70}")
-    print(f"Running: {script_name}")
-    print(f"{'=' * 70}")
 
     try:
         result = subprocess.run(
@@ -53,15 +49,9 @@ def run_extractor(script_name: str) -> bool:
             check=False,
         )
 
-        if result.returncode != 0:
-            print(f"  ❌ {script_name} failed with exit code {result.returncode}")
-            return False
+        return result.returncode == 0
 
-        print(f"  ✅ {script_name} completed successfully")
-        return True
-
-    except Exception as e:
-        print(f"  ❌ Error running {script_name}: {e}")
+    except Exception:
         return False
 
 
@@ -73,19 +63,8 @@ def backfill(start_date: datetime, end_date: datetime) -> None:
     specified date range. This function serves as a framework for chunked
     processing if needed in the future.
     """
-    days_count = (end_date - start_date).days + 1
+    (end_date - start_date).days + 1
 
-    print("=" * 70)
-    print("Snapshot Backfill v1")
-    print("=" * 70)
-    print(f"Start date: {start_date.strftime('%Y-%m-%d')}")
-    print(f"End date:   {end_date.strftime('%Y-%m-%d')}")
-    print(f"Days:       {days_count}")
-    print("=" * 70)
-    print()
-    print("Note: Extractors process all available data.")
-    print("Future enhancement: Add date-range filtering to extractors.")
-    print()
 
     # Run all extractors
     failed = []
@@ -96,22 +75,15 @@ def backfill(start_date: datetime, end_date: datetime) -> None:
             failed.append(script_name)
 
     # Summary
-    print("\n" + "=" * 70)
-    print("Backfill Summary")
-    print("=" * 70)
 
     if failed:
-        print(f"❌ {len(failed)} extractors failed:")
         for script_name in failed:
-            print(f"  - {script_name}")
-        print("\nRun failed extractors individually to debug.")
+            pass
     else:
-        print("✅ All extractors completed successfully!")
+        pass
 
-    print("=" * 70)
 
     # Run validation
-    print("\nRunning validation...")
     validation_script = (
         PROJECT_ROOT / "scripts" / "data_pipeline" / "validate_snapshots_v1.py"
     )
@@ -155,7 +127,6 @@ Examples:
         start_date = parse_date(args.start_date)
         end_date = parse_date(args.end_date)
     else:
-        print("Error: Specify either --days or both --start-date and --end-date")
         sys.exit(1)
 
     # Run backfill

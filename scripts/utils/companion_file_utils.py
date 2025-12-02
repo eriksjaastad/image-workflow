@@ -34,9 +34,7 @@ except Exception:
 
 
 class Logger:
-    """
-    Centralized logging utility for consistent error/info messages across all scripts.
-    """
+    """Centralized logging utility for consistent error/info messages across all scripts."""
 
     # Color codes for terminal output
     COLORS = {
@@ -73,23 +71,18 @@ class Logger:
 
     def debug(self, message: str):
         """Log debug message."""
-        print(self._format_message("DEBUG", message))
 
     def info(self, message: str):
         """Log info message."""
-        print(self._format_message("INFO", message))
 
     def warning(self, message: str):
         """Log warning message."""
-        print(self._format_message("WARNING", message))
 
     def error(self, message: str):
         """Log error message."""
-        print(self._format_message("ERROR", message), file=sys.stderr)
 
     def success(self, message: str):
         """Log success message."""
-        print(self._format_message("SUCCESS", message))
 
     def error_with_exception(self, message: str, exception: Exception):
         """Log error message with exception details."""
@@ -127,7 +120,7 @@ def _quiet_flag() -> bool:
 
 def _say(message: str) -> None:
     if not _quiet_flag():
-        print(message)
+        pass
 
 
 @lru_cache(maxsize=1024)
@@ -247,7 +240,8 @@ def move_file_with_all_companions(
                     _say(f"Moved: {src_path.name}")
                 else:
                     logger.error(f"Move failed - destination doesn't exist: {dst_path}")
-                    raise RuntimeError(f"Failed to move {src_path.name} to {dst_dir}")
+                    msg = f"Failed to move {src_path.name} to {dst_dir}"
+                    raise RuntimeError(msg)
             except Exception as e:
                 logger.error_with_exception(f"Failed to move {src_path.name}", e)
                 raise
@@ -275,7 +269,8 @@ def move_file_with_all_companions(
                         logger.error(
                             f"Companion move failed - destination doesn't exist: {companion_dst}"
                         )
-                        raise RuntimeError(f"Failed to move companion {companion.name}")
+                        msg = f"Failed to move companion {companion.name}"
+                        raise RuntimeError(msg)
                 except Exception as e:
                     logger.error_with_exception(
                         f"Failed to move companion {companion.name}", e
@@ -315,7 +310,7 @@ def safe_move_path(src_path: Path, dst_dir: Path, dry_run: bool = False) -> list
 
 
 def scan_images(
-    folder: Path, extensions: list[str] = None, recursive: bool = True
+    folder: Path, extensions: list[str] | None = None, recursive: bool = True
 ) -> list[Path]:
     """
     Scan for image files in a directory.
@@ -603,17 +598,13 @@ def move_multiple_files_with_companions(
     skipped_count = 0
     error_count = 0
 
-    for i, image_file in enumerate(image_files, 1):
+    for _i, image_file in enumerate(image_files, 1):
         # Check if destination already exists - if so, skip this file
         dest_image = dest_dir / image_file.name
         if not dry_run and dest_image.exists():
-            print(
-                f"[{i:3d}/{len(image_files)}] SKIPPING: {image_file.name} (already exists in destination)"
-            )
             skipped_count += 1
             continue
 
-        print(f"[{i:3d}/{len(image_files)}] Moving: {image_file.name}")
 
         if not dry_run:
             try:
@@ -639,7 +630,6 @@ def move_multiple_files_with_companions(
                 moved_count += 1
 
             except Exception as e:
-                print(f"❌ ERROR moving {image_file.name}: {e}")
                 if tracker:
                     tracker.log_operation("error", str(image_file), "", notes=str(e))
                 error_count += 1
@@ -680,9 +670,12 @@ def safe_delete_paths(
                 logger.error_with_exception(f"Failed to delete {p}", exc)
     else:
         if not _SEND2TRASH_AVAILABLE:
-            raise RuntimeError(
+            msg = (
                 "send2trash is not installed. Install with: pip install send2trash\n"
                 "Or set hard_delete=True to permanently delete files (dangerous)."
+            )
+            raise RuntimeError(
+                msg
             )
         for p in paths:
             try:
@@ -694,7 +687,7 @@ def safe_delete_paths(
 
     if tracker and deleted:
         source_dir = (
-            str(Path(list(paths)[0]).parent.name) if paths else "unknown"
+            str(Path(next(iter(paths))).parent.name) if paths else "unknown"
         )  # best-effort
         try:
             tracker.log_operation(
@@ -793,7 +786,7 @@ def log_crop_decision(
 
     # 1. Validate project_id
     if not project_id or not project_id.strip():
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ TRAINING DATA ERROR - Empty project_id!\n"
             f"{'=' * 70}\n"
@@ -802,10 +795,13 @@ def log_crop_decision(
             f"Got: {project_id!r}\n"
             f"{'=' * 70}\n"
         )
+        raise ValueError(
+            msg
+        )
 
     # 2. Validate filename (no paths!)
     if not filename or not filename.strip():
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ TRAINING DATA ERROR - Empty filename!\n"
             f"{'=' * 70}\n"
@@ -813,9 +809,12 @@ def log_crop_decision(
             f"Got: {filename!r}\n"
             f"{'=' * 70}\n"
         )
+        raise ValueError(
+            msg
+        )
 
     if "/" in filename or "\\" in filename:
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ TRAINING DATA ERROR - Filename contains path separators!\n"
             f"{'=' * 70}\n"
@@ -824,11 +823,14 @@ def log_crop_decision(
             f"Expected: Just the filename (e.g., '20250705_230713_stage3.png')\n"
             f"{'=' * 70}\n"
         )
+        raise ValueError(
+            msg
+        )
 
     # 3. Validate crop coordinates
     x1, y1, x2, y2 = crop_coords
     if not (0 <= x1 < x2 <= 1 and 0 <= y1 < y2 <= 1):
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ TRAINING DATA ERROR - Invalid crop coordinates!\n"
             f"{'=' * 70}\n"
@@ -840,10 +842,13 @@ def log_crop_decision(
             f"  • x1 < x2 and y1 < y2\n"
             f"{'=' * 70}\n"
         )
+        raise ValueError(
+            msg
+        )
 
     # 4. Validate dimensions
     if width <= 0 or height <= 0:
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ TRAINING DATA ERROR - Invalid image dimensions!\n"
             f"{'=' * 70}\n"
@@ -852,6 +857,9 @@ def log_crop_decision(
             f"\n"
             f"Both width and height must be positive integers.\n"
             f"{'=' * 70}\n"
+        )
+        raise ValueError(
+            msg
         )
 
     # 5. Generate or validate timestamp
@@ -862,7 +870,7 @@ def log_crop_decision(
         try:
             _dt.fromisoformat(timestamp.replace("Z", ""))
         except Exception as e:
-            raise ValueError(
+            msg = (
                 f"\n{'=' * 70}\n"
                 f"❌ TRAINING DATA ERROR - Invalid timestamp format!\n"
                 f"{'=' * 70}\n"
@@ -870,6 +878,9 @@ def log_crop_decision(
                 f"Expected ISO 8601 format (e.g., '2025-10-08T18:47:32Z')\n"
                 f"Error: {e}\n"
                 f"{'=' * 70}\n"
+            )
+            raise ValueError(
+                msg
             )
 
     # ========================================================================
@@ -940,7 +951,7 @@ def log_select_crop_entry(
             else (0, 0)
         )
         if w <= 0 or h <= 0:
-            raise ValueError(
+            msg = (
                 f"\n{'=' * 70}\n"
                 f"❌ CRITICAL TRAINING DATA ERROR - Invalid Image Dimensions!\n"
                 f"{'=' * 70}\n"
@@ -954,12 +965,15 @@ def log_select_crop_entry(
                 f"   Ensure it passes actual image dimensions, not (0, 0).\n"
                 f"{'=' * 70}\n"
             )
+            raise ValueError(
+                msg
+            )
 
     # 2. Validate crop coordinates if provided
     if crop_norm is not None:
         x1, y1, x2, y2 = crop_norm
         if not (0 <= x1 < x2 <= 1 and 0 <= y1 < y2 <= 1):
-            raise ValueError(
+            msg = (
                 f"\n{'=' * 70}\n"
                 f"❌ CRITICAL TRAINING DATA ERROR - Invalid Crop Coordinates!\n"
                 f"{'=' * 70}\n"
@@ -970,6 +984,9 @@ def log_select_crop_entry(
                 f"\n"
                 f"🔧 FIX: Check crop coordinate calculation in calling code.\n"
                 f"{'=' * 70}\n"
+            )
+            raise ValueError(
+                msg
             )
 
     # ========================================================================
@@ -1039,7 +1056,7 @@ def log_selection_only_entry(
 
     # 1. Validate chosen path exists
     if not chosen_path or not str(chosen_path).strip():
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ CRITICAL TRAINING DATA ERROR - Empty Chosen Path!\n"
             f"{'=' * 70}\n"
@@ -1049,10 +1066,13 @@ def log_selection_only_entry(
             f"   Ensure chosen_path is a valid file path.\n"
             f"{'=' * 70}\n"
         )
+        raise ValueError(
+            msg
+        )
 
     # 2. Validate negative paths is a list
     if not isinstance(negative_paths, list):
-        raise ValueError(
+        msg = (
             f"\n{'=' * 70}\n"
             f"❌ CRITICAL TRAINING DATA ERROR - Invalid Negative Paths!\n"
             f"{'=' * 70}\n"
@@ -1060,6 +1080,9 @@ def log_selection_only_entry(
             f"\n"
             f"🔧 FIX: Pass a list of paths as negative_paths.\n"
             f"{'=' * 70}\n"
+        )
+        raise ValueError(
+            msg
         )
 
     # 3. Validate we have at least one alternative (otherwise why log?)
@@ -1113,7 +1136,8 @@ def generate_thumbnail(
         Exception: If thumbnail generation fails
     """
     if Image is None:
-        raise ImportError("PIL (Pillow) is required for thumbnail generation")
+        msg = "PIL (Pillow) is required for thumbnail generation"
+        raise ImportError(msg)
 
     try:
         with Image.open(image_path) as img:

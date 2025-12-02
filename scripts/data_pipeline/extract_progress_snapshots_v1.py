@@ -202,16 +202,14 @@ def extract_from_progress_file(
             if snapshot:
                 snapshots.append(snapshot)
 
-    except Exception as e:
-        print(f"  ⚠️  Error reading {progress_path}: {e}")
+    except Exception:
+        pass
 
     return snapshots
 
 
 def main():
     """Main entry point."""
-    print("Extracting progress snapshots...")
-
     # Collect all progress files
     progress_files = []
 
@@ -223,7 +221,6 @@ def main():
         for p in SORTER_PROGRESS_DIR.glob("*.json"):
             progress_files.append((p, "sorter"))
 
-    print(f"Found {len(progress_files)} progress files")
 
     # Extract snapshots
     by_day = defaultdict(list)
@@ -231,7 +228,6 @@ def main():
     duplicate_count = 0
 
     for progress_file, tool_type in progress_files:
-        print(f"  Processing {progress_file.name} ({tool_type})...")
         snapshots = extract_from_progress_file(progress_file, tool_type)
 
         for snapshot in snapshots:
@@ -246,10 +242,6 @@ def main():
             day = snapshot["day"]
             by_day[day].append(snapshot)
 
-    print(
-        f"\nExtracted {len(seen_progress_ids)} unique snapshots ({duplicate_count} duplicates skipped)"
-    )
-    print(f"Days: {len(by_day)}")
 
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -269,9 +261,7 @@ def main():
                 f.write(json.dumps(snapshot) + "\n")
 
         total_written += len(day_snapshots)
-        print(f"  {day_str}: {len(day_snapshots)} snapshots")
 
-    print(f"\n✅ Done! {total_written} snapshots written to {OUTPUT_DIR}")
 
 
 if __name__ == "__main__":

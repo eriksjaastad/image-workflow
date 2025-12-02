@@ -15,13 +15,14 @@ FEATURES:
 
 """
 
+import sys
 from pathlib import Path
 
 selected_dir = Path("__selected")
 
 if not selected_dir.exists():
     print(f"❌ {selected_dir} doesn't exist")
-    exit(1)
+    sys.exit(1)
 
 subdirs = [d for d in selected_dir.iterdir() if d.is_dir()]
 subdirs.sort()

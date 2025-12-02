@@ -138,14 +138,16 @@ class BaseSeleniumTest(unittest.TestCase):
             except Exception:
                 pass
             time.sleep(0.1)
-        raise TimeoutError(f"Server did not start within {timeout} seconds")
+        msg = f"Server did not start within {timeout} seconds"
+        raise TimeoutError(msg)
 
     def get_flask_app(self):
         """
         Return the Flask app instance to test.
         Must be overridden by subclasses.
         """
-        raise NotImplementedError("Subclasses must implement get_flask_app()")
+        msg = "Subclasses must implement get_flask_app()"
+        raise NotImplementedError(msg)
 
     def prepare_test_data(self):
         """

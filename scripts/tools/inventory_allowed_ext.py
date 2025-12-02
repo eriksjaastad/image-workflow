@@ -28,7 +28,7 @@ def is_hidden(p: Path) -> bool:
 
 
 def _dir_has_images(dir_path: Path, image_exts: set[str]) -> bool:
-    for dp, dn, fn in os.walk(dir_path):
+    for _dp, dn, fn in os.walk(dir_path):
         dn[:] = [d for d in dn if not d.startswith(".")]
         for name in fn:
             if name.startswith("."):
@@ -94,7 +94,7 @@ def write_allowlist(
         "projectId": project_id,
         "snapshotAt": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sourcePath": str(content_dir),
-        "allowedExtensions": sorted(list(ext_counts.keys())),
+        "allowedExtensions": sorted(ext_counts.keys()),
         "clientWhitelistOverrides": [],
         "notes": "Initial inventory of content/ extensions",
     }
@@ -134,7 +134,8 @@ def main() -> None:
 
     content_dir = Path(args.content_dir).resolve()
     if not content_dir.exists() or not content_dir.is_dir():
-        raise SystemExit(f"[!] content-dir not found or not a directory: {content_dir}")
+        msg = f"[!] content-dir not found or not a directory: {content_dir}"
+        raise SystemExit(msg)
 
     image_exts = {e.strip().lower() for e in args.image_exts.split(",") if e.strip()}
     ext_counts = collect_extensions(content_dir, image_exts)

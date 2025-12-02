@@ -47,17 +47,15 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
     """
     directory_path = Path(directory).resolve()
     if not directory_path.exists() or not directory_path.is_dir():
-        raise ValueError(f"Directory not found: {directory_path}")
+        msg = f"Directory not found: {directory_path}"
+        raise ValueError(msg)
 
     # Find all .caption files
     caption_files = list(directory_path.rglob("*.caption"))
     total_files = len(caption_files)
 
-    print(f"🔍 Analyzing caption files in: {directory_path}")
-    print(f"[*] Found {total_files} caption files")
 
     if total_files == 0:
-        print("[!] No caption files found")
         return {"total_files": 0, "unique_contents": 0, "duplicate_groups": []}
 
     # Group files by content
@@ -73,18 +71,14 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
             read_errors.append(f"Error reading {caption_file}: {e}")
 
     if read_errors:
-        print(f"[!] {len(read_errors)} files had read errors:")
-        for error in read_errors:
-            print(f"    {error}")
+        for _error in read_errors:
+            pass
 
     # Analyze results
     unique_contents = len(content_groups)
     duplicate_groups = []
     total_duplicates = 0
 
-    print("\n📊 Analysis Results:")
-    print(f"[*] Total files: {total_files}")
-    print(f"[*] Unique contents: {unique_contents}")
 
     # Find duplicate groups (content appearing in multiple files)
     for content, files in content_groups.items():
@@ -95,34 +89,24 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
             total_duplicates += len(files)
 
     if duplicate_groups:
-        print(f"[*] Duplicate groups: {len(duplicate_groups)}")
-        print(f"[*] Files with duplicates: {total_duplicates}")
-        print(f"[*] Unique files: {total_files - total_duplicates}")
 
-        print("\n🔄 Duplicate Groups:")
-        print("=" * 60)
 
         # Sort by count (most duplicates first)
         duplicate_groups.sort(key=lambda x: x["count"], reverse=True)
 
-        for i, group in enumerate(duplicate_groups, 1):
-            print(f"\nGroup {i}: {group['count']} files with identical content")
+        for _i, group in enumerate(duplicate_groups, 1):
 
             if show_content:
-                content_preview = (
+                (
                     group["content"][:100] + "..."
                     if len(group["content"]) > 100
                     else group["content"]
                 )
-                print(f'Content: "{content_preview}"')
 
-            print("Files:")
-            for file_path in group["files"]:
-                print(f"  • {file_path.name}")
+            for _file_path in group["files"]:
+                pass
     else:
-        print(
-            f"[*] No duplicates found - all {total_files} files have unique content! ✅"
-        )
+        pass
 
     return {
         "total_files": total_files,
@@ -152,12 +136,8 @@ def move_duplicate_groups_to_subdirs(
     directory_path = analysis_results["directory_path"]
 
     if not duplicate_groups:
-        print("[*] No duplicate groups to move")
         return {"groups_moved": 0, "files_moved": 0, "errors": []}
 
-    print("\n🚚 Moving duplicate groups to subdirectories...")
-    print(f"[*] Target directory: {directory_path}")
-    print(f"[*] Mode: {'DRY RUN' if dry_run else 'LIVE'}")
 
     groups_moved = 0
     files_moved = 0
@@ -167,13 +147,11 @@ def move_duplicate_groups_to_subdirs(
         group_dir_name = f"duplicate_group_{i:03d}"
         group_dir_path = directory_path / group_dir_name
 
-        content_preview = (
+        (
             group["content"][:50] + "..."
             if len(group["content"]) > 50
             else group["content"]
         )
-        print(f"\nGroup {i}: {group['count']} files → {group_dir_name}/")
-        print(f'Content: "{content_preview}"')
 
         if not dry_run:
             try:
@@ -181,7 +159,6 @@ def move_duplicate_groups_to_subdirs(
             except Exception as e:
                 error_msg = f"Failed to create directory {group_dir_name}: {e}"
                 errors.append(error_msg)
-                print(f"[!] {error_msg}")
                 continue
 
         group_files_moved = 0
@@ -202,38 +179,28 @@ def move_duplicate_groups_to_subdirs(
                         moved_files = move_file_with_all_companions(
                             png_file, group_dir_path, dry_run=False
                         )
-                        for moved_file in moved_files:
-                            print(f"  • {moved_file}")
+                        for _moved_file in moved_files:
                             group_files_moved += 1
                     else:
-                        print(f"  • {caption_file.name} (would move)")
-                        print(f"  • {png_file.name} (would move)")
                         group_files_moved += 2
                 else:
                     # Just move the caption file if no PNG exists
                     caption_dest = group_dir_path / caption_file.name
                     if not dry_run:
                         shutil.move(str(caption_file), str(caption_dest))
-                    print(f"  • {caption_file.name}")
                     group_files_moved += 1
-                    print(f"  • {png_file.name} (not found)")
 
             except Exception as e:
                 error_msg = f"Failed to move {caption_file.name}: {e}"
                 errors.append(error_msg)
-                print(f"[!] {error_msg}")
 
         if group_files_moved > 0:
             groups_moved += 1
             files_moved += group_files_moved
 
-    print("\n📊 Move Summary:")
-    print(f"[*] Groups moved: {groups_moved}")
-    print(f"[*] Files moved: {files_moved}")
     if errors:
-        print(f"[*] Errors: {len(errors)}")
-        for error in errors:
-            print(f"    {error}")
+        for _error in errors:
+            pass
 
     return {"groups_moved": groups_moved, "files_moved": files_moved, "errors": errors}
 
@@ -286,15 +253,13 @@ Examples:
         if args.move_groups:
             if results["duplicate_groups"]:
                 move_duplicate_groups_to_subdirs(results, args.dry_run)
-                print("\n✅ Move operation completed!")
             else:
-                print("\n[*] No duplicate groups to move")
+                pass
 
         # Exit with success
         sys.exit(0)
 
-    except Exception as e:
-        print(f"[!] Operation failed: {e}")
+    except Exception:
         sys.exit(1)
 
 

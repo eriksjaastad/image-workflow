@@ -14,6 +14,7 @@ Checks:
 
 import gzip
 import json
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -106,8 +107,6 @@ def count_snapshot_events_by_day() -> dict[str, int]:
 
 def validate_event_counts() -> tuple[bool, list[str]]:
     """Validate event counts between raw and snapshot."""
-    print("\n📊 Validating event counts...")
-
     raw_counts = count_raw_events_by_day()
     snapshot_counts = count_snapshot_events_by_day()
 
@@ -129,22 +128,19 @@ def validate_event_counts() -> tuple[bool, list[str]]:
                 )
                 passed = False
             else:
-                print(f"  ✓ {day}: {snapshot_count} events")
+                pass
         elif snapshot_count > 0:
-            print(f"  ✓ {day}: {snapshot_count} events")
+            pass
 
     if issues:
-        print("\n  ⚠️  Count discrepancies:")
-        for issue in issues:
-            print(issue)
+        for _issue in issues:
+            pass
 
     return passed, issues
 
 
 def validate_timestamps() -> tuple[bool, list[str]]:
     """Validate timestamp ranges per day."""
-    print("\n⏰ Validating timestamps...")
-
     events_dir = SNAPSHOT_DIR / "operation_events_v1"
     if not events_dir.exists():
         return False, ["operation_events_v1 not found"]
@@ -169,11 +165,8 @@ def validate_timestamps() -> tuple[bool, list[str]]:
                         timestamps.append(ts_str)
 
         if timestamps:
-            min_ts = min(timestamps)
-            max_ts = max(timestamps)
-            print(
-                f"  ✓ {day_str}: {min_ts[:10]} to {max_ts[:10]} ({len(timestamps)} events)"
-            )
+            min(timestamps)
+            max(timestamps)
         else:
             issues.append(f"  {day_str}: No valid timestamps")
             passed = False
@@ -183,8 +176,6 @@ def validate_timestamps() -> tuple[bool, list[str]]:
 
 def validate_scripts_operations() -> tuple[bool, list[str]]:
     """Validate scripts and operations against allowlist."""
-    print("\n🔍 Validating scripts and operations...")
-
     events_dir = SNAPSHOT_DIR / "operation_events_v1"
     if not events_dir.exists():
         return False, ["operation_events_v1 not found"]
@@ -215,10 +206,8 @@ def validate_scripts_operations() -> tuple[bool, list[str]]:
         issues.append(f"  Unknown scripts: {unknown_scripts}")
         passed = False
 
-    print(f"  ✓ Scripts found: {len(scripts)}")
-    for script, count in scripts.most_common():
-        status = "✓" if script in KNOWN_SCRIPTS else "⚠️"
-        print(f"    {status} {script}: {count}")
+    for _script, _count in scripts.most_common():
+        pass
 
     # Check operations
     unknown_ops = set(operations.keys()) - KNOWN_OPERATIONS
@@ -226,18 +215,14 @@ def validate_scripts_operations() -> tuple[bool, list[str]]:
         issues.append(f"  Unknown operations: {unknown_ops}")
         passed = False
 
-    print(f"  ✓ Operations found: {len(operations)}")
-    for op, count in operations.most_common():
-        status = "✓" if op in KNOWN_OPERATIONS else "⚠️"
-        print(f"    {status} {op}: {count}")
+    for op, _count in operations.most_common():
+        pass
 
     return passed, issues
 
 
 def validate_session_integrity() -> tuple[bool, list[str]]:
     """Soft referential check: session_ids in events should have sessions."""
-    print("\n🔗 Validating session integrity (soft check)...")
-
     # Collect session_ids from events
     events_dir = SNAPSHOT_DIR / "operation_events_v1"
     event_sessions = set()
@@ -258,7 +243,6 @@ def validate_session_integrity() -> tuple[bool, list[str]]:
 
     # Collect session_ids from derived sessions
     derived_sessions_dir = SNAPSHOT_DIR / "derived_sessions_v1"
-    derived_session_ids = set()
 
     if derived_sessions_dir.exists():
         for day_dir in derived_sessions_dir.glob("day=*"):
@@ -273,21 +257,12 @@ def validate_session_integrity() -> tuple[bool, list[str]]:
                         # Derived sessions have their own IDs, can't cross-reference
 
     # Note: This is a soft check because writers are independent
-    print(f"  ℹ️  Event sessions referenced: {len(event_sessions)}")
-    print(f"  ℹ️  Derived sessions created: {len(derived_session_ids)}")
-    print(
-        "  ℹ️  (Soft check: writers are independent, referential integrity not enforced)"
-    )
 
     return True, []
 
 
 def validate_snapshots() -> dict[str, Any]:
     """Run all validation checks."""
-    print("=" * 70)
-    print("Snapshot Validation Suite v1")
-    print("=" * 70)
-
     results = {"timestamp": datetime.now().isoformat(), "checks": {}}
 
     # Run checks
@@ -307,23 +282,17 @@ def validate_snapshots() -> dict[str, Any]:
             all_passed = False
 
     # Summary
-    print("\n" + "=" * 70)
-    print("📋 Validation Summary")
-    print("=" * 70)
 
     for check_name, check_result in results["checks"].items():
-        status = "✅ PASS" if check_result["passed"] else "❌ FAIL"
-        print(f"  {status}: {check_name}")
+        "✅ PASS" if check_result["passed"] else "❌ FAIL"
         if check_result["issues"]:
-            for issue in check_result["issues"]:
-                print(f"    {issue}")
+            for _issue in check_result["issues"]:
+                pass
 
-    print("\n" + "=" * 70)
     if all_passed:
-        print("✅ All validation checks passed!")
+        pass
     else:
-        print("⚠️  Some validation checks failed. Review issues above.")
-    print("=" * 70)
+        pass
 
     results["all_passed"] = all_passed
 
@@ -344,11 +313,10 @@ def main():
     with open(report_file, "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"\n📄 Validation report written to: {report_file}")
 
     # Exit with appropriate code
     return 0 if results["all_passed"] else 1
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

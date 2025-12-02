@@ -43,9 +43,9 @@ def _scan_immediate_subdirs(base_dir: Path) -> list[Path]:
 
 def _find_images(dir_path: Path) -> list[Path]:
     return (
-        sorted([p for p in dir_path.glob("*.png")])
-        + sorted([p for p in dir_path.glob("*.jpg")])
-        + sorted([p for p in dir_path.glob("*.jpeg")])
+        sorted(dir_path.glob("*.png"))
+        + sorted(dir_path.glob("*.jpg"))
+        + sorted(dir_path.glob("*.jpeg"))
     )
 
 

@@ -70,33 +70,23 @@ def move_files(source_dir: Path, dest_dir: Path, dry_run: bool = False) -> None:
     tracker = FileTracker("recursive_file_mover")
 
     # Find all image files
-    print(f"🔍 Scanning {source_dir} for image files...")
     image_files = find_all_image_files(source_dir)
 
     if not image_files:
-        print(f"❌ No image files found in {source_dir}")
         return
 
-    print(f"📊 Found {len(image_files)} image files")
-    print()
 
     # Use shared utility function
     results = move_multiple_files_with_companions(
         image_files, dest_dir, dry_run, tracker
     )
 
-    print()
-    print("📊 OPERATION COMPLETE:")
-    print(f"   • Images processed: {len(image_files)}")
-    print(f"   • Successfully moved: {results['moved']}")
-    print(f"   • Files skipped (already exist): {results['skipped']}")
     if results["errors"] > 0:
-        print(f"   • Errors encountered: {results['errors']}")
+        pass
     if dry_run:
-        print("   • DRY RUN - No files were actually moved")
+        pass
     else:
-        print(f"   • Files moved to: {dest_dir}")
-        print("   • Operations logged by FileTracker")
+        pass
 
 
 def main():
@@ -132,50 +122,37 @@ Examples:
 
     # Validate source directory
     if not source_dir.exists():
-        print(f"❌ ERROR: Source directory does not exist: {source_dir}")
         sys.exit(1)
 
     if not source_dir.is_dir():
-        print(f"❌ ERROR: Source is not a directory: {source_dir}")
         sys.exit(1)
 
     # Check if source and destination are the same
     if source_dir == dest_dir:
-        print("❌ ERROR: Source and destination are the same directory")
         sys.exit(1)
 
     # Validate destination directory
     if not dest_dir.exists():
-        print(f"❌ ERROR: Destination directory does not exist: {dest_dir}")
         sys.exit(1)
 
     if not dest_dir.is_dir():
-        print(f"❌ ERROR: Destination is not a directory: {dest_dir}")
         sys.exit(1)
 
     # Check if destination is inside source (would cause issues)
     try:
         dest_dir.relative_to(source_dir)
-        print("❌ ERROR: Destination directory is inside source directory")
         sys.exit(1)
     except ValueError:
         pass  # Good - destination is not inside source
 
-    print("🚀 RECURSIVE FILE MOVER")
-    print("=" * 50)
-    print(f"📂 Source:      {source_dir}")
-    print(f"📁 Destination: {dest_dir}")
     if args.dry_run:
-        print("🧪 Mode:        DRY RUN (no files will be moved)")
-    print()
+        pass
 
     # Confirm operation unless it's a dry run or --yes flag is used
     if not args.dry_run and not args.yes:
         response = input("Continue with file move operation? [y/N]: ").strip().lower()
         if response != "y":
-            print("Operation cancelled.")
             sys.exit(0)
-        print()
 
     move_files(source_dir, dest_dir, args.dry_run)
 

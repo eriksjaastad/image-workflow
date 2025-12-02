@@ -57,8 +57,9 @@ class WebCharacterSorterTest:
         if self.server_process.poll() is not None:
             # Server has exited, check output
             stdout, stderr = self.server_process.communicate()
+            msg = f"Server failed to start. STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
             raise Exception(
-                f"Server failed to start. STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
+                msg
             )
 
         # Setup headless Chrome
@@ -82,8 +83,9 @@ class WebCharacterSorterTest:
             # If connection fails, check server output
             if self.server_process.poll() is not None:
                 stdout, stderr = self.server_process.communicate()
+                msg = f"Server connection failed. Server output - STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
                 raise Exception(
-                    f"Server connection failed. Server output - STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
+                    msg
                 )
             raise e
 

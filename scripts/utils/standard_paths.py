@@ -37,7 +37,8 @@ def get_cropped_dir() -> Path:
 
 def get_character_group_dir(index: int) -> Path:
     if index not in (1, 2, 3):
-        raise ValueError("Character group index must be 1, 2, or 3")
+        msg = "Character group index must be 1, 2, or 3"
+        raise ValueError(msg)
     return get_project_root() / f"__character_group_{index}"
 
 

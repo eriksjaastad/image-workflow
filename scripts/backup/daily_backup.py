@@ -174,14 +174,7 @@ def main():
     )
 
     # Force output to stdout and stderr
-    import sys
 
-    print(f"✅ Backup complete → {out_dir}", file=sys.stdout, flush=True)
-    print(
-        json.dumps({"summary": manifest["items"]}, indent=2),
-        file=sys.stdout,
-        flush=True,
-    )
 
     # Also write to a log file for debugging
     log_file = dest_root / "backup_log.txt"

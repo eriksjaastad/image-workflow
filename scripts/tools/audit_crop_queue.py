@@ -20,6 +20,7 @@ Checks:
 import argparse
 import json
 import sqlite3
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -86,10 +87,8 @@ def check_db_record(project_id: str, group_id: str) -> tuple[bool, str]:
         return False, f"Error: {e}"
 
 
-def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path = None):
-    """
-    Perform comprehensive audit of queue consistency.
-    """
+def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | None = None):
+    """Perform comprehensive audit of queue consistency."""
     print(f"\n{'='*80}")
     print("CROP QUEUE AUDIT")
     print(f"{'='*80}\n")
@@ -375,7 +374,7 @@ def main():
     is_clean = audit_queue(args.queue, args.crop_queued_dir, args.report_file)
 
     # Exit code: 0 if clean, 1 if issues found
-    exit(0 if is_clean else 1)
+    sys.exit(0 if is_clean else 1)
 
 
 if __name__ == "__main__":

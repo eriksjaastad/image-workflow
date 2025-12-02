@@ -130,15 +130,15 @@ def extract_from_daily_file(daily_path: Path) -> list[dict[str, Any]]:
         elif isinstance(data, dict):
             # Dict with scripts -> sessions structure
             scripts_data = data.get("scripts", {})
-            for script_name, script_data in scripts_data.items():
+            for _script_name, script_data in scripts_data.items():
                 if isinstance(script_data, dict):
                     for raw_session in script_data.get("sessions", []):
                         normalized = normalize_session(raw_session, daily_path.name)
                         if normalized:
                             sessions.append(normalized)
 
-    except Exception as e:
-        print(f"  ⚠️  Error reading {daily_path}: {e}")
+    except Exception:
+        pass
 
     return sessions
 
@@ -157,10 +157,7 @@ def extract_from_session_file(session_path: Path) -> dict[str, Any] | None:
 
 def main():
     """Main entry point."""
-    print("Extracting legacy timer sessions...")
-
     if not TIMER_DIR.exists():
-        print(f"Timer data directory not found: {TIMER_DIR}")
         return
 
     # Collect sessions from daily files
@@ -170,10 +167,8 @@ def main():
 
     # Process daily files first (most complete data)
     daily_files = list(TIMER_DIR.glob("daily_*.json"))
-    print(f"Found {len(daily_files)} daily files")
 
     for daily_file in sorted(daily_files):
-        print(f"  Processing {daily_file.name}...")
         sessions = extract_from_daily_file(daily_file)
 
         for session in sessions:
@@ -194,7 +189,6 @@ def main():
 
     # Process individual session files (supplement)
     session_files = list(TIMER_DIR.glob("session_*.json"))
-    print(f"\nFound {len(session_files)} session files")
 
     for session_file in sorted(session_files):
         session = extract_from_session_file(session_file)
@@ -216,10 +210,6 @@ def main():
         day = session["day"]
         by_day[day].append(session)
 
-    print(
-        f"\nExtracted {len(seen_session_keys)} unique sessions ({duplicate_count} duplicates skipped)"
-    )
-    print(f"Days: {len(by_day)}")
 
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -239,9 +229,7 @@ def main():
                 f.write(json.dumps(session) + "\n")
 
         total_written += len(day_sessions)
-        print(f"  {day_str}: {len(day_sessions)} sessions")
 
-    print(f"\n✅ Done! {total_written} sessions written to {OUTPUT_DIR}")
 
 
 if __name__ == "__main__":

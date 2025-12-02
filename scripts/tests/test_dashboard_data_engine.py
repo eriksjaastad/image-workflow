@@ -167,7 +167,7 @@ class TestDashboardDataEngine(unittest.TestCase):
         self.assertGreater(len(records), 2)
 
         # Check that we have data from both dates
-        dates = set(r["date"] for r in records if r.get("date"))
+        dates = {r["date"] for r in records if r.get("date")}
         self.assertIn(date(2025, 10, 2), dates)
         self.assertIn(date(2025, 10, 3), dates)
 
@@ -427,7 +427,7 @@ class TestDashboardDataEngine(unittest.TestCase):
         records = self.engine.load_file_operations("20251002", "20251002")
 
         # Should only have records from Oct 2
-        dates = set(r["date"] for r in records if r.get("date"))
+        dates = {r["date"] for r in records if r.get("date")}
         self.assertEqual(len(dates), 1)
         self.assertIn(date(2025, 10, 2), dates)
 
@@ -572,7 +572,7 @@ class TestDashboardIntegration(unittest.TestCase):
             f"Expected at least 2 scripts in chart data, got {len(by_script)}",
         )
         # Verify data was transformed properly
-        for script_name, script_data in by_script.items():
+        for _script_name, script_data in by_script.items():
             self.assertIn("dates", script_data)
             self.assertIn("counts", script_data)
 
@@ -629,7 +629,7 @@ class TestDashboardIntegration(unittest.TestCase):
         )
 
         # Get the first script's data (should be our Desktop Image Selector Crop)
-        script_data = list(by_script.values())[0]
+        script_data = next(iter(by_script.values()))
         dates = script_data["dates"]
         counts = script_data["counts"]
 

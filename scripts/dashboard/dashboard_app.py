@@ -100,7 +100,7 @@ class UnifiedDashboard:
                 resp.headers["Pragma"] = "no-cache"
                 return resp
 
-            except Exception as e:
+            except Exception:
                 import traceback
 
                 print("=" * 70)
@@ -191,7 +191,7 @@ class UnifiedDashboard:
                 allocated_hours = (
                     compute_phase_hours_by_active_days(ts_project, active_days_map)
                     if ts_project
-                    else {p: 0.0 for p in phases}
+                    else dict.fromkeys(phases, 0.0)
                 )
 
                 for phase in phases:
@@ -263,7 +263,7 @@ class UnifiedDashboard:
                 resp.headers["Pragma"] = "no-cache"
                 return resp
 
-            except Exception as e:
+            except Exception:
                 import traceback
 
                 print("=" * 70)
@@ -283,7 +283,7 @@ class UnifiedDashboard:
                     lookback_days=60,
                 )
                 return jsonify(raw_data)
-            except Exception as e:
+            except Exception:
                 return error_response("An internal error occurred", 500)
 
     def _get_dashboard_template(self) -> str:

@@ -53,7 +53,6 @@ class RankingModel(nn.Module):
 
 def load_embeddings_cache() -> tuple[dict, dict]:
     """Load embeddings cache."""
-    print("📂 Loading embeddings cache...")
     cache = {}
     filename_cache = {}
 
@@ -69,7 +68,6 @@ def load_embeddings_cache() -> tuple[dict, dict]:
             if filename not in filename_cache or "training data" not in path:
                 filename_cache[filename] = hash_val
 
-    print(f"   Loaded {len(cache):,} cached embeddings")
     return cache, filename_cache
 
 
@@ -107,7 +105,6 @@ def normalize_path(path: str) -> str:
 
 def load_anomaly_set() -> set:
     """Load anomaly cases."""
-    print("📂 Loading anomaly cases...")
     anomalies = set()
 
     with ANOMALY_CSV.open("r") as f:
@@ -119,7 +116,6 @@ def load_anomaly_set() -> set:
             for neg_path in rejected:
                 anomalies.add((chosen, normalize_path(neg_path)))
 
-    print(f"   Loaded {len(anomalies):,} anomaly pairs")
     return anomalies
 
 
@@ -147,8 +143,6 @@ def load_embedding(path: str, cache: dict, filename_cache: dict) -> np.ndarray:
 
 def load_validation_data(cache: dict, filename_cache: dict, anomaly_set: set):
     """Load validation sets (normal and anomaly)."""
-    print("\n📂 Loading validation data...")
-
     normal_pairs = []
     anomaly_pairs = []
     skipped = 0
@@ -199,9 +193,6 @@ def load_validation_data(cache: dict, filename_cache: dict, anomaly_set: set):
         -int(len(anomaly_pairs) * 0.2) :
     ]  # 20% for anomalies since they're rare
 
-    print(f"   Normal validation: {len(normal_val):,} pairs")
-    print(f"   Anomaly validation: {len(anomaly_val):,} pairs")
-    print(f"   Skipped: {skipped:,}")
 
     return normal_val, anomaly_val
 
@@ -232,10 +223,6 @@ def evaluate_model(model: nn.Module, pairs: list[dict], desc: str) -> dict:
 
 
 def main():
-    print("=" * 70)
-    print("MODEL EVALUATION - Ranker v2 vs v3")
-    print("=" * 70)
-    print(f"Device: {device}\n")
 
     # Load data
     cache, filename_cache = load_embeddings_cache()
@@ -245,9 +232,6 @@ def main():
     results = {}
 
     # Test ranker v2
-    print("\n" + "=" * 70)
-    print("TESTING RANKER V2")
-    print("=" * 70)
 
     v2_path = MODEL_DIR / "ranker_v2.pt"
     if v2_path.exists():
@@ -257,13 +241,6 @@ def main():
         v2_normal = evaluate_model(model_v2, normal_val, "Ranker v2 - Normal cases")
         v2_anomaly = evaluate_model(model_v2, anomaly_val, "Ranker v2 - Anomaly cases")
 
-        print("\n✅ Ranker v2 Results:")
-        print(
-            f"   Normal:  {v2_normal['correct']:,}/{v2_normal['total_pairs']:,} = {v2_normal['accuracy']:.1%}"
-        )
-        print(
-            f"   Anomaly: {v2_anomaly['correct']:,}/{v2_anomaly['total_pairs']:,} = {v2_anomaly['accuracy']:.1%} ⭐"
-        )
 
         results["ranker_v2"] = {
             "normal": v2_normal,
@@ -274,13 +251,9 @@ def main():
             },
         }
     else:
-        print(f"⚠️  Ranker v2 not found: {v2_path}")
         results["ranker_v2"] = None
 
     # Test ranker v3
-    print("\n" + "=" * 70)
-    print("TESTING RANKER V3")
-    print("=" * 70)
 
     v3_path = MODEL_DIR / "ranker_v3_w10.pt"
     if v3_path.exists():
@@ -290,13 +263,6 @@ def main():
         v3_normal = evaluate_model(model_v3, normal_val, "Ranker v3 - Normal cases")
         v3_anomaly = evaluate_model(model_v3, anomaly_val, "Ranker v3 - Anomaly cases")
 
-        print("\n✅ Ranker v3 Results:")
-        print(
-            f"   Normal:  {v3_normal['correct']:,}/{v3_normal['total_pairs']:,} = {v3_normal['accuracy']:.1%}"
-        )
-        print(
-            f"   Anomaly: {v3_anomaly['correct']:,}/{v3_anomaly['total_pairs']:,} = {v3_anomaly['accuracy']:.1%} ⭐"
-        )
 
         results["ranker_v3"] = {
             "normal": v3_normal,
@@ -307,32 +273,21 @@ def main():
             },
         }
     else:
-        print(f"⚠️  Ranker v3 not found: {v3_path}")
         results["ranker_v3"] = None
 
     # Comparison
     if results["ranker_v2"] and results["ranker_v3"]:
-        print("\n" + "=" * 70)
-        print("COMPARISON")
-        print("=" * 70)
 
         v2_anom = results["ranker_v2"]["anomaly"]["accuracy"]
         v3_anom = results["ranker_v3"]["anomaly"]["accuracy"]
-        improvement = (v3_anom - v2_anom) * 100
+        (v3_anom - v2_anom) * 100
 
-        print("\n📊 Anomaly Accuracy:")
-        print(f"   v2: {v2_anom:.1%}")
-        print(f"   v3: {v3_anom:.1%}")
-        print(f"   Improvement: {improvement:+.1f} percentage points")
 
-        print("\n📊 Overall Accuracy:")
-        print(f"   v2: {results['ranker_v2']['overall']['accuracy']:.1%}")
-        print(f"   v3: {results['ranker_v3']['overall']['accuracy']:.1%}")
 
         if v3_anom > v2_anom:
-            print("\n🎉 Ranker v3 is BETTER at quality judgment!")
+            pass
         else:
-            print("\n⚠️  Ranker v2 performed better on anomalies")
+            pass
 
     # Save results
     LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -341,8 +296,6 @@ def main():
     with results_path.open("w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"\n📁 Results saved: {results_path}")
-    print("=" * 70)
 
 
 if __name__ == "__main__":

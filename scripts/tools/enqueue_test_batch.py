@@ -15,7 +15,7 @@ from scripts.utils.crop_queue import CropQueueManager
 
 
 def collect_images(source_dir: Path, limit: int) -> list[Path]:
-    imgs = [p for p in source_dir.glob("*.png")]
+    imgs = list(source_dir.glob("*.png"))
     return imgs[:limit] if limit else imgs
 
 

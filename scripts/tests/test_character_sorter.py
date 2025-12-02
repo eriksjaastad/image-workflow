@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Quick test script to run character sorter in headless browser and take screenshot
-"""
+"""Quick test script to run character sorter in headless browser and take screenshot"""
 
 import subprocess
 import time

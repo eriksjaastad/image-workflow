@@ -107,7 +107,7 @@ class UnifiedDashboard:
                 print("ERROR in /api/productivity/data endpoint:")
                 traceback.print_exc()
                 print("=" * 70)
-                return error_response(str(e), 500)
+                return error_response("An internal error occurred", 500)
 
         @self.app.route("/api/scripts")
         def get_scripts():
@@ -270,7 +270,7 @@ class UnifiedDashboard:
                 print("ERROR in /api/current-project/progress endpoint:")
                 traceback.print_exc()
                 print("=" * 70)
-                return error_response(str(e), 500)
+                return error_response("An internal error occurred", 500)
 
         # ===== Debug Endpoint =====
 
@@ -284,7 +284,7 @@ class UnifiedDashboard:
                 )
                 return jsonify(raw_data)
             except Exception as e:
-                return error_response(str(e), 500)
+                return error_response("An internal error occurred", 500)
 
     def _get_dashboard_template(self) -> str:
         """Return the HTML template for the tabbed dashboard."""

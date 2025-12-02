@@ -605,7 +605,11 @@ def create_app(output_dir):
         # Find the correct directory structure
         for dir_info in directories:
             if dir_info["name"] == directory:
-                image_path = dir_info["path"] / filename
+                base_path = dir_info["path"]
+                # Validate path to prevent directory traversal attacks
+                image_path = (base_path / filename).resolve()
+                if not image_path.is_relative_to(base_path.resolve()):
+                    return "Invalid path", 403
                 if image_path.exists():
                     try:
                         # Generate thumbnail using shared function
@@ -646,7 +650,12 @@ def create_app(output_dir):
                 errors.append(f"Invalid selection: {selection}")
                 continue
 
-            source_path = output_path / directory / image
+            # Validate path to prevent directory traversal attacks
+            source_path = (output_path / directory / image).resolve()
+            if not source_path.is_relative_to(output_path.resolve()):
+                errors.append(f"Invalid path: {image}")
+                continue
+
             if not source_path.exists():
                 errors.append(f"Image not found: {image}")
                 continue
@@ -684,14 +693,14 @@ def create_app(output_dir):
                         _ = safe_delete_image_and_yaml(
                             source_path, hard_delete=False, tracker=tracker
                         )
-                    except Exception as e:
-                        errors.append(f"Delete failed for {image}: {e}")
+                    except Exception:
+                        errors.append(f"Delete failed for {image}")
                         continue
 
                 processed += 1
 
-            except Exception as e:
-                errors.append(f"Error processing {image}: {e!s}")
+            except Exception:
+                errors.append(f"Error processing {image}")
 
         if errors:
             return jsonify(

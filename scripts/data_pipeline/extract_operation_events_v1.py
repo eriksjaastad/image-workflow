@@ -96,11 +96,11 @@ def generate_event_id(event: dict[str, Any]) -> str:
     files = event.get("files", []) or event.get("files_sample", [])
     if files:
         files_str = "|".join(sorted(files[:10]))  # Use first 10 for stability
-        files_md5 = hashlib.md5(files_str.encode()).hexdigest()[:8]
-        canonical_parts.append(files_md5)
+        files_hash = hashlib.sha256(files_str.encode()).hexdigest()[:8]
+        canonical_parts.append(files_hash)
 
     canonical = "|".join(canonical_parts)
-    return f"evt:{hashlib.md5(canonical.encode()).hexdigest()[:12]}"
+    return f"evt:{hashlib.sha256(canonical.encode()).hexdigest()[:12]}"
 
 
 def normalize_event(raw_event: dict[str, Any]) -> dict[str, Any] | None:

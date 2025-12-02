@@ -1750,8 +1750,8 @@ def build_app(
                 except Exception:
                     pass
 
-        except Exception as exc:
-            return jsonify({"status": "error", "message": str(exc)}), 500
+        except Exception:
+            return jsonify({"status": "error", "message": "Processing failed"}), 500
 
         deleted_count = len(selections) - kept_count
         

@@ -655,11 +655,16 @@ def create_app(left_dir, right_dir):
 
         # Determine which directory to serve from
         if directory == left_path.name:
-            image_path = left_path / filename
+            base_path = left_path
         elif directory == right_path.name:
-            image_path = right_path / filename
+            base_path = right_path
         else:
             return "Directory not found", 404
+
+        # Validate path to prevent directory traversal attacks
+        image_path = (base_path / filename).resolve()
+        if not image_path.is_relative_to(base_path.resolve()):
+            return "Invalid path", 403
 
         if image_path.exists():
             try:
@@ -707,7 +712,12 @@ def create_app(left_dir, right_dir):
                 errors.append(f"Can only delete from right directory: {directory}")
                 continue
 
-            source_path = right_path / image
+            # Validate path to prevent directory traversal attacks
+            source_path = (right_path / image).resolve()
+            if not source_path.is_relative_to(right_path.resolve()):
+                errors.append(f"Invalid path: {image}")
+                continue
+
             if not source_path.exists():
                 errors.append(f"Image not found: {image}")
                 continue
@@ -749,8 +759,8 @@ def create_app(left_dir, right_dir):
 
                 processed += 1
 
-            except Exception as e:
-                errors.append(f"Error processing {image}: {e!s}")
+            except Exception:
+                errors.append(f"Error processing {image}")
 
         if errors:
             return jsonify(

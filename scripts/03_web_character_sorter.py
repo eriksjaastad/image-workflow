@@ -953,8 +953,8 @@ def create_app(
                     }
                 )
 
-            except Exception as e:
-                return jsonify({"status": "error", "message": str(e)}), 500
+            except Exception:
+                return jsonify({"status": "error", "message": "Move operation failed"}), 500
 
         elif action == "delete":
             try:
@@ -980,8 +980,8 @@ def create_app(
                     }
                 )
 
-            except Exception as e:
-                return jsonify({"status": "error", "message": str(e)}), 500
+            except Exception:
+                return jsonify({"status": "error", "message": "Delete operation failed"}), 500
 
         else:
             return jsonify({"status": "error", "message": "Unknown action"}), 400
@@ -1112,9 +1112,9 @@ def create_app(
 
                     move_file_with_all_companions(d, staging, dry_run=False)
                     moved.append(d.name)
-                except Exception as e:
+                except Exception:
                     return jsonify(
-                        {"status": "error", "message": f"Failed moving {d.name}: {e}"}
+                        {"status": "error", "message": f"Failed moving {d.name}"}
                     ), 500
 
         if moved:
@@ -1211,8 +1211,8 @@ def create_app(
                     history.append((image_path.name, "SENT_TO_CROP", moved_files))
                     processed_count += 1
 
-        except Exception as e:
-            return jsonify({"status": "error", "message": str(e)}), 500
+        except Exception:
+            return jsonify({"status": "error", "message": "Processing failed"}), 500
 
         # Remove processed images from the list (in reverse order to maintain indices)
         for index in sorted(processed_indices, reverse=True):

@@ -611,32 +611,80 @@ def main():
         description="Create a new project manifest with proper timestamps and image counts",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  # Interactive mode (prompts for all inputs)
+USAGE PATTERNS:
+
+1. INTERACTIVE MODE (Recommended for manual testing)
+   python scripts/00_start_project.py
+   → Prompts for project ID, directory, and title
+
+2. POSITIONAL ARGUMENT (Recommended for automation/scripting)
+   python scripts/00_start_project.py sandbox/TEST-mojo1
+   → Auto-derives "TEST-mojo1" as project ID from directory name
+   → Perfect for CI/CD, automation, batch processing
+   → Reduces user error by keeping ID and directory in sync
+
+3. EXPLICIT FLAGS (For special cases, scripting with custom paths)
+   python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3
+   → Use when project ID differs from directory name
+   → Useful when content is outside repo structure
+   → For backward compatibility with existing scripts
+
+WHEN TO USE EACH:
+
+  INTERACTIVE MODE:
+  - First time setting up a project
+  - Manual, one-off project creation
+  - When you need to enter custom title
+
+  POSITIONAL ARGUMENT:
+  - Sandbox testing (TEST- prefixed directories)
+  - Batch processing multiple projects
+  - CI/CD pipelines
+  - Automation scripts
+
+  EXPLICIT FLAGS:
+  - Advanced scenarios with complex directory structures
+  - Legacy scripts that need specific naming
+  - When project ID ≠ directory name by design
+
+EXAMPLES:
+
+  # Interactive mode
   python scripts/00_start_project.py
-  
-  # Auto-derive project ID from directory name
+
+  # Sandbox testing (auto-derives TEST-mojo1)
   python scripts/00_start_project.py sandbox/TEST-mojo1
-  # → Uses TEST-mojo1 as project ID, sandbox/TEST-mojo1 as content directory
-  
-  # With explicit project ID and directory
-  python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3
-  
+
+  # Production project (auto-derives mojo3)
+  python scripts/00_start_project.py ../mojo3
+
+  # Custom naming (legacy/special cases)
+  python scripts/00_start_project.py --project-id custom-id --content-dir /path/to/images
+
   # With custom title
   python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3 --title "Mojo Project 3"
-  
-  # Force overwrite
-  python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3 --force
+
+  # Force overwrite (skip confirmation)
+  python scripts/00_start_project.py ../mojo3 --force
         """,
     )
 
     parser.add_argument(
         "content_dir_positional",
         nargs="?",
-        help="Path to project content directory (derives project ID from directory name)",
+        help="(Recommended) Path to project content directory - project ID auto-derived from directory name. "
+        "Use this for sandbox testing or automation. Keep ID and directory in sync automatically.",
     )
-    parser.add_argument("--project-id", help="Unique project identifier (e.g., mojo3)")
-    parser.add_argument("--content-dir", help="Path to project content directory")
+    parser.add_argument(
+        "--project-id",
+        help="(Optional) Unique project identifier. Only use with --content-dir. "
+        "Not needed with positional argument (auto-derived). Use for special cases where ID differs from directory name.",
+    )
+    parser.add_argument(
+        "--content-dir",
+        help="(Optional) Path to project content directory. Only use with --project-id. "
+        "Not needed with positional argument. Use for advanced scenarios with complex directory structures.",
+    )
     parser.add_argument(
         "--title", help="Human-readable project title (default: capitalized project-id)"
     )

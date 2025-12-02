@@ -108,21 +108,24 @@ ignore = [
   # Pytest - flexible testing styles
   "PT017",    # pytest.raises broad exception
   "PT018",    # pytest.raises composite assertion
+  "PT028",    # pytest default arguments (sometimes needed)
 
   # Other pragmatic exceptions
   "PLW0603",  # Global statement (sometimes needed in scripts)
   "PLW1509",  # Preexec_fn in subprocess (intentional)
   "PLC0206",  # Dict iteration extracting keys (sometimes clearer)
   "RUF012",   # Mutable class attribute (intentional in many cases)
+  "DTZ004",   # datetime.utcfromtimestamp (legacy code)
   "DTZ011",   # datetime.date.today() (OK for dates without time)
   "DTZ012",   # datetime.date.fromtimestamp (OK for dates)
-  "DTZ004",   # datetime.utcfromtimestamp (legacy code)
+  "DTZ901",   # datetime.min without timezone (sometimes needed as fallback)
   "B025",     # Duplicate exception handler (sometimes intentional)
   "B005",     # strip with multi-char (intentional)
   "B018",     # Useless expression (sometimes for side effects)
   "B023",     # Function uses loop variable (closure pattern is intentional)
   "B904",     # raise without from (legacy code, fix incrementally)
   "RUF005",   # Collection concatenation (sometimes clearer)
+  "RUF059",   # Unpacked variable unused (sometimes intentional)
   "PTH107",   # os.remove (sometimes needed for compatibility)
   "PTH112",   # os.path.isdir (sometimes needed for compatibility)
   "PTH119",   # os.path.basename (sometimes needed for compatibility)

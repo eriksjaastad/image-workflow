@@ -657,9 +657,18 @@ def perform_file_operations(
     Execute file operations based on user decision.
 
     Args:
-        project_id: Project identifier (e.g., 'mojo1', 'mojo3') for training data
+        group: The image group being processed.
+        action: The action to perform ('approve', 'crop', 'reject', etc.).
+        selected_index: Index of the selected image in the group, or None.
+        crop_coords: Crop coordinates as (x1, y1, x2, y2) normalized, or None.
+        tracker: FileTracker instance for logging operations.
+        selected_dir: Directory to move selected images to.
+        crop_dir: Directory to move images needing cropping to.
+        delete_staging_dir: Directory to stage deleted images.
+        project_id: Project identifier (e.g., 'mojo1', 'mojo3') for training data.
 
-    Returns: Structured result dict with counts and summary message
+    Returns:
+        Structured result dict with counts and summary message:
         {
           "moved_selected": int,  # 1 if selected image moved to selected/
           "moved_crop": int,      # 1 if selected image moved to crop/
@@ -871,7 +880,8 @@ def build_app(
 ):
     """Build Flask app for reviewing image groups."""
     if not flask_available:
-        raise RuntimeError("Flask not available - cannot build web app")
+        msg = "Flask not available - cannot build web app"
+        raise RuntimeError(msg)
 
     app = Flask(__name__)
     app.config["ALL_GROUPS"] = groups  # Full list
@@ -2043,7 +2053,7 @@ def build_app(
                 # Perform file operations
                 try:
                     # Artifact detection prior to file ops
-                    is_artifact, reasons = detect_artifact(group)
+                    is_artifact, _reasons = detect_artifact(group)
                     if is_artifact:
                         pass
                     # Include artifact flags in tracker notes via log_operation extra? We attach in JSONL below; avoid altering FileTracker schema.

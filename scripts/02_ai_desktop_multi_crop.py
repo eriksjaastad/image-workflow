@@ -80,8 +80,9 @@ from pathlib import Path
 
 try:
     from PIL import Image
-except Exception:
-    raise RuntimeError("Pillow is required. Install with: pip install pillow")
+except ImportError as err:
+    msg = "Pillow is required. Install with: pip install pillow"
+    raise RuntimeError(msg) from err
 
 
 # Import the existing MultiCropTool and base behavior
@@ -139,11 +140,13 @@ candidate_paths = [
 _module_path = next((p for p in candidate_paths if p.exists()), None)
 if _module_path is None:  # pragma: no cover
     searched = ", ".join(str(p) for p in candidate_paths)
-    raise ImportError(f"Could not find base MultiCropTool; looked in: {searched}")
+    msg = f"Could not find base MultiCropTool; looked in: {searched}"
+    raise ImportError(msg)
 
 _spec = _il_util.spec_from_file_location("desktop_multi_crop", str(_module_path))
 if _spec is None or _spec.loader is None:  # pragma: no cover
-    raise ImportError(f"Could not load MultiCropTool from {_module_path}")
+    msg = f"Could not load MultiCropTool from {_module_path}"
+    raise ImportError(msg)
 _desktop_multi_crop = _il_util.module_from_spec(_spec)
 _spec.loader.exec_module(_desktop_multi_crop)  # type: ignore
 MultiCropTool = _desktop_multi_crop.MultiCropTool  # type: ignore
@@ -195,9 +198,8 @@ class AIMultiCropTool(MultiCropTool):
                 logging.getLogger(__name__).exception(
                     "FileTracker initialization failed - refusing to proceed without audit trail"
                 )
-                raise RuntimeError(
-                    "FileTracker initialization failed: refusing to proceed without audit trail"
-                ) from e
+                msg = "FileTracker initialization failed: refusing to proceed without audit trail"
+                raise RuntimeError(msg) from e
 
     # ---- Lightweight UI alert helpers ----
     def _show_alert(self, message: str, color: str = "red") -> None:
@@ -219,12 +221,12 @@ class AIMultiCropTool(MultiCropTool):
                 va="bottom",
                 color=color,
                 fontsize=11,
-                bbox=dict(
-                    boxstyle="round,pad=0.3",
-                    facecolor="#fff3cd",
-                    edgecolor=color,
-                    alpha=0.95,
-                ),
+                bbox={
+                    "boxstyle": "round,pad=0.3",
+                    "facecolor": "#fff3cd",
+                    "edgecolor": color,
+                    "alpha": 0.95,
+                },
             )
             self.fig.canvas.draw_idle()
         except Exception:
@@ -353,28 +355,28 @@ class AIMultiCropTool(MultiCropTool):
         cropped_img.save(png_path)
         # Verify output exists and is non-empty
         if not png_path.exists():
-            raise RuntimeError(f"Crop failed: output file does not exist: {png_path}")
+            msg = f"Crop failed: output file does not exist: {png_path}"
+            raise RuntimeError(msg)
         cropped_size = png_path.stat().st_size
         if cropped_size == 0:
-            raise RuntimeError(f"Crop failed: output file is 0 bytes: {png_path}")
+            msg = f"Crop failed: output file is 0 bytes: {png_path}"
+            raise RuntimeError(msg)
         # Verify dimensions changed unless full-image crop
         if cropped_dimensions == original_dimensions and (x1, y1, x2, y2) != (
             0,
             0,
             *original_dimensions,
         ):
-            raise RuntimeError(
-                f"Crop failed: dimensions unchanged despite crop coords: {png_path}"
-            )
+            msg = f"Crop failed: dimensions unchanged despite crop coords: {png_path}"
+            raise RuntimeError(msg)
         # Heuristic: size unchanged is suspicious unless full-image crop
         if (
             original_size >= 0
             and cropped_size == original_size
             and (x1, y1, x2, y2) != (0, 0, *original_dimensions)
         ):
-            raise RuntimeError(
-                f"Crop failed: file size unchanged after crop (coords={(x1, y1, x2, y2)}, path={png_path})"
-            )
+            msg = f"Crop failed: file size unchanged after crop (coords={(x1, y1, x2, y2)}, path={png_path})"
+            raise RuntimeError(msg)
         print(f"Cropped and saved in place: {png_path.name}")
         # Log crop operation (create/update) - fail-fast if tracking is enabled
         if getattr(self, "tracker", None) is not None:
@@ -571,9 +573,7 @@ class AIMultiCropTool(MultiCropTool):
 
     def submit_batch(self):
         """Override submit_batch to flush queue in queue mode."""
-        if self.queue_mode and self.queue_manager and hasattr(self, "_queue_batch"):
-            # Submit accumulated crops to queue
-            if self._queue_batch:
+        if self.queue_mode and self.queue_manager and hasattr(self, "_queue_batch") and self._queue_batch:
                 # Set index_in_batch for each entry
                 for idx, crop_entry in enumerate(self._queue_batch):
                     crop_entry["index_in_batch"] = idx

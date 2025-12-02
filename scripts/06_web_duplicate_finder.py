@@ -651,7 +651,16 @@ def create_app(left_dir, right_dir):
     @app.route("/image/<directory>/<filename>")
     def serve_image(directory, filename):
         """Serve image thumbnails from the directories."""
+        import os
         from flask import Response
+
+        # Validate inputs before constructing path to prevent directory traversal
+        if (
+            ".." in filename
+            or "/" in filename or "\\" in filename
+            or os.path.basename(filename) != filename
+        ):
+            return "Invalid path", 403
 
         # Determine which directory to serve from
         if directory == left_path.name:
@@ -661,7 +670,7 @@ def create_app(left_dir, right_dir):
         else:
             return "Directory not found", 404
 
-        # Validate path to prevent directory traversal attacks
+        # Construct and validate final path
         image_path = (base_path / filename).resolve()
         if not image_path.is_relative_to(base_path.resolve()):
             return "Invalid path", 403
@@ -712,7 +721,17 @@ def create_app(left_dir, right_dir):
                 errors.append(f"Can only delete from right directory: {directory}")
                 continue
 
-            # Validate path to prevent directory traversal attacks
+            # Validate inputs before constructing path to prevent directory traversal
+            import os
+            if (
+                ".." in image
+                or "/" in image or "\\" in image
+                or os.path.basename(image) != image
+            ):
+                errors.append(f"Invalid path: {image}")
+                continue
+
+            # Construct and validate final path
             source_path = (right_path / image).resolve()
             if not source_path.is_relative_to(right_path.resolve()):
                 errors.append(f"Invalid path: {image}")

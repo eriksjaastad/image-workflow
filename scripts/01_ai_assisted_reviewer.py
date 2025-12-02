@@ -732,12 +732,13 @@ def perform_file_operations(
                 "deleted_images": 1,
                 "message": f"Rejected: {selected_image.name} moved to delete staging",
             }
-        except Exception as e:
+        except Exception:
+            logger.exception("Failed to reject single image")
             return {
                 "moved_selected": 0,
                 "moved_crop": 0,
                 "deleted_images": 0,
-                "message": f"Error: {e}",
+                "message": "Error: Failed to reject image",
             }
 
     if selected_index is None:
@@ -834,12 +835,13 @@ def perform_file_operations(
         }
         return result
 
-    except Exception as e:
+    except Exception:
+        logger.exception("Error during file operations")
         return {
             "moved_selected": 0,
             "moved_crop": 0,
             "deleted_images": 0,
-            "message": f"Error during file operations: {e}",
+            "message": "Error during file operations",
         }
 
 

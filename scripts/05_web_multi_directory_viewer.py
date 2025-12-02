@@ -697,7 +697,8 @@ def create_app(output_dir):
                         crop_dir = output_path.parent / "__crop"
                         crop_dir.mkdir(exist_ok=True)
 
-                    dest_path = crop_dir / image
+                    # Use sanitized filename to avoid path traversal
+                    dest_path = crop_dir / source_path.name
 
                     # Handle name conflicts
                     counter = 1

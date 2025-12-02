@@ -776,7 +776,7 @@ def create_app(left_dir, right_dir):
 
                 processed += 1
 
-            except Exception as e:
+            except Exception as _:
                 logger.exception(f"Error processing {image}")
                 errors.append(f"Error processing {image}")
 

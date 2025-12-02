@@ -24,10 +24,27 @@ Activate virtual environment first:
 
 USAGE:
 ------
-  python scripts/01_ai_assisted_reviewer.py <raw_images_directory>/
+  python scripts/01_ai_assisted_reviewer.py <project_id>
+
+SANDBOX MODE (for testing - isolates data):
+--------------------------------------------
+  python scripts/01_ai_assisted_reviewer.py <project_id> --sandbox
+
+Example:
+  # Start test project first:
+  python scripts/00_start_project.py sandbox/TEST-aiko --sandbox
+
+  # Then run reviewer in sandbox mode:
+  python scripts/01_ai_assisted_reviewer.py TEST-aiko --sandbox
+
+Benefits:
+  - All file operations logged to: data/file_operations_logs/sandbox/
+  - All training data kept separate (no production data pollution)
+  - Easy cleanup: python scripts/tools/cleanup_sandbox.py --confirm
 
 FLAGS:
 ------
+  --sandbox         Run in sandbox mode (isolates data, requires TEST- prefix in project ID)
   --batch-size N    Number of groups to process per batch (default: 100)
   --host HOST       Host for web server (default: 127.0.0.1)
   --port PORT       Port for web server (default: 8081)
@@ -140,6 +157,7 @@ from utils.companion_file_utils import (
     move_file_with_all_companions,
     sort_image_files_by_timestamp_and_stage,
 )
+from utils.sandbox_mode import SandboxConfig
 
 # Flask import deferred until needed (after argument parsing)
 flask_available = False
@@ -2149,7 +2167,9 @@ def build_app(
         except Exception:
             logger.exception("Unhandled error in /process-batch")
             # Don't expose internal error details to client
-            return jsonify({"status": "error", "message": "An internal error occurred"}), 500
+            return jsonify(
+                {"status": "error", "message": "An internal error occurred"}
+            ), 500
 
     @app.route("/submit", methods=["POST"])
     def submit():
@@ -2232,7 +2252,9 @@ def build_app(
 
         except Exception as _:
             logger.exception("Unhandled error in /submit")
-            return jsonify({"status": "error", "message": "An internal error occurred"}), 500
+            return jsonify(
+                {"status": "error", "message": "An internal error occurred"}
+            ), 500
 
     @app.route("/next")
     def next_group():
@@ -2393,6 +2415,11 @@ def main() -> None:
         help="Number of groups per batch (default: 100)",
     )
     parser.add_argument(
+        "--sandbox",
+        action="store_true",
+        help="Run in sandbox mode (isolates data, requires TEST- prefix in project ID)",
+    )
+    parser.add_argument(
         "--print-triplets",
         action="store_true",
         help="Print grouping information and exit (for testing)",
@@ -2444,8 +2471,13 @@ def main() -> None:
     else:
         pass
 
+    # Initialize sandbox configuration
+    sandbox = SandboxConfig(enabled=args.sandbox)
+    if sandbox.enabled:
+        sandbox.print_banner()
+
     # Initialize FileTracker
-    tracker = FileTracker("ai_assisted_reviewer")
+    tracker = FileTracker("ai_assisted_reviewer", sandbox_config=sandbox)
 
     # Scan and group images
     images = scan_images(directory)

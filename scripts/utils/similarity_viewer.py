@@ -644,9 +644,24 @@ def create_app(output_dir):
     @app.route("/image/<directory>/<filename>")
     def serve_image(directory, filename):
         """Serve images from the directories."""
+        import os
         from flask import send_file
 
-        # Validate path to prevent directory traversal attacks
+        # Validate inputs before constructing path to prevent directory traversal
+        # Reject path separators, "..", and ensure basename matches
+        if (
+            ".." in directory or ".." in filename
+            or "/" in filename or "\\" in filename
+            or os.path.basename(filename) != filename
+        ):
+            return "Invalid path", 403
+
+        # Validate directory exists in our known list
+        valid_dir = next((d for d in directories if d["name"] == directory), None)
+        if not valid_dir:
+            return "Invalid directory", 403
+
+        # Construct and validate final path
         image_path = (output_path / directory / filename).resolve()
         if not image_path.is_relative_to(output_path.resolve()):
             return "Invalid path", 403

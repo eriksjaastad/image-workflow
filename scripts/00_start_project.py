@@ -612,10 +612,14 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Interactive mode
+  # Interactive mode (prompts for all inputs)
   python scripts/00_start_project.py
   
-  # With arguments
+  # Auto-derive project ID from directory name
+  python scripts/00_start_project.py sandbox/TEST-mojo1
+  # → Uses TEST-mojo1 as project ID, sandbox/TEST-mojo1 as content directory
+  
+  # With explicit project ID and directory
   python scripts/00_start_project.py --project-id mojo3 --content-dir ../mojo3
   
   # With custom title
@@ -626,6 +630,11 @@ Examples:
         """,
     )
 
+    parser.add_argument(
+        "content_dir_positional",
+        nargs="?",
+        help="Path to project content directory (derives project ID from directory name)",
+    )
     parser.add_argument("--project-id", help="Unique project identifier (e.g., mojo3)")
     parser.add_argument("--content-dir", help="Path to project content directory")
     parser.add_argument(
@@ -649,9 +658,23 @@ Examples:
     if sandbox and sandbox.enabled:
         sandbox.print_banner()
 
-    # If no arguments provided, run in interactive mode
-    if not args.project_id or not args.content_dir:
+    # Handle positional argument: derive project ID from directory name
+    project_id = args.project_id
+    content_dir = args.content_dir
+
+    if args.content_dir_positional:
+        # Positional argument provided: derive project ID from directory name
+        content_dir = args.content_dir_positional
+        dir_path = Path(content_dir)
+        project_id = dir_path.name  # Use directory name as project ID
+        
         if args.project_id or args.content_dir:
+            print("❌ Error: Use either positional directory OR --project-id/--content-dir, not both")
+            sys.exit(1)
+
+    # If no arguments provided, run in interactive mode
+    if not project_id or not content_dir:
+        if project_id or content_dir:
             print(
                 "❌ Error: Both --project-id and --content-dir are required when using arguments"
             )
@@ -662,11 +685,11 @@ Examples:
         return
 
     # Command-line mode
-    content_dir = Path(args.content_dir).expanduser()
+    content_dir_path = Path(content_dir).expanduser()
 
     result = create_project_manifest(
-        project_id=args.project_id,
-        content_dir=content_dir,
+        project_id=project_id,
+        content_dir=content_dir_path,
         title=args.title,
         force=args.force,
         sandbox_config=sandbox,

@@ -108,7 +108,6 @@ ignore = [
   # Pytest - flexible testing styles
   "PT017",    # pytest.raises broad exception
   "PT018",    # pytest.raises composite assertion
-  "PT028",    # pytest default arguments (sometimes needed)
 
   # Other pragmatic exceptions
   "PLW0603",  # Global statement (sometimes needed in scripts)

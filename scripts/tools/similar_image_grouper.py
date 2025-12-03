@@ -1,3 +1,5 @@
+from typing import Any
+
 """
 Groups similar images by visual similarity using CLIP embeddings.
 Moves original files (with ALL companion files having same base name) to group directories.
@@ -124,15 +126,15 @@ def main():
     if not DRY_RUN:
         TARGET_PARENT.mkdir(parents=True, exist_ok=True)
 
-    groups = {}
+    groups: dict[str, Any] = {}
     for idx, lbl in zip(good_idx, labels, strict=False):
         groups.setdefault(int(lbl), []).append(files[idx])
 
     # Report or move files based on dry-run flag
     if DRY_RUN:
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print("DRY RUN RESULTS - Groups that would be created:")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
 
         # Sort groups by size (largest first) for easier review
         sorted_groups = sorted(groups.items(), key=lambda x: len(x[1]), reverse=True)
@@ -157,13 +159,13 @@ def main():
         clustered = sum(c for k, c in sizes.items() if k != -1)
         singles = sizes.get(-1, 0)
 
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print("SUMMARY:")
         print(f"  Total groups: {num_groups}")
         print(f"  Images in groups: {clustered}")
         print(f"  Singles: {singles}")
         print(f"  Total images: {len(files)}")
-        print(f"{'='*70}\n")
+        print(f"{'=' * 70}\n")
         print("✅ Dry run complete! Run without --dry-run to actually move files.")
         print(f"📁 Target would be: {TARGET_PARENT.resolve()}")
 
@@ -186,7 +188,7 @@ def main():
         clustered = sum(c for k, c in sizes.items() if k != -1)
 
         print(
-            f"\n✅ Done! {len(sizes)-('singles' in sizes)} clusters, {clustered} images clustered, {sizes.get(-1,0)} singles."
+            f"\n✅ Done! {len(sizes) - ('singles' in sizes)} clusters, {clustered} images clustered, {sizes.get(-1, 0)} singles."
         )
         print(f"📁 Output: {TARGET_PARENT.resolve()}")
         print("🔒 All original filenames and images preserved - no alterations made.")

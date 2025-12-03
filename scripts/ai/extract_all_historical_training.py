@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Extract training data from ALL historical projects.
@@ -36,7 +38,7 @@ OUTPUT_DIR = BASE_DIR / "data/training"
 
 # Project configurations from timesheet.csv
 # Format: (project_name, raw_dir, final_dir)
-PROJECTS = [
+PROJECTS: dict[str, Any] = [
     # Already processed:
     # ("mojo-1", TRAINING_DATA_DIR / "mojo1", TRAINING_DATA_DIR / "mojo1_final"),
     # To process (adjust these paths based on your actual directory structure):

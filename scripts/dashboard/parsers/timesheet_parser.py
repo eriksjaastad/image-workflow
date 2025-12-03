@@ -44,7 +44,7 @@ class TimesheetParser:
         if not self.csv_path.exists():
             return {"projects": [], "totals": {"total_hours": 0, "total_projects": 0}}
 
-        projects = {}
+        projects: dict[str, Any] = {}
         current_project = None
 
         # Read CSV and auto-detect if header is missing

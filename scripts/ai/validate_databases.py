@@ -68,9 +68,9 @@ class ValidationReport:
 
     def __init__(self, db_name: str):
         self.db_name = db_name
-        self.errors = []
-        self.warnings = []
-        self.stats = {}
+        self.errors: list[Any] = []
+        self.warnings: list[Any] = []
+        self.stats: dict[str, Any] = {}
 
     def error(self, msg: str):
         self.errors.append(msg)
@@ -273,9 +273,9 @@ def validate_records(db_path: Path, report: ValidationReport, verbose: bool = Fa
     report.add_stat("records_with_ai_predictions", has_ai_predictions)
     report.add_stat("records_with_user_data", has_user_data)
     report.add_stat(
-        "ai_prediction_coverage", f"{has_ai_predictions/total_records*100:.1f}%"
+        "ai_prediction_coverage", f"{has_ai_predictions / total_records * 100:.1f}%"
     )
-    report.add_stat("user_data_coverage", f"{has_user_data/total_records*100:.1f}%")
+    report.add_stat("user_data_coverage", f"{has_user_data / total_records * 100:.1f}%")
 
     if total_issues == 0:
         report.add_stat("data_quality", "✅ EXCELLENT")

@@ -11,6 +11,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -136,8 +137,8 @@ if TORCH_AVAILABLE:
             print(f"[!] Error loading models: {e}")
             return None, None, None
 else:
-    RankerModel = None
-    CropProposerModel = None
+    RankerModel = None  # type: ignore
+    CropProposerModel = None  # type: ignore
 
     def load_ai_models(models_dir: Path):
         return None, None, None
@@ -181,8 +182,8 @@ def test_rule_based_recommendation():
     print("\n🧪 Test 2: Rule-Based Recommendation (Fallback)")
 
     # Create fake image group
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir = Path(tmpdir)
+    with tempfile.TemporaryDirectory() as tmpdir_str:
+        tmpdir: Path = Path(tmpdir_str)
 
         # Create fake images with different stages (sorted by stage)
         images = [
@@ -240,7 +241,7 @@ def test_crop_coordinates_validation():
         # Check if meaningful crop (less than 95% of image)
         if crop_area < 0.95:
             print(
-                f"      → Meaningful crop (removes {100 - crop_area*100:.1f}% of image)"
+                f"      → Meaningful crop (removes {100 - crop_area * 100:.1f}% of image)"
             )
         else:
             print("      → Nearly full image (should not crop)")
@@ -287,8 +288,8 @@ def test_decision_file_creation():
     """Test that .decision files are created correctly."""
     print("\n🧪 Test 5: Decision File Creation")
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir = Path(tmpdir)
+    with tempfile.TemporaryDirectory() as tmpdir_str:
+        tmpdir: Path = Path(tmpdir_str)
 
         # Create fake image
         img = tmpdir / "test_20250101_120000_stage2_upscaled.png"

@@ -75,7 +75,7 @@ import sys
 import time
 from collections import Counter
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional, cast
 
 try:
     import yaml
@@ -102,9 +102,7 @@ except Exception:
             file=sys.stderr,
         )
         msg = "ActivityTimer/FileTracker unavailable - refusing to proceed without audit trail"
-        raise RuntimeError(
-            msg
-        ) from e
+        raise RuntimeError(msg) from e
 
 try:
     from utils.companion_file_utils import (
@@ -435,8 +433,8 @@ def analyze_prompts_for_characters(
     )
 
     # First pass: collect all potential prompt-based characters
-    prompt_character_counts = {}
-    file_to_prompt_char = {}
+    prompt_character_counts: dict[str, int] = {}
+    file_to_prompt_char: dict[str, str] = {}
 
     for filename, char_info in files_without_character:
         prompt = char_info.get("prompt", "")
@@ -664,7 +662,7 @@ def analyze_yaml(
         print(f"[*] Total {total_files} metadata files to analyze...")
 
     character_mapping = {}
-    processing_stats = {
+    processing_stats: dict[str, Any] = {
         "total_files": total_files,
         "processed": 0,
         "errors": 0,
@@ -718,9 +716,7 @@ def analyze_yaml(
 
     elapsed_time = time.time() - start_time
     processing_stats["processing_time"] = elapsed_time
-    processing_stats["characters_found"] = sorted(
-        processing_stats["characters_found"]
-    )
+    processing_stats["characters_found"] = sorted(processing_stats["characters_found"])
     processing_stats["stages_found"] = sorted(processing_stats["stages_found"])
 
     # Create output data structure
@@ -751,9 +747,7 @@ def analyze_yaml(
             # Verify file was written and is non-empty
             if not output_path.exists():
                 msg = f"Write verification failed: {output_path} does not exist"
-                raise RuntimeError(
-                    msg
-                )
+                raise RuntimeError(msg)
             if output_path.stat().st_size == 0:
                 msg = f"Write verification failed: {output_path} is empty"
                 raise RuntimeError(msg)
@@ -982,7 +976,7 @@ def preview_grouping_plan(
         True if user confirms, False if user cancels
     """
     # Count files per group
-    group_counts = {}
+    group_counts: dict[str, int] = {}
     files_staying_in_root = 0
 
     for _filename, char_info in character_mapping.items():
@@ -1065,7 +1059,7 @@ def move_file_pair(
     yaml_path: Path,
     target_dir: Path,
     dry_run: bool = False,
-    tracker: Optional = None,
+    tracker: Any | None = None,
 ) -> bool:
     """Move PNG and ALL its companion files to target directory."""
     try:
@@ -1079,17 +1073,13 @@ def move_file_pair(
                 # Verify files actually moved
                 if not moved_files:
                     msg = f"move_file_with_all_companions returned empty list for {png_path}"
-                    raise RuntimeError(
-                        msg
-                    )
+                    raise RuntimeError(msg)
 
                 # Verify PNG actually moved
                 target_png = target_dir / png_path.name
                 if not target_png.exists():
                     msg = f"Move verification failed: {target_png} does not exist after move"
-                    raise RuntimeError(
-                        msg
-                    )
+                    raise RuntimeError(msg)
 
                 # Track file operations (fail-fast if tracking enabled)
                 if tracker:
@@ -1101,9 +1091,7 @@ def move_file_pair(
                         )
             else:
                 msg = "Companion utilities unavailable - cannot safely move with companions"
-                raise RuntimeError(
-                    msg
-                )
+                raise RuntimeError(msg)
 
         return True
 
@@ -1158,7 +1146,7 @@ def group_by_category(
     character_mapping = analysis_data["character_mapping"]
 
     # Extract unique categories based on group_by parameter
-    categories = set()
+    categories: set[str] = set()
     for file_data in character_mapping.values():
         category_name = file_data.get(
             "character_name"
@@ -1166,16 +1154,18 @@ def group_by_category(
         if category_name:
             categories.add(category_name)
 
-    categories = sorted(categories)
+    categories_list: list[str] = sorted(categories)
 
     if not quiet:
         category_label = group_by.replace("_", " ").title()
         print(f"🎭 Grouping by {category_label} - Intelligent Image Organization")
         print(f"📁 Source: {source_dir}")
-        print(f"[*] Found {len(categories)} {group_by} groups: {', '.join(categories)}")
+        print(
+            f"[*] Found {len(categories_list)} {group_by} groups: {', '.join(categories_list)}"
+        )
 
     # Create category directories
-    char_dirs = create_character_directories(source_dir, categories, dry_run)
+    char_dirs = create_character_directories(source_dir, categories_list, dry_run)
 
     # Initialize activity tracking
     tracker = None
@@ -1191,13 +1181,13 @@ def group_by_category(
         # raise RuntimeError("FileTracker unavailable - aborting to preserve audit trail")
 
     # Statistics tracking
-    stats = {
+    stats: dict[str, Any] = {
         "total_images": len(character_mapping),  # Each key is one PNG image
         "moved_successfully": 0,
         "move_errors": 0,
         "missing_images": 0,
         "skipped_unknown": 0,
-        "character_counts": dict.fromkeys(categories, 0),
+        "character_counts": dict.fromkeys(categories_list, 0),
         "processing_time": 0,
     }
 
@@ -1323,7 +1313,9 @@ def group_by_category(
             )
 
         # Move the file pair
-        if move_file_pair(png_path, yaml_path, target_dir, dry_run, tracker):
+        if target_dir and move_file_pair(
+            png_path, yaml_path, target_dir, dry_run, tracker
+        ):
             stats["moved_successfully"] += 1
             # Track by the actual directory used (could be multi-character)
             if is_multi_character and len(all_characters) > 1:
@@ -1435,8 +1427,8 @@ def process_directory(
 
     # If group_by is NOT "character", we need to re-extract categories from ALL files
     if group_by != "character":
-        category_assignments = {}
-        category_counts = {}
+        category_assignments: dict[str, str] = {}
+        category_counts: dict[str, int] = {}
 
         # First, clear character_name for ALL files to prevent LoRA fallback
         for filename in enhanced_data["character_mapping"]:
@@ -1574,29 +1566,27 @@ def process_directory(
                 context_path = Path(context_file)
                 if not context_path.exists():
                     msg = f"Write verification failed: {context_path} does not exist"
-                    raise RuntimeError(
-                        msg
-                    )
+                    raise RuntimeError(msg)
                 if context_path.stat().st_size == 0:
                     msg = f"Write verification failed: {context_path} is empty"
-                    raise RuntimeError(
-                        msg
-                    )
+                    raise RuntimeError(msg)
                 if not quiet:
                     print(f"✅ Enhanced analysis saved to: {context_file}")
             except Exception as e:
                 print(f"[ERROR] Failed to save enhanced analysis: {e}", file=sys.stderr)
                 msg = f"Enhanced analysis file write failed: {context_file}"
-                raise RuntimeError(
-                    msg
-                ) from e
+                raise RuntimeError(msg) from e
 
     # Preview and Confirmation (skip for dry-run since it already shows what would happen)
-    if not dry_run and not quiet and not preview_grouping_plan(
-        enhanced_data["character_mapping"],
-        directory,
-        group_by,
-        auto_confirm=False,  # Always ask for confirmation in pipeline mode
+    if (
+        not dry_run
+        and not quiet
+        and not preview_grouping_plan(
+            enhanced_data["character_mapping"],
+            directory,
+            group_by,
+            auto_confirm=False,  # Always ask for confirmation in pipeline mode
+        )
     ):
         if not quiet:
             print("\n[!] Operation cancelled by user")
@@ -1605,9 +1595,7 @@ def process_directory(
             "grouping_stats": {"cancelled": True},
             "pipeline_summary": {
                 "total_files_analyzed": enhanced_data["summary"]["total_images"],
-                "characters_found": len(
-                    enhanced_data["summary"]["characters_found"]
-                ),
+                "characters_found": len(enhanced_data["summary"]["characters_found"]),
                 "files_organized": 0,
                 "files_skipped": 0,
                 "success_rate": 0,
@@ -1737,13 +1725,13 @@ Examples:
         print(f"🔍 Analyzing {len(yaml_files)} YAML files...")
 
         # Counters for each category
-        ethnicities = Counter()
-        age_groups = Counter()
-        body_types = Counter()
-        hair_colors = Counter()
-        scenarios = Counter()
-        face_shapes = Counter()
-        physique_types = Counter()
+        ethnicities: Counter[str] = Counter()
+        age_groups: Counter[str] = Counter()
+        body_types: Counter[str] = Counter()
+        hair_colors: Counter[str] = Counter()
+        scenarios: Counter[str] = Counter()
+        face_shapes: Counter[str] = Counter()
+        physique_types: Counter[str] = Counter()
 
         successful = 0
 

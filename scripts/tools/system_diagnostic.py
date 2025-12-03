@@ -17,7 +17,9 @@ def run_command(cmd, capture=True):
                 cmd, shell=True, capture_output=True, text=True, timeout=10, check=False
             )
             return result.returncode, result.stdout.strip(), result.stderr.strip()
-        result = subprocess.run(cmd, shell=True, timeout=10, check=False)
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, timeout=10, check=False
+        )
         return result.returncode, "", ""
     except Exception as e:
         return -1, "", str(e)

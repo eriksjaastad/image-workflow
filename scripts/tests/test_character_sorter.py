@@ -50,7 +50,7 @@ def test_character_sorter():
         for i, name_elem in enumerate(image_names):
             text = name_elem.text
             color = name_elem.value_of_css_property("color")
-            print(f"Image {i+1}: '{text}' (color: {color})")
+            print(f"Image {i + 1}: '{text}' (color: {color})")
 
         driver.quit()
 

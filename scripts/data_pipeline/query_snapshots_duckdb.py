@@ -126,10 +126,8 @@ def execute_query(
             rows = result.fetchall()
             [desc[0] for desc in result.description]
 
-
             for _row in rows:
                 pass
-
 
     except Exception:
         pass
@@ -170,13 +168,11 @@ def interactive_mode(con: duckdb.DuckDBPyConnection) -> None:
             rows = result.fetchall()
             [desc[0] for desc in result.description]
 
-
             for _row in rows[:100]:  # Limit to first 100 rows
                 pass
 
             if len(rows) > 100:
                 pass
-
 
         except KeyboardInterrupt:
             break

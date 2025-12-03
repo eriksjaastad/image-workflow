@@ -106,7 +106,7 @@ def _build_session(script: str, events: list[dict[str, Any]]) -> dict[str, Any]:
     )
 
     # Count operations by type
-    ops_by_type = defaultdict(int)
+    ops_by_type: dict[str, int] = defaultdict(int)
     projects_touched = set()
     for e in events:
         op_type = e.get("operation", "unknown")
@@ -146,7 +146,6 @@ def main():
             if line.strip():
                 events.append(json.loads(line))
 
-
     # Filter to last N days and group by day
     cutoff = datetime.now(UTC) - timedelta(days=LOOKBACK_DAYS)
     by_day = defaultdict(list)
@@ -161,7 +160,6 @@ def main():
 
         day_str = ts.strftime("%Y%m%d")
         by_day[day_str].append(event)
-
 
     # Create output directory
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -181,7 +179,6 @@ def main():
                 f.write(json.dumps(session) + "\n")
 
         total_sessions += len(sessions)
-
 
     # Show sample
     if total_sessions > 0:

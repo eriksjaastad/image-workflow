@@ -13,6 +13,7 @@ making maintenance easier.
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 # Set matplotlib backend before importing pyplot
 import matplotlib
@@ -67,15 +68,17 @@ class BaseDesktopImageTool:
         self.tracker = FileTracker(tool_name)
 
         # Common state
-        self.current_images = []
-        self.image_states = []  # List of dicts with crop coords, action, etc.
-        self.selectors = []
-        self.axes = []
+        self.current_images: list[Any] = []
+        self.image_states: list[
+            Any
+        ] = []  # List of dicts with crop coords, action, etc.
+        self.selectors: list[Any] = []
+        self.axes: list[Any] = []
         self.has_pending_changes = False
         self.quit_confirmed = False
 
         # Matplotlib setup
-        self.fig = None
+        self.fig: Any | None = None
         self.current_num_images = 3
         self.setup_display(self.current_num_images)
 
@@ -129,6 +132,7 @@ class BaseDesktopImageTool:
             self.fig.clf()
 
         # Create axes manually to keep the same Figure instance alive
+        assert self.fig is not None  # Help mypy understand fig is not None
         self.axes = [
             self.fig.add_subplot(1, num_images, i + 1) for i in range(num_images)
         ]
@@ -187,16 +191,21 @@ class BaseDesktopImageTool:
         """Create a RectangleSelector for the given axis and image."""
         selector = RectangleSelector(
             ax,
-            lambda eclick, erelease, idx=image_idx: self.on_crop_select(
+            lambda eclick, erelease, idx=image_idx: self.on_crop_select(  # type: ignore
                 eclick, erelease, idx
             ),
             useblit=True,  # Fast blitting for smooth interactive dragging
-            button=[1],
+            button=[1],  # type: ignore
             minspanx=5,
             minspany=5,
             spancoords="pixels",
             interactive=True,
-            props={"facecolor": "none", "edgecolor": "red", "linewidth": 2, "alpha": 0.8},
+            props={
+                "facecolor": "none",
+                "edgecolor": "red",
+                "linewidth": 2,
+                "alpha": 0.8,
+            },
             handle_props={
                 "markersize": 48,
                 "markerfacecolor": "none",
@@ -280,19 +289,19 @@ class BaseDesktopImageTool:
             sel_height = y2 - y1
 
             if sel_width > 0 and sel_height > 0:
-                target_height_from_width = sel_width / active_aspect_ratio
-                target_width_from_height = sel_height * active_aspect_ratio
+                target_height_from_width: float = sel_width / active_aspect_ratio
+                target_width_from_height: float = sel_height * active_aspect_ratio
 
                 if target_height_from_width <= sel_height:
-                    new_height = target_height_from_width
-                    height_diff = sel_height - new_height
-                    y1 += height_diff / 2
-                    y2 = y1 + new_height
+                    new_height: float = target_height_from_width
+                    height_diff: float = sel_height - new_height
+                    y1 += height_diff / 2  # type: ignore
+                    y2 = y1 + new_height  # type: ignore
                 else:
-                    new_width = target_width_from_height
-                    width_diff = sel_width - new_width
-                    x1 += width_diff / 2
-                    x2 = x1 + new_width
+                    new_width: float = target_width_from_height
+                    width_diff: float = sel_width - new_width
+                    x1 += width_diff / 2  # type: ignore
+                    x2 = x1 + new_width  # type: ignore
 
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                 self._set_selector_extents_safely(image_idx, x1, x2, y1, y2)
@@ -403,8 +412,8 @@ class BaseDesktopImageTool:
                 str(png_path.parent),
                 str(png_path.parent),
                 1,
-                f"No-op crop; skipped save ({x1},{y1},{x2},{y2})",
-                [png_path.name],
+                f"No-op crop; skipped save ({x1},{y1},{x2},{y2})",  # type: ignore
+                [png_path.name],  # type: ignore
             )
         else:
             # Perform real crop and save in place
@@ -417,8 +426,8 @@ class BaseDesktopImageTool:
                 str(png_path.parent),
                 str(png_path.parent),
                 1,
-                f"Cropped in place to ({x1},{y1},{x2},{y2})",
-                [png_path.name],
+                f"Cropped in place to ({x1},{y1},{x2},{y2})",  # type: ignore
+                [png_path.name],  # type: ignore
             )
 
     def safe_delete(self, png_path: Path, yaml_path: Path):
@@ -439,10 +448,9 @@ class BaseDesktopImageTool:
                 str(png_path.parent),
                 str(delete_staging),
                 len(moved_files),
-                "Moved to delete staging for review",
-                [f.name for f in moved_files],
+                "Moved to delete staging for review",  # type: ignore
+                [f.name for f in moved_files],  # type: ignore
             )
-
 
     def move_to_cropped(self, png_path: Path, yaml_path: Path, reason: str):
         """Mark files as processed (skipped) but leave them in original directory."""
@@ -458,10 +466,9 @@ class BaseDesktopImageTool:
             str(png_path.parent),
             str(png_path.parent),
             file_count,
-            f"Image {reason} (left in place)",
-            files,
+            f"Image {reason} (left in place)",  # type: ignore
+            files,  # type: ignore
         )
-
 
     def load_image_safely(self, png_path: Path, image_idx: int) -> bool:
         """Load an image safely and handle errors."""

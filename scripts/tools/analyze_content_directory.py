@@ -16,6 +16,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+from typing import Any, cast
 
 # Add the scripts/ directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -24,7 +25,7 @@ from utils.companion_file_utils import extract_timestamp_from_filename
 
 def analyze_file_extensions(directory: Path) -> dict[str, int]:
     """Analyze all file extensions in the directory."""
-    extensions = Counter()
+    extensions: Counter[str] = Counter()
 
     for file_path in directory.rglob("*"):
         if file_path.is_file():
@@ -35,7 +36,7 @@ def analyze_file_extensions(directory: Path) -> dict[str, int]:
 
 def analyze_filename_patterns(directory: Path) -> dict[str, int]:
     """Analyze filename patterns to understand naming conventions."""
-    patterns = Counter()
+    patterns: Counter[str] = Counter()
 
     for file_path in directory.rglob("*"):
         if file_path.is_file():
@@ -159,29 +160,31 @@ def analyze_triplet_patterns(directory: Path) -> dict[str, int]:
     return triplet_stats
 
 
-def analyze_prompt_files(directory: Path) -> dict[str, int]:
+def analyze_prompt_files(directory: Path) -> dict[str, Any]:
     """Analyze prompt files if they exist."""
     prompt_stats = {"total_prompt_files": 0, "total_prompts": 0, "prompt_files": []}
 
     prompts_dir = directory / "prompts"
     if prompts_dir.exists():
         for prompt_file in prompts_dir.glob("*.txt"):
-            prompt_stats["total_prompt_files"] += 1
-            prompt_stats["prompt_files"].append(prompt_file.name)
+            prompt_stats["total_prompt_files"] = (
+                cast(int, prompt_stats["total_prompt_files"]) + 1
+            )
+            cast(list[str], prompt_stats["prompt_files"]).append(prompt_file.name)
 
             try:
                 with open(prompt_file, encoding="utf-8") as f:
                     lines = f.readlines()
-                    prompt_stats["total_prompts"] += len(
-                        [line for line in lines if line.strip()]
-                    )
+                    prompt_stats["total_prompts"] = cast(
+                        int, prompt_stats["total_prompts"]
+                    ) + len([line for line in lines if line.strip()])
             except Exception as e:
                 print(f"Warning: Could not read {prompt_file}: {e}")
 
     return prompt_stats
 
 
-def analyze_directory_structure(directory: Path) -> dict[str, int]:
+def analyze_directory_structure(directory: Path) -> dict[str, Any]:
     """Analyze directory structure."""
     structure_stats = {
         "total_directories": 0,
@@ -192,14 +195,20 @@ def analyze_directory_structure(directory: Path) -> dict[str, int]:
 
     for item in directory.rglob("*"):
         if item.is_dir():
-            structure_stats["total_directories"] += 1
-            structure_stats["directory_names"].append(item.name)
+            structure_stats["total_directories"] = (
+                cast(int, structure_stats["total_directories"]) + 1
+            )
+            cast(list[str], structure_stats["directory_names"]).append(item.name)
 
             # Calculate depth
             depth = len(item.relative_to(directory).parts)
-            structure_stats["max_depth"] = max(structure_stats["max_depth"], depth)
+            structure_stats["max_depth"] = max(
+                cast(int, structure_stats["max_depth"]), depth
+            )
         elif item.is_file():
-            structure_stats["total_files"] += 1
+            structure_stats["total_files"] = (
+                cast(int, structure_stats["total_files"]) + 1
+            )
 
     return structure_stats
 

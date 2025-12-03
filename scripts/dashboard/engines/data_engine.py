@@ -53,7 +53,7 @@ class DashboardDataEngine:
         self.snapshot_loader = SnapshotLoader(project_root)
 
         # Cache for processed data
-        self._cache = {}
+        self._cache: dict[str, Any] = {}
 
     def load_projects(self) -> list[dict[str, Any]]:
         """Load project manifests from data/projects/*.project.json"""
@@ -114,19 +114,19 @@ class DashboardDataEngine:
                 labels.append(cur.isoformat())
                 cur = cur + timedelta(hours=1)
         elif time_slice == "D":
-            cur = start.replace(hour=0, minute=0, second=0, microsecond=0).date()
-            end = now.date()
-            while cur <= end:
-                labels.append(cur.isoformat())
-                cur = cur + timedelta(days=1)
+            cur_date = start.replace(hour=0, minute=0, second=0, microsecond=0).date()
+            end_date = now.date()
+            while cur_date <= end_date:
+                labels.append(cur_date.isoformat())
+                cur_date = cur_date + timedelta(days=1)
         elif time_slice == "W":
             # Start from Monday of the start week
             start_monday = (start - timedelta(days=start.weekday())).date()
             end_monday = (now - timedelta(days=now.weekday())).date()
-            cur = start_monday
-            while cur <= end_monday:
-                labels.append(cur.isoformat())
-                cur = cur + timedelta(days=7)
+            cur_date = start_monday
+            while cur_date <= end_monday:
+                labels.append(cur_date.isoformat())
+                cur_date = cur_date + timedelta(days=7)
         elif time_slice == "M":
             # Move to first of month for start and iterate monthly
             cur = start.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -214,7 +214,7 @@ class DashboardDataEngine:
         self, start_date: str | None = None, end_date: str | None = None
     ) -> list[dict]:
         """Load and process ActivityTimer data"""
-        records = []
+        records: list[dict[str, Any]] = []
 
         if not self.timer_data_dir.exists():
             return records
@@ -757,7 +757,7 @@ class DashboardDataEngine:
         self, start_date: str | None = None, end_date: str | None = None
     ) -> list[dict]:
         """Fallback: Load records from detailed log files"""
-        records = []
+        records: list[dict[str, Any]] = []
 
         file_ops_dir = self.data_dir / "data" / "file_operations_logs"
         if not file_ops_dir.exists():
@@ -879,7 +879,9 @@ class DashboardDataEngine:
             return []
 
         # Group by time slice and group field
-        aggregated = defaultdict(lambda: defaultdict(float))
+        aggregated: dict[str, dict[str, float]] = defaultdict(
+            lambda: defaultdict(float)
+        )
 
         for record in records:
             # Get time slice key
@@ -925,7 +927,9 @@ class DashboardDataEngine:
             return []
 
         # Group by time slice and project
-        aggregated = defaultdict(lambda: defaultdict(float))
+        aggregated: dict[str, dict[str, float]] = defaultdict(
+            lambda: defaultdict(float)
+        )
 
         for record in records:
             # Get time slice key
@@ -945,7 +949,9 @@ class DashboardDataEngine:
                 # Check for exact match or word-boundary match (separated by / or _)
                 # This prevents "dalia" from matching "dalia_hannah"
                 if (
-                    f"/{pid_lower}/" in f"/{src}/" or f"/{pid_lower}/" in f"/{dst}/" or pid_lower in (src, dst)
+                    f"/{pid_lower}/" in f"/{src}/"
+                    or f"/{pid_lower}/" in f"/{dst}/"
+                    or pid_lower in (src, dst)
                 ):
                     project_id = pid
                     break
@@ -1030,7 +1036,8 @@ class DashboardDataEngine:
             if png_count is None:
                 png_count = 0
 
-            aggregated[time_key][project_title] += png_count
+            if project_title:
+                aggregated[time_key][project_title] += png_count
 
         # Convert to list format
         result = []
@@ -1146,7 +1153,9 @@ class DashboardDataEngine:
         )
 
         # Calculate averages by time pattern
-        pattern_groups = defaultdict(lambda: defaultdict(list))
+        pattern_groups: dict[str, dict[str, list[float]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
 
         for record in aggregated:
             time_pattern = self._get_time_pattern(record["time_slice"], time_slice)
@@ -1366,7 +1375,7 @@ class DashboardDataEngine:
         activity_dates_clean = [d for d in activity_dates if d is not None]
         file_ops_dates_clean = [d for d in file_ops_dates if d is not None]
 
-        dashboard_data = {
+        dashboard_data: dict[str, Any] = {
             "metadata": {
                 "generated_at": datetime.now().isoformat(),
                 "time_slice": time_slice,
@@ -1570,7 +1579,8 @@ class DashboardDataEngine:
         if file_ops_records:
             ops_by_display: dict[str, list[dict[str, Any]]] = defaultdict(list)
             for r in file_ops_records:
-                display = self.get_display_name(r.get("script"))
+                script_name = r.get("script") or "unknown"
+                display = self.get_display_name(script_name)
                 ops_by_display[display].append(r)
             for display, ops in ops_by_display.items():
                 metrics = self.calculate_file_operation_work_time(ops)
@@ -1582,7 +1592,8 @@ class DashboardDataEngine:
                 lambda: {"work_time_seconds": 0.0, "files_processed": 0.0}
             )
             for r in activity_records:
-                display = self.get_display_name(r.get("script"))
+                script_name = r.get("script") or "unknown"
+                display = self.get_display_name(script_name)
                 if display in timing_by_display:
                     continue
                 tmp_by_display[display]["work_time_seconds"] += float(
@@ -1609,14 +1620,16 @@ class DashboardDataEngine:
         dashboard_data["timing_data"] = timing_by_display
 
         # Compute artifact stats from operation events extra fields if present
+        # Note: load_operation_events method not available in SnapshotLoader
         try:
-            events = self.loader.load_operation_events(lookback_days)
-            artifact_count = 0
-            for evt in events:
-                extra = evt.get("extra") or {}
-                if extra.get("artifact"):
-                    artifact_count += 1
-            dashboard_data["artifact_stats"] = {"artifact_events": artifact_count}
+            # events = self.snapshot_loader.load_operation_events(lookback_days)
+            # artifact_count = 0
+            # for evt in events:
+            #     extra = evt.get("extra") or {}
+            #     if extra.get("artifact"):
+            #         artifact_count += 1
+            # dashboard_data["artifact_stats"] = {"artifact_events": artifact_count}
+            dashboard_data["artifact_stats"] = {"artifact_events": 0}
         except Exception:
             # Best effort; do not break dashboard
             dashboard_data["artifact_stats"] = {"artifact_events": 0}
@@ -1645,7 +1658,7 @@ class DashboardDataEngine:
         Returns:
             Dict with backup status information
         """
-        backup_status = {
+        backup_status: dict[str, Any] = {
             "status": "unknown",
             "last_backup": None,
             "last_backup_timestamp": None,
@@ -1673,14 +1686,17 @@ class DashboardDataEngine:
                     )
                 elif backup_status["status"] == "failed":
                     failures = backup_status.get("failures", [])
+                    failure_count = len(failures) if isinstance(failures, list) else 0
                     backup_status["message"] = (
-                        f"❌ Last backup failed: {backup_status['last_backup']} ({len(failures)} failures)"
+                        f"❌ Last backup failed: {backup_status['last_backup']} ({failure_count} failures)"
                     )
                 else:
                     backup_status["message"] = "⚠️ Backup status unknown"
 
                 # Check if backup is recent (within 48 hours)
-                if backup_status["last_backup_timestamp"]:
+                if backup_status["last_backup_timestamp"] and isinstance(
+                    backup_status["last_backup_timestamp"], str
+                ):
                     last_backup_time = datetime.fromisoformat(
                         backup_status["last_backup_timestamp"]
                     )

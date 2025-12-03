@@ -434,7 +434,7 @@ class ProjectMetricsAggregator:
                 op = str(rec.get("operation") or "").lower()
                 dest = str(rec.get("dest_dir") or "").lower()
                 if (
-                    (op == "move"
+                    op == "move"
                     and dest
                     in {
                         "selected",
@@ -443,9 +443,8 @@ class ProjectMetricsAggregator:
                         "__crop",
                         "__crop_auto",
                         "crop_auto",
-                    })
-                    or op == "crop"
-                ):
+                    }
+                ) or op == "crop":
                     tmp += int(rec.get("file_count") or 0)
             total = tmp
         else:

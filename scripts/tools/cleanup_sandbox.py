@@ -22,6 +22,7 @@ Directories cleaned:
     - data/file_operations_logs/sandbox/
     - data/test_runs/
 """
+
 import argparse
 import shutil
 import sys
@@ -117,14 +118,24 @@ def cleanup_sandbox(confirm: bool = True, dry_run: bool = False) -> int:
         return 0
 
     # Verify all directories have sandbox markers (safety check)
-    dirs_without_markers = [d for d in existing_dirs if not SandboxConfig.has_marker_file(d)]
+    dirs_without_markers = [
+        d for d in existing_dirs if not SandboxConfig.has_marker_file(d)
+    ]
 
     if dirs_without_markers:
-        print("⚠️  ERROR: Some directories are missing .sandbox_marker files:", file=sys.stderr)
+        print(
+            "⚠️  ERROR: Some directories are missing .sandbox_marker files:",
+            file=sys.stderr,
+        )
         for d in dirs_without_markers:
             print(f"   - {d}", file=sys.stderr)
-        print("\nThese directories will NOT be deleted (safety check).", file=sys.stderr)
-        print("If you're sure these are sandbox directories, add .sandbox_marker files manually.", file=sys.stderr)
+        print(
+            "\nThese directories will NOT be deleted (safety check).", file=sys.stderr
+        )
+        print(
+            "If you're sure these are sandbox directories, add .sandbox_marker files manually.",
+            file=sys.stderr,
+        )
 
         # Remove unmarked directories from the list
         existing_dirs = [d for d in existing_dirs if SandboxConfig.has_marker_file(d)]
@@ -191,21 +202,18 @@ def main() -> int:
         epilog=__doc__,
     )
     parser.add_argument(
-        "--force",
-        "-f",
-        action="store_true",
-        help="Skip confirmation prompt"
+        "--force", "-f", action="store_true", help="Skip confirmation prompt"
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Show what would be deleted without actually deleting"
+        help="Show what would be deleted without actually deleting",
     )
     parser.add_argument(
         "--list",
         "-l",
         action="store_true",
-        help="List all sandbox directories and their sizes"
+        help="List all sandbox directories and their sizes",
     )
     args = parser.parse_args()
 

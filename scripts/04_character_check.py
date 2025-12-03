@@ -115,7 +115,7 @@ def analyze_directory(
 ) -> dict[str, Counter]:
     """Analyze one directory's images, returning a Counter per field."""
     results: dict[str, Counter] = {name: Counter() for name in fields}
-    extraction_failures = Counter()
+    extraction_failures: dict[str, int] = Counter()
 
     for png in sorted(dir_path.glob("*.png")):
         yaml_path = png.with_suffix(".yaml")

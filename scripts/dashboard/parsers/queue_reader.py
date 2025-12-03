@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Queue Data Reader - Dashboard Integration
@@ -216,7 +218,9 @@ class QueueDataReader:
         if not trends:
             return {}
 
-        by_day = defaultdict(lambda: {"crops": 0, "batches": 0, "total_time_ms": 0})
+        by_day: dict[str, Any] = defaultdict(
+            lambda: {"crops": 0, "batches": 0, "total_time_ms": 0}
+        )
 
         for batch in trends:
             date_str = batch["timestamp"][:10]  # YYYY-MM-DD

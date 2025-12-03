@@ -573,69 +573,72 @@ class AIMultiCropTool(MultiCropTool):
 
     def submit_batch(self):
         """Override submit_batch to flush queue in queue mode."""
-        if self.queue_mode and self.queue_manager and hasattr(self, "_queue_batch") and self._queue_batch:
-                # Set index_in_batch for each entry
-                for idx, crop_entry in enumerate(self._queue_batch):
-                    crop_entry["index_in_batch"] = idx
+        if (
+            self.queue_mode
+            and self.queue_manager
+            and hasattr(self, "_queue_batch")
+            and self._queue_batch
+        ):
+            # Set index_in_batch for each entry
+            for idx, crop_entry in enumerate(self._queue_batch):
+                crop_entry["index_in_batch"] = idx
 
-                # Get session/project info
-                from datetime import datetime
+            # Get session/project info
+            from datetime import datetime
 
-                session_id = getattr(
-                    self,
-                    "session_id",
-                    # Use UTC to ensure consistent session IDs across timezones/DST
-                    f"crop_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}",
-                )
+            session_id = getattr(
+                self,
+                "session_id",
+                # Use UTC to ensure consistent session IDs across timezones/DST
+                f"crop_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}",
+            )
 
-                project_id = getattr(self, "project_id", "unknown")
+            project_id = getattr(self, "project_id", "unknown")
 
-                # Enqueue the batch
-                batch_id = self.queue_manager.enqueue_batch(
-                    crops=self._queue_batch,
-                    session_id=session_id,
-                    project_id=project_id,
-                )
+            # Enqueue the batch
+            batch_id = self.queue_manager.enqueue_batch(
+                crops=self._queue_batch,
+                session_id=session_id,
+                project_id=project_id,
+            )
 
-                print(
-                    f"[Queue] Batch {batch_id} queued ({len(self._queue_batch)} crops)"
-                )
+            print(f"[Queue] Batch {batch_id} queued ({len(self._queue_batch)} crops)")
 
-                # Move source files to __crop_queued directory to get them out of the way
-                try:
-                    from pathlib import Path as _Path
+            # Move source files to __crop_queued directory to get them out of the way
+            try:
+                from pathlib import Path as _Path
 
-                    queued_dir = _Path(__file__).parent.parent / "__crop_queued"
-                    queued_dir.mkdir(exist_ok=True)
+                queued_dir = _Path(__file__).parent.parent / "__crop_queued"
+                queued_dir.mkdir(exist_ok=True)
 
-                    total_moved = 0
-                    for crop_entry in self._queue_batch:
-                        source_path = _Path(crop_entry["source_path"])
-                        if source_path.exists():
-                            try:
-                                moved_files = move_file_with_all_companions(
-                                    source_path, queued_dir, dry_run=False
-                                )
-                                total_moved += len(moved_files)
-                                # Silently move files - no per-file output in queue mode
-                            except Exception as e:
-                                print(
-                                    f"[Queue] Warning: couldn't move {source_path.name}: {e}"
-                                )
+                total_moved = 0
+                for crop_entry in self._queue_batch:
+                    source_path = _Path(crop_entry["source_path"])
+                    if source_path.exists():
+                        try:
+                            moved_files = move_file_with_all_companions(
+                                source_path, queued_dir, dry_run=False
+                            )
+                            total_moved += len(moved_files)
+                            # Silently move files - no per-file output in queue mode
+                        except Exception as e:
+                            print(
+                                f"[Queue] Warning: couldn't move {source_path.name}: {e}"
+                            )
 
-                    # Log the move operation
-                    if hasattr(self, "tracker") and total_moved > 0:
-                        self.tracker.log_operation(
-                            "move",
-                            dest_dir=str(queued_dir),
-                            file_count=total_moved,
-                            notes=f"batch={batch_id}, queued_for_processing",
-                        )
-                except Exception as e:
-                    print(f"[Queue] Warning: file movement error: {e}")
+                # Log the move operation
+                if hasattr(self, "tracker") and total_moved > 0:
+                    self.tracker.log_operation(
+                        "move",
+                        dest_dir=str(queued_dir),
+                        file_count=total_moved,
+                        notes=f"batch={batch_id}, queued_for_processing",
+                    )
+            except Exception as e:
+                print(f"[Queue] Warning: file movement error: {e}")
 
-                # Clear the batch
-                self._queue_batch = []
+            # Clear the batch
+            self._queue_batch = []
 
         # Call parent submit_batch (which handles progress tracking and loading next batch)
         try:

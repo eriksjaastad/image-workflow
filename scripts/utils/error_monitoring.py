@@ -109,7 +109,6 @@ class ErrorMonitor:
     def _loud_error_display(self, message: str):
         """Display error with maximum visual impact."""
 
-
     def _log_to_file(self, level: str, message: str, timestamp: str):
         """Log error to persistent file."""
         try:

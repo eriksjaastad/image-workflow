@@ -252,7 +252,7 @@ def write_reports(
         for p in problems[:50]:
             lines.append(f"- {p}")
         if len(problems) > 50:
-            lines.append(f"- ... and {len(problems)-50} more")
+            lines.append(f"- ... and {len(problems) - 50} more")
         lines.append("")
     # Placeholder section for artifact candidates (decision-level when DB flagging is available)
     lines.append("## Artifact Candidates (scaffolding)")

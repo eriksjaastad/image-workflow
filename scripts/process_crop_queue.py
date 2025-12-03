@@ -230,7 +230,6 @@ class CropQueueProcessor:
         errors = []
         warnings = []
 
-
         # Define allowed safe zones (strict whitelist)
         allowed_safe_zones = {
             "__cropped",
@@ -486,7 +485,6 @@ class CropQueueProcessor:
             except (KeyboardInterrupt, EOFError):
                 return
 
-
         if self.timing_simulator:
             self.timing_simulator.start_session()
 
@@ -516,7 +514,6 @@ class CropQueueProcessor:
             # Check if we've hit the limit
             if limit and processed >= limit:
                 break
-
 
 
 def main():

@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Train Ranking Model v2 with Anomaly Oversampling
@@ -167,7 +169,7 @@ def load_training_data(embeddings_cache: dict) -> tuple[list[dict], list[dict]]:
     anomaly_cases = []
     skipped = 0
     missing_embeddings = []
-    project_counts = {}  # Track examples per project
+    project_counts: dict[str, Any] = {}  # Track examples per project
 
     with SELECTION_LOG.open("r") as f:
         reader = csv.DictReader(f)

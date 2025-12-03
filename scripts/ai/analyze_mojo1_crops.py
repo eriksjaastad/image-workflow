@@ -104,7 +104,7 @@ def main():
     # Analyze crop timing distribution
     if cropped:
         # Group by days difference
-        day_buckets = defaultdict(int)
+        day_buckets: dict[str, int] = defaultdict(int)
         for case in cropped:
             days = int(case["days_diff"])
             if days < 7:

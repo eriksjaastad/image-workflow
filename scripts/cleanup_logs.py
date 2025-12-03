@@ -22,6 +22,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, cast
 
 # Import DashboardDataEngine at module level for testability
 try:
@@ -52,7 +53,7 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
 
     # Paths (allow test override via EM_TEST_DATA_ROOT)
     override = (
-        Path(os.environ.get("EM_TEST_DATA_ROOT"))
+        Path(cast(str, os.environ.get("EM_TEST_DATA_ROOT")))
         if "EM_TEST_DATA_ROOT" in os.environ
         else None
     )
@@ -144,7 +145,7 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
             pass
 
     # Consolidate by script
-    script_summaries = defaultdict(
+    script_summaries: dict[str, Any] = defaultdict(
         lambda: {
             "total_files": 0,
             "operations": defaultdict(int),
@@ -171,9 +172,22 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
 
         # tests expect total_files to be sum of file_count across ops (not PNG-only fallback in this path)
         file_count = int(op.get("file_count", 0) or 0)
-        script_summaries[script]["total_files"] += file_count
-        script_summaries[script]["operations"][operation_type] += file_count
-        script_summaries[script]["sessions"].add(session_id)
+        cast(dict[str, Any], script_summaries[script])["total_files"] = (
+            cast(int, cast(dict[str, Any], script_summaries[script])["total_files"])
+            + file_count
+        )
+        cast(dict[str, Any], script_summaries[script])["operations"][operation_type] = (
+            cast(
+                int,
+                cast(dict[str, Any], script_summaries[script])["operations"][
+                    operation_type
+                ],
+            )
+            + file_count
+        )
+        cast(set[str], cast(dict[str, Any], script_summaries[script])["sessions"]).add(
+            session_id
+        )
 
         if not script_summaries[script]["first_operation"]:
             script_summaries[script]["first_operation"] = timestamp
@@ -190,14 +204,18 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
                     summary["last_operation"].replace("Z", "+00:00")
                 )
                 work_time_seconds = (end - start).total_seconds()
-                summary["work_time_seconds"] = work_time_seconds
-                summary["work_time_minutes"] = work_time_seconds / 60.0
+                cast(dict[str, Any], summary)["work_time_seconds"] = work_time_seconds
+                cast(dict[str, Any], summary)["work_time_minutes"] = (
+                    work_time_seconds / 60.0
+                )
             except Exception:
                 summary["work_time_seconds"] = 0
                 summary["work_time_minutes"] = 0
 
         # Convert sets to counts
-        summary["session_count"] = len(summary["sessions"])
+        cast(dict[str, Any], summary)["session_count"] = len(
+            cast(set[str], cast(dict[str, Any], summary)["sessions"])
+        )
         del summary["sessions"]
 
     # Create daily summary (even if no operations)
@@ -213,7 +231,6 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
     with open(summary_file, "w") as f:
         json.dump(daily_summary, f, indent=2)
 
-
     # CRITICAL: Verify dashboard can read the consolidated data
     # If no operations (e.g., empty day), skip verification but keep summary
     if operations:
@@ -224,9 +241,7 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
 
             if not test_records:
                 msg = "Dashboard cannot read consolidated data - no records found"
-                raise Exception(
-                    msg
-                )
+                raise Exception(msg)
 
             # Verify we have data for the target date
             # Handle both date objects and string dates
@@ -246,10 +261,7 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
             ]
             if not date_records:
                 msg = f"Dashboard cannot find data for target date {target_date}"
-                raise Exception(
-                    msg
-                )
-
+                raise Exception(msg)
 
         except Exception as e:
             # Remove the summary file since it's invalid

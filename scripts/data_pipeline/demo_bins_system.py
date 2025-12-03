@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 15-Minute Bins System Demo
@@ -96,7 +98,7 @@ def check_raw_logs(data_dir: Path) -> tuple[int, str, str]:
     archive_count = len(list(archives_dir.glob("*.gz"))) if archives_dir.exists() else 0
 
     # Find date range
-    all_files = []
+    all_files: list[Any] = []
     if logs_dir.exists():
         all_files.extend(logs_dir.glob("*.log"))
     if archives_dir.exists():
@@ -197,10 +199,8 @@ def main():
         else:
             pass
 
-
     # Step 5: Next steps
     print_section("Next Steps")
-
 
     print_section("Demo Complete ✅")
 

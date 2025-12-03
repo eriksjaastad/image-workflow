@@ -39,8 +39,8 @@ def create_test_groups(tmp: Path):
     # Load reviewer module
     module_path = PROJECT_ROOT / "scripts" / "01_ai_assisted_reviewer.py"
     spec = importlib.util.spec_from_file_location("ai_reviewer_module", module_path)
-    mod = importlib.util.module_from_spec(spec)
     assert spec and spec.loader, "Failed to load module spec for reviewer"
+    mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     ImageGroup = mod.ImageGroup
 
@@ -171,6 +171,7 @@ class AIReviewerHotkeyTester:
                 spec = importlib.util.spec_from_file_location(
                     "ai_reviewer_module", module_path
                 )
+                assert spec and spec.loader, "Failed to load module spec for reviewer"
                 mod = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(mod)
 
@@ -243,9 +244,7 @@ class AIReviewerHotkeyTester:
 
                     if not found_correct_move:
                         msg = f"No files moved to {expected_dest}. Moves: {moved_files}"
-                        raise AssertionError(
-                            msg
-                        )
+                        raise AssertionError(msg)
 
                     print(
                         f"✅ Hotkey '{hotkey}' (img {img_idx}, AI crop: {has_ai_crop}) → {expected_dest}"

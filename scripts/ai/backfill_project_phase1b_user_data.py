@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 r"""
 Phase 1B: Backfill User Ground Truth into Temp Database
@@ -207,7 +209,7 @@ def process_records(
         "errors": 0,
     }
 
-    samples = []  # Collect sample updates for dry-run
+    samples: list[Any] = []  # Collect sample updates for dry-run
 
     for record in tqdm(records, desc="Backfilling" if not dry_run else "Analyzing"):
         try:

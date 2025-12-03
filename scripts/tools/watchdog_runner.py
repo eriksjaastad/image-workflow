@@ -158,7 +158,8 @@ def main() -> None:
         except Exception:
             pass
 
-    run_with_watchdog(args.cmd, args.timeout, hb_file, args.hb_threshold)
+    if hb_file is not None:
+        run_with_watchdog(args.cmd, args.timeout, hb_file, args.hb_threshold)
 
 
 if __name__ == "__main__":

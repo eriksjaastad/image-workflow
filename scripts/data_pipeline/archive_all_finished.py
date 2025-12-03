@@ -19,7 +19,6 @@ sys.path.insert(0, str(project_root))
 
 
 def main():
-
     # Find all project manifests
     projects_dir = project_root / "data" / "projects"
     if not projects_dir.exists():
@@ -28,7 +27,6 @@ def main():
     manifests = list(projects_dir.glob("*.project.json"))
     if not manifests:
         sys.exit(1)
-
 
     # First: Generate bins for all historical data
     result = subprocess.run(
@@ -41,7 +39,6 @@ def main():
 
     if result.returncode != 0:
         sys.exit(1)
-
 
     # Find finished projects
     finished_projects = []
@@ -66,7 +63,6 @@ def main():
         except Exception:
             continue
 
-
     if not finished_projects:
         sys.exit(0)
 
@@ -76,7 +72,6 @@ def main():
     failed = []
 
     for project_id, title, manifest in finished_projects:
-
         result = subprocess.run(
             [
                 sys.executable,
@@ -105,14 +100,12 @@ def main():
             if result.stderr:
                 pass
 
-
     # Summary
     if failed:
         for _pid in failed:
             pass
 
     # Next steps
-
 
 
 if __name__ == "__main__":

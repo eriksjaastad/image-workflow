@@ -16,7 +16,7 @@ import json
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LEGACY_DIR = PROJECT_ROOT / "data" / "daily_summaries"
@@ -69,7 +69,7 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
     legacy_parsed["day"]
 
     # Initialize snapshot structure
-    by_script = defaultdict(
+    by_script: dict[str, Any] = defaultdict(
         lambda: {
             "operations": defaultdict(int),
             "files_processed": 0,
@@ -77,7 +77,7 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
             "timestamps": [],
         }
     )
-    by_operation = defaultdict(int)
+    by_operation: dict[str, int] = defaultdict(int)
     projects_touched = set()
 
     # Parse legacy format (handle various structures)
@@ -129,7 +129,7 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
         if data["timestamps"]:
             # Normalize timestamps to ISO format
             normalized_ts = []
-            for ts in data["timestamps"]:
+            for ts in cast(list[Any], data["timestamps"]):
                 try:
                     if isinstance(ts, str):
                         dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
@@ -141,9 +141,9 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
 
             if normalized_ts:
                 script_stats[script] = {
-                    "operations": dict(data["operations"]),
-                    "files_processed": data["files_processed"],
-                    "event_count": data["event_count"],
+                    "operations": dict(cast(dict[str, int], data["operations"])),
+                    "files_processed": cast(int, data["files_processed"]),
+                    "event_count": cast(int, data["event_count"]),
                     "first_op_ts": min(normalized_ts).isoformat(),
                     "last_op_ts": max(normalized_ts).isoformat(),
                 }
@@ -151,9 +151,9 @@ def convert_to_snapshot_format(legacy_parsed: dict[str, Any]) -> dict[str, Any]:
         else:
             # No timestamps, create minimal record
             script_stats[script] = {
-                "operations": dict(data["operations"]),
-                "files_processed": data["files_processed"],
-                "event_count": data["event_count"],
+                "operations": dict(cast(dict[str, int], data["operations"])),
+                "files_processed": cast(int, data["files_processed"]),
+                "event_count": cast(int, data["event_count"]),
                 "first_op_ts": None,
                 "last_op_ts": None,
             }
@@ -192,7 +192,6 @@ def main():
     if not legacy_files:
         return
 
-
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     migrated_count = 0
@@ -226,7 +225,6 @@ def main():
 
         except Exception:
             error_count += 1
-
 
     if args.dry_run:
         pass

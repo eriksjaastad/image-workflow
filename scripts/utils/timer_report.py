@@ -61,13 +61,11 @@ class AdvancedTimerReporter(TimerReporter):
         if not totals["script_totals"]:
             return
 
-
         # Overall metrics
         total_hours = totals["total_active_time"] / 3600
         if total_hours > 0:
             files_per_hour = totals["total_files_processed"] / total_hours
             totals["total_operations"] / total_hours
-
 
         # Script-specific metrics
         script_metrics = []
@@ -115,12 +113,10 @@ class AdvancedTimerReporter(TimerReporter):
         if not daily_data:
             return
 
-
         # Calculate averages
         sum(d["active_time"] for d in daily_data) / len(daily_data) / 3600
         sum(d["efficiency"] for d in daily_data) / len(daily_data)
         sum(d["files_processed"] for d in daily_data) / len(daily_data)
-
 
         # Show recent days
         for data in daily_data[:7]:  # Last 7 days
@@ -189,7 +185,6 @@ class AdvancedTimerReporter(TimerReporter):
                 json.dump(export_data, f, indent=2)
         else:
             return
-
 
 
 def main():

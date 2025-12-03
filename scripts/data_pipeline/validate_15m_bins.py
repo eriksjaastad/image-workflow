@@ -407,7 +407,6 @@ class BinValidator:
             pass
 
 
-
 def validate_day(data_dir: Path, day_str: str, verbose: bool = False) -> bool:
     """Validate bins for a single day.
 
@@ -462,7 +461,6 @@ def main():
 
     if not data_dir.exists():
         sys.exit(2)
-
 
     if args.day:
         # Validate single day

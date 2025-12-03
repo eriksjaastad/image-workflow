@@ -94,6 +94,7 @@ import threading
 import time
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 # Configure logging
 logging.basicConfig(
@@ -188,9 +189,9 @@ class MultiDirectoryProgressTracker:
         )
         self.progress_file = self.progress_dir / f"{safe_name}_progress.json"
 
-        self.directories = []
+        self.directories: list[Any] = []
         self.current_directory_index = 0
-        self.session_data = {}
+        self.session_data: dict[str, Any] = {}
 
         self.discover_directories()
         self.load_progress()
@@ -392,7 +393,7 @@ def scan_images(folder: Path) -> list[Path]:
 
 def load_similarity_neighbors(similarity_map_dir: Path) -> dict[str, dict]:
     """Load similarity neighbor data from face_groups/neighbors.jsonl"""
-    neighbors = {}
+    neighbors: dict[str, Any] = {}
     neighbors_file = similarity_map_dir / "neighbors.jsonl"
 
     if not neighbors_file.exists():
@@ -424,7 +425,7 @@ def similarity_sort_images(
     name_to_path = {img.name: img for img in images}
 
     # Build similarity graph for this set of images
-    similarity_graph = {}
+    similarity_graph: dict[str, Any] = {}
     for img_name in image_names:
         similarity_graph[img_name] = []
         if img_name in neighbors_data:
@@ -954,7 +955,9 @@ def create_app(
                 )
 
             except Exception:
-                return jsonify({"status": "error", "message": "Move operation failed"}), 500
+                return jsonify(
+                    {"status": "error", "message": "Move operation failed"}
+                ), 500
 
         elif action == "delete":
             try:
@@ -981,7 +984,9 @@ def create_app(
                 )
 
             except Exception:
-                return jsonify({"status": "error", "message": "Delete operation failed"}), 500
+                return jsonify(
+                    {"status": "error", "message": "Delete operation failed"}
+                ), 500
 
         else:
             return jsonify({"status": "error", "message": "Unknown action"}), 400

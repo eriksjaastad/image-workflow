@@ -185,3 +185,8 @@ Temporary Items
 sandbox/
 
 dashboard_data_sample.json
+
+# === PROJECT: TEST-aiko (started 2025-12-02) ===
+TEST-aiko/**/*.png
+TEST-aiko/**/*.yaml
+# === END PROJECT: TEST-aiko ===

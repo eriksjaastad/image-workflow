@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Test that all production scripts have dashboard mappings.
@@ -65,9 +67,7 @@ def test_all_production_scripts_have_mappings():
             f"Add them to get_display_name() in data_engine.py!\n"
             f"This causes work to be invisible in the dashboard."
         )
-        raise AssertionError(
-            msg
-        )
+        raise AssertionError(msg)
 
 
 def test_mapped_scripts_are_in_production_list():
@@ -130,7 +130,7 @@ def test_no_duplicate_mappings():
         "batch_crop_tool",
     ]
 
-    mappings = {}
+    mappings: dict[str, Any] = {}
     for script in production_scripts:
         display = engine.get_display_name(script)
         mappings.setdefault(display, []).append(script)

@@ -14,6 +14,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from typing import Any
 
 from PIL import Image
 from selenium import webdriver
@@ -28,8 +29,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 class WebToolSmokeTest(unittest.TestCase):
     """Base class for web tool smoke tests."""
 
-    driver = None
-    process = None
+    driver: Any = None
+    process: subprocess.Popen[bytes] | None = None
 
     @classmethod
     def setUpClass(cls):

@@ -19,6 +19,7 @@ import json
 import sys
 from datetime import datetime, time
 from pathlib import Path
+from typing import cast
 
 
 def parse_time(time_str: str) -> time | None:
@@ -163,7 +164,7 @@ def parse_csv_to_projects(csv_path: Path) -> list[dict]:
                     else:
                         current_project["notes"] = notes.strip()
 
-                current_project["rows"].append(row_data)
+                cast(list, current_project["rows"]).append(row_data)
 
         # Don't forget last project
         if current_project:
@@ -285,7 +286,6 @@ def main():
     # Get workspace root
     workspace_root = Path(__file__).parent.parent
 
-
     # Parse CSV
     try:
         projects = parse_csv_to_projects(csv_path)
@@ -327,8 +327,6 @@ def main():
         project.get("initial_images") or 0
         project.get("final_images") or 0
 
-
-
     # Create manifests
 
     success_count = 0
@@ -345,7 +343,6 @@ def main():
                 success_count += 1
         else:
             error_count += 1
-
 
     if dry_run:
         pass

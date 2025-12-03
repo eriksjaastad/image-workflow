@@ -31,7 +31,7 @@ def find_active_project():
     return None, None
 
 
-def resolve_project_root(manifest_path: Path, root_hint: str) -> Path:
+def resolve_project_root(manifest_path: Path, root_hint: str) -> Path | None:
     """Resolve the project root path from manifest."""
     if not root_hint:
         return None

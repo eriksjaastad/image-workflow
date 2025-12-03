@@ -20,7 +20,7 @@ import json
 import logging
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, cast
 
 # Import SandboxConfig for type hints
 try:
@@ -35,7 +35,7 @@ class FileTracker:
         script_name: str,
         log_file: str = "file_operations.log",
         sandbox: bool = False,
-        sandbox_config: Optional["SandboxConfig"] = None,
+        sandbox_config: "SandboxConfig | None" = None,
     ):
         self.script_name = script_name
         self.sandbox = sandbox or (
@@ -54,7 +54,7 @@ class FileTracker:
         log_dir.mkdir(parents=True, exist_ok=True)
         self.log_file = log_dir / log_file
         self.session_id = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-        self.current_batch = None
+        self.current_batch: str | None = None
         self._write_failures = 0  # Track consecutive failures
 
         # Check if we need to start fresh for a new day
@@ -173,7 +173,7 @@ class FileTracker:
             files: List of specific filenames (optional)
             notes: Additional notes
         """
-        entry = {
+        entry: dict[str, Any] = {
             "type": "file_operation",
             "script": self.script_name,
             "session_id": self.session_id,
@@ -319,20 +319,21 @@ def read_log(
     logger = logging.getLogger("file_tracker.read_log")
 
     if log_file is None:
-        log_file = (
+        log_file_path = (
             Path(__file__).parent.parent
             / "data"
             / "file_operations_logs"
             / "file_operations.log"
         )
-
-    if not Path(log_file).exists():
+    else:
+        log_file_path = Path(log_file)
+    if not log_file_path.exists():
         logger.warning("No log file found at %s", log_file)
         return []
 
     entries = []
     try:
-        with Path(log_file).open() as f:
+        with log_file_path.open() as f:
             for line in f:
                 try:
                     entry = json.loads(line.strip())
@@ -363,7 +364,6 @@ def print_recent_activity(hours: int = 24):
     now = datetime.now(UTC)
     cutoff = now - timedelta(hours=hours)
 
-
     for entry in entries:
         try:
             timestamp = datetime.fromisoformat(entry["timestamp"])
@@ -386,7 +386,6 @@ def print_recent_activity(hours: int = 24):
 
         except (KeyError, ValueError):  # Specific exceptions for timestamp parsing
             continue
-
 
 
 if __name__ == "__main__":

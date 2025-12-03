@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Productivity Dashboard - Web Interface
@@ -147,7 +149,7 @@ class ProductivityDashboard:
 
         # Transform file operations by script
         if data["file_operations_data"].get("by_script"):
-            by_script_data = {}
+            by_script_data: dict[str, Any] = {}
             for record in data["file_operations_data"]["by_script"]:
                 script = record["script"]
                 display_name = script_display_names.get(script, script)
@@ -176,7 +178,7 @@ class ProductivityDashboard:
 
         # Transform file operations by type
         if data["file_operations_data"].get("by_operation"):
-            by_operation_data = {}
+            by_operation_data: dict[str, Any] = {}
             for record in data["file_operations_data"]["by_operation"]:
                 operation = record["operation"]
                 date = record["time_slice"]
@@ -445,7 +447,7 @@ class ProductivityDashboard:
         proj_ops = [r for r in window_ops if _belongs(r)]
 
         # Group by display tool name
-        grouped = {}
+        grouped: dict[str, Any] = {}
         for r in proj_ops:
             disp = self._get_display_name(r.get("script") or "")
             if disp not in allowed_tools_order:

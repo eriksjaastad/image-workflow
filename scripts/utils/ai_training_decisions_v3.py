@@ -175,25 +175,19 @@ def log_ai_decision(
     # Validation
     if not images or len(images) < 2 or len(images) > 4:
         msg = f"Invalid images list: must have 2-4 images, got {len(images)}"
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     if user_action not in ("approve", "crop", "reject"):
         msg = f"Invalid user_action: {user_action}"
         raise ValueError(msg)
 
     if not (0 <= ai_selected_index < len(images)):
-        msg = f"Invalid ai_selected_index: {ai_selected_index} (must be 0-{len(images)-1})"
-        raise ValueError(
-            msg
-        )
+        msg = f"Invalid ai_selected_index: {ai_selected_index} (must be 0-{len(images) - 1})"
+        raise ValueError(msg)
 
     if not (0 <= user_selected_index < len(images)):
-        msg = f"Invalid user_selected_index: {user_selected_index} (must be 0-{len(images)-1})"
-        raise ValueError(
-            msg
-        )
+        msg = f"Invalid user_selected_index: {user_selected_index} (must be 0-{len(images) - 1})"
+        raise ValueError(msg)
 
     if image_width <= 0 or image_height <= 0:
         msg = f"Invalid dimensions: {image_width}x{image_height}"
@@ -280,16 +274,12 @@ def update_decision_with_crop(
     # Validation
     if len(final_crop_coords) != 4:
         msg = f"Invalid crop coords: must be [x1, y1, x2, y2], got {final_crop_coords}"
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     x1, y1, x2, y2 = final_crop_coords
     if not (0 <= x1 < x2 <= 1 and 0 <= y1 < y2 <= 1):
         msg = f"Invalid crop coords: {final_crop_coords} (must be in [0,1] with x1<x2, y1<y2)"
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     if crop_timestamp is None:
         crop_timestamp = datetime.utcnow().isoformat() + "Z"

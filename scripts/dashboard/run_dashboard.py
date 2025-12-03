@@ -44,9 +44,7 @@ def validate_port(port: int) -> int:
             f"Port must be between 1024-65535 (got {port}). "
             f"Ports below 1024 require root privileges."
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
     return port
 
 
@@ -77,9 +75,7 @@ def validate_data_dir(path: Path) -> Path:
             f"Invalid project structure: Missing 'data/' subdirectory in {path}\n"
             f"Expected structure: <project_root>/data/"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     return path
 

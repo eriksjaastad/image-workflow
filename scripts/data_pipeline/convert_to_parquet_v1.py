@@ -27,7 +27,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 try:
     import pandas as pd
@@ -111,14 +111,12 @@ def convert_dataset(
 
     config = DATASETS[dataset_name]
 
-
     # Find all JSONL/JSON files
-    pattern = config["jsonl_pattern"]
+    pattern = cast(str, config["jsonl_pattern"])
     jsonl_files = list(SNAPSHOT_DIR.glob(pattern))
 
     if not jsonl_files:
         return False
-
 
     # Read all records
     all_records = []
@@ -141,7 +139,6 @@ def convert_dataset(
     if not all_records:
         return False
 
-
     # Convert to DataFrame
     try:
         df = pd.DataFrame(all_records)
@@ -149,7 +146,7 @@ def convert_dataset(
         return False
 
     # Output directory
-    output_dir = SNAPSHOT_DIR / config["parquet_dir"]
+    output_dir = SNAPSHOT_DIR / cast(str, config["parquet_dir"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Write Parquet
@@ -180,7 +177,6 @@ def convert_dataset(
         parquet_size = sum(f.stat().st_size for f in parquet_files)
 
         jsonl_size / parquet_size if parquet_size > 0 else 0
-
 
         return True
 
@@ -251,7 +247,6 @@ Examples:
     else:
         datasets_to_convert = args.dataset
 
-
     # Convert datasets
     failed = []
     for dataset_name in datasets_to_convert:
@@ -270,7 +265,6 @@ Examples:
             pass
     else:
         pass
-
 
     sys.exit(0 if not failed else 1)
 

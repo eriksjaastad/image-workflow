@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Triplet Deduplication Utility - Remove triplets if any stage matches completed work
@@ -26,7 +28,7 @@ from utils.companion_file_utils import (
 def build_completed_database(completed_dir):
     """Build a set of all base timestamps from completed work."""
     completed_path = Path(completed_dir)
-    completed_timestamps = set()
+    completed_timestamps: set[Any] = set()
 
     if not completed_path.exists():
         return completed_timestamps
@@ -45,7 +47,7 @@ def build_completed_database(completed_dir):
 def find_triplets_in_directory(directory):
     """Find all triplets in the given directory."""
     dir_path = Path(directory)
-    triplets = {}
+    triplets: dict[str, Any] = {}
 
     # Find all PNG files and group by base timestamp
     png_files = list(dir_path.glob("*.png"))
@@ -116,7 +118,6 @@ def main():
     if not new_images_path.exists():
         return
 
-
     # Build database of completed work
     completed_timestamps = build_completed_database(args.completed_dir)
 
@@ -129,7 +130,6 @@ def main():
     if not new_triplets:
         return
 
-
     # Check for duplicates
     duplicates_found = []
 
@@ -140,11 +140,9 @@ def main():
     if not duplicates_found:
         return
 
-
     total_removed = 0
 
     for base_timestamp, triplet_files in duplicates_found:
-
         if args.dry_run:
             for _stage, png_file in triplet_files.items():
                 if png_file and png_file.exists():

@@ -32,6 +32,7 @@ import shutil
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 
 def analyze_caption_duplicates(directory: str, show_content: bool = False) -> dict:
@@ -54,7 +55,6 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
     caption_files = list(directory_path.rglob("*.caption"))
     total_files = len(caption_files)
 
-
     if total_files == 0:
         return {"total_files": 0, "unique_contents": 0, "duplicate_groups": []}
 
@@ -76,9 +76,8 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
 
     # Analyze results
     unique_contents = len(content_groups)
-    duplicate_groups = []
+    duplicate_groups: list[dict[str, Any]] = []
     total_duplicates = 0
-
 
     # Find duplicate groups (content appearing in multiple files)
     for content, files in content_groups.items():
@@ -89,13 +88,10 @@ def analyze_caption_duplicates(directory: str, show_content: bool = False) -> di
             total_duplicates += len(files)
 
     if duplicate_groups:
-
-
         # Sort by count (most duplicates first)
         duplicate_groups.sort(key=lambda x: x["count"], reverse=True)
 
         for _i, group in enumerate(duplicate_groups, 1):
-
             if show_content:
                 (
                     group["content"][:100] + "..."
@@ -137,7 +133,6 @@ def move_duplicate_groups_to_subdirs(
 
     if not duplicate_groups:
         return {"groups_moved": 0, "files_moved": 0, "errors": []}
-
 
     groups_moved = 0
     files_moved = 0

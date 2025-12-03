@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Audit Crop Queue - Consistency Report
@@ -27,7 +29,7 @@ from pathlib import Path
 
 def load_queue_entries(queue_file: Path) -> list[dict]:
     """Load all entries from queue file."""
-    entries = []
+    entries: list[Any] = []
     if not queue_file.exists():
         return entries
 
@@ -87,11 +89,13 @@ def check_db_record(project_id: str, group_id: str) -> tuple[bool, str]:
         return False, f"Error: {e}"
 
 
-def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | None = None):
+def audit_queue(
+    queue_file: Path, crop_queued_dir: Path, report_file: Path | None = None
+):
     """Perform comprehensive audit of queue consistency."""
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CROP QUEUE AUDIT")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
     print(f"Queue file: {queue_file}")
     print(f"Crop queued directory: {crop_queued_dir}")
     print(f"Timestamp: {datetime.now().isoformat()}\n")
@@ -106,7 +110,7 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
     print(f"Found {len(filesystem_files)} files in {crop_queued_dir.name}/\n")
 
     # Track issues
-    issues = {
+    issues: dict[str, Any] = {
         "orphaned_queue_entries": [],
         "orphaned_files": [],
         "missing_decision_files": [],
@@ -115,9 +119,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
     }
 
     # Check 1: Orphaned queue entries (source file doesn't exist)
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CHECK 1: Orphaned Queue Entries")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     queue_source_paths = set()
     for entry in queue_entries:
@@ -148,9 +152,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print("✅ No orphaned queue entries")
 
     # Check 2: Orphaned files (file exists but not in queue)
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CHECK 2: Orphaned Files in __crop_queued/")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     for file_path in filesystem_files:
         if file_path not in queue_source_paths:
@@ -166,9 +170,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print("✅ No orphaned files")
 
     # Check 3: Missing .decision files
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CHECK 3: Missing .decision Files")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     for entry in queue_entries:
         source_path = Path(entry["source_path"])
@@ -195,9 +199,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print("✅ All queued files have .decision files")
 
     # Check 4: Missing DB records
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CHECK 4: Missing DB Records")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     for entry in queue_entries:
         source_path = Path(entry["source_path"])
@@ -240,9 +244,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print("✅ All queued crops have valid DB records")
 
     # Check 5: Invalid crop coordinates
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CHECK 5: Invalid Crop Coordinates")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     for entry in queue_entries:
         crop_rect = entry.get("crop_rect", [])
@@ -303,9 +307,9 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print("✅ All crop coordinates are valid")
 
     # Summary
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("AUDIT SUMMARY")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     total_issues = sum(len(v) for v in issues.values())
 
@@ -323,7 +327,7 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
         print(f"Writing detailed report to {report_file}...")
         with open(report_file, "w") as f:
             f.write("Crop Queue Audit Report\n")
-            f.write(f"{'='*80}\n\n")
+            f.write(f"{'=' * 80}\n\n")
             f.write(f"Generated: {datetime.now().isoformat()}\n")
             f.write(f"Queue file: {queue_file}\n")
             f.write(f"Crop queued directory: {crop_queued_dir}\n\n")
@@ -338,7 +342,7 @@ def audit_queue(queue_file: Path, crop_queued_dir: Path, report_file: Path | Non
                     f.write(
                         f"\n{issue_type.replace('_', ' ').title()}: {len(issue_list)}\n"
                     )
-                    f.write(f"{'-'*80}\n")
+                    f.write(f"{'-' * 80}\n")
                     for issue in issue_list:
                         f.write(f"{json.dumps(issue, indent=2)}\n")
 

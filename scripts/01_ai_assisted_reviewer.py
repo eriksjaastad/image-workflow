@@ -129,7 +129,7 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # Configure logging
 logging.basicConfig(
@@ -166,11 +166,11 @@ try:
 
     flask_available = True
 except ImportError:
-    Flask = None
-    Response = None
-    jsonify = None
-    render_template_string = None
-    request = None
+    Flask = None  # type: ignore
+    Response = None  # type: ignore
+    jsonify = None  # type: ignore
+    render_template_string = None  # type: ignore
+    request = None  # type: ignore
 
 try:
     from PIL import Image
@@ -257,10 +257,10 @@ if TORCH_AVAILABLE:
 
 else:
     # Define dummy classes when torch is not available
-    class RankerModel:
+    class RankerModel:  # type: ignore
         pass
 
-    class CropProposerModel:
+    class CropProposerModel:  # type: ignore
         pass
 
 
@@ -670,7 +670,7 @@ def perform_file_operations(
     crop_dir: Path,
     delete_staging_dir: Path,
     project_id: str = "unknown",
-) -> dict[str, any]:
+) -> dict[str, Any]:
     """
     Execute file operations based on user decision.
 
@@ -2128,7 +2128,7 @@ def build_app(
 
             # Lightweight JSON line logger to data/log_archives/
             try:
-                logs_dir: Path = app.config.get("LOG_ARCHIVES_DIR")
+                logs_dir = cast(Path, app.config.get("LOG_ARCHIVES_DIR"))
                 if logs_dir:
                     log_path = logs_dir / "reviewer_batch_summaries.jsonl"
                     summary_record = {

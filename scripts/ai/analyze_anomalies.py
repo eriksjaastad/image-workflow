@@ -103,6 +103,9 @@ def analyze_selection(chosen_path: str, neg_paths_json: str) -> tuple[bool, dict
 
     max_rejected_stage = max(rejected_stages)
 
+    # Type assertion - max() on non-empty int list returns int
+    assert isinstance(max_rejected_stage, int)
+
     info = {
         "chosen_stage": chosen_stage,
         "rejected_stages": sorted(rejected_stages),
@@ -138,7 +141,7 @@ def main():
     total_selections = 0
     total_anomalies = 0
     anomalies_by_project = defaultdict(list)
-    normal_by_project = defaultdict(int)
+    normal_by_project: dict[str, int] = defaultdict(int)
     unparseable = 0
 
     all_anomalies = []

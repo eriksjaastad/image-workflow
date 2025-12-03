@@ -210,7 +210,6 @@ def main():
         day = session["day"]
         by_day[day].append(session)
 
-
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -229,7 +228,6 @@ def main():
                 f.write(json.dumps(session) + "\n")
 
         total_written += len(day_sessions)
-
 
 
 if __name__ == "__main__":

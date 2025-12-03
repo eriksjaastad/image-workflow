@@ -47,8 +47,8 @@ def build_test_groups(tmp: Path):
     # Dynamically load reviewer module (filename starts with a digit)
     module_path = PROJECT_ROOT / "scripts" / "01_ai_assisted_reviewer.py"
     spec = importlib.util.spec_from_file_location("ai_reviewer_module", module_path)
-    mod = importlib.util.module_from_spec(spec)
     assert spec and spec.loader, "Failed to load module spec for reviewer"
+    mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)  # type: ignore
     ImageGroup = mod.ImageGroup
 
@@ -98,8 +98,8 @@ def run_test_case():
     # Import here to avoid Flask dependency during module import in other tests
     module_path = PROJECT_ROOT / "scripts" / "01_ai_assisted_reviewer.py"
     spec = importlib.util.spec_from_file_location("ai_reviewer_module", module_path)
-    mod = importlib.util.module_from_spec(spec)
     assert spec and spec.loader, "Failed to load module spec for reviewer"
+    mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)  # type: ignore
     build_app = mod.build_app
 

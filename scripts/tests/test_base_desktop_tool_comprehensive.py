@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Comprehensive Tests for BaseDesktopImageTool
@@ -210,7 +212,7 @@ class TestErrorHandlingPatterns(unittest.TestCase):
 
     def test_empty_directory_handling(self):
         """Test handling of empty directories"""
-        files = []
+        files: list[Any] = []
 
         if not files:
             # Should skip or show message

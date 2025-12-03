@@ -67,7 +67,7 @@ import json
 import shutil
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, cast
 
 # Deps (install in your 3.11 venv):
 # pip install onnxruntime insightface torch torchvision torchreid scikit-learn hdbscan opencv-python-headless
@@ -149,7 +149,7 @@ class HybridEmbedder:
             img = img.resize((int(w/scale), int(h/scale)), Image.Resampling.LANCZOS)
         return img
 
-    def _face_embedding(self, img: Image.Image) -> Optional[np.ndarray]:
+    def _face_embedding(self, img: Image.Image) -> np.ndarray | None:
         bgr = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
         faces = self.face_app.get(bgr)
         if not faces:
@@ -164,7 +164,7 @@ class HybridEmbedder:
         v = normalize(v, norm="l2")[0]
         return v  # 512-D
 
-    def _reid_embedding(self, img: Image.Image) -> Optional[np.ndarray]:
+    def _reid_embedding(self, img: Image.Image) -> np.ndarray | None:
         if not self.reid_extractor:
             return None
         crop = top_center_crop(img, 0.9, 0.65)
@@ -195,7 +195,7 @@ class HybridEmbedder:
         v = normalize(v, norm="l2")[0]
         return v
 
-    def embed(self, path: Path) -> Optional[np.ndarray]:
+    def embed(self, path: Path) -> np.ndarray | None:
         try:
             img = self._prep_image(path)
         except Exception:
@@ -237,8 +237,8 @@ def _calculate_distance_band(X: np.ndarray) -> tuple[float, float]:
     return max(0.04, q10), min(0.60, q50)
 
 def cluster_with_backoff(X: np.ndarray, min_cluster_size: int,
-                         start_thresh: Optional[float] = None,
-                         min_thresh: Optional[float] = None,
+                         start_thresh: float | None = None,
+                         min_thresh: float | None = None,
                          step: float = 0.01) -> tuple[np.ndarray, float]:
     """
     Agglomerative (cosine, COMPLETE) with automatic threshold backoff.
@@ -364,9 +364,9 @@ def second_pass_unknowns(X: np.ndarray, labels: np.ndarray,
 
 
 # ------------------------------ IO & grouping ------------------------------
-def discover_image_yaml_pairs(root: Path) -> Tuple[List[Path], List[str]]:
+def discover_image_yaml_pairs(root: Path) -> tuple[list[Path], list[str]]:
     image_exts = {".jpg", ".jpeg", ".png", ".webp"}
-    errors: List[str] = []
+    errors: list[str] = []
 
     all_files = list(root.rglob("*"))
     images = {p.stem: p for p in all_files if p.suffix.lower() in image_exts}
@@ -398,11 +398,11 @@ def discover_image_yaml_pairs(root: Path) -> Tuple[List[Path], List[str]]:
     return valid_image_paths, errors
 
 
-def move_image_yaml_pairs(out_dir: Path, paths: List[Path], labels: np.ndarray,
-                          min_cluster_size: int = 20, tracker=None) -> Dict:
+def move_image_yaml_pairs(out_dir: Path, paths: list[Path], labels: np.ndarray,
+                          min_cluster_size: int = 20, tracker=None) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    manifest = {"groups": [], "moved_pairs": 0, "errors": []}
-    by_label: Dict[int, List[int]] = {}
+    manifest: dict[str, Any] = {"groups": [], "moved_pairs": 0, "errors": []}
+    by_label: dict[int, list[int]] = {}
     for i, lab in enumerate(labels):
         by_label.setdefault(int(lab), []).append(i)
 
@@ -450,7 +450,7 @@ def move_image_yaml_pairs(out_dir: Path, paths: List[Path], labels: np.ndarray,
             notes=f"Moved {total_pairs} image/YAML pairs into {manifest['total_groups']} groups + unknown")
     return manifest
 
-def write_similarity_map(out_dir: Path, kept_paths: List[Path], labels: np.ndarray, X: np.ndarray,
+def write_similarity_map(out_dir: Path, kept_paths: list[Path], labels: np.ndarray, X: np.ndarray,
                          topk: int = 8, threshold: float = 0.20, scope: str = "cluster"):
     """
     Writes:
@@ -472,7 +472,7 @@ def write_similarity_map(out_dir: Path, kept_paths: List[Path], labels: np.ndarr
             w.writerow([i, lab, name])
 
     # choose candidate sets (within cluster vs global)
-    clusters: Dict[int, List[int]] = {}
+    clusters: dict[int, list[int]] = {}
     if scope == "cluster":
         for i, lab in enumerate(labs):
             clusters.setdefault(lab, []).append(i)
@@ -500,7 +500,7 @@ def write_similarity_map(out_dir: Path, kept_paths: List[Path], labels: np.ndarr
             for loc, i in enumerate(idxs):
                 row_d = dists[loc]                  # distances to candidates
                 order = np.argsort(row_d)           # ascending (closest first)
-                neigh = []
+                neigh: list[dict[str, Any]] = []
                 for jloc in order:
                     if len(neigh) >= topk:
                         break
@@ -518,9 +518,9 @@ def write_similarity_map(out_dir: Path, kept_paths: List[Path], labels: np.ndarr
                 # collect edges (undirected, dedupe with sorted (i,j))
                 for n in neigh:
                     a, b = (i, n["index"]) if i < n["index"] else (n["index"], i)
-                    key = (a, b)
-                    if a != b and key not in edge_set:
-                        edge_set.add(key)
+                    edge_key = (a, b)
+                    if a != b and edge_key not in edge_set:
+                        edge_set.add(edge_key)
                         edges.append((a, b, int(labs[a]), int(labs[b]),
                                       float(1.0 - float(dists[idxs.index(a)][idxs.index(b)]) if scope=="cluster" else 1.0 - float(X[a] @ X[b])),
                                       float(1.0 - (X[a] @ X[b])),  # dist (recompute safely)
@@ -594,8 +594,8 @@ def main():
     embedder = HybridEmbedder(max_side=args.max_side, face_min_score=args.face_min_score, use_reid_fallback=True)
     print(f"Device (Torch): {'mps' if torch.backends.mps.is_available() else 'cpu'}")
 
-    embs: List[np.ndarray] = []
-    kept_paths: List[Path] = []
+    embs: list[np.ndarray] = []
+    kept_paths: list[Path] = []
     failed = used_face = used_reid = used_none = 0
 
     print(f"\n🎯 Embedding {len(paths)} images…")

@@ -175,7 +175,6 @@ def main():
 
     # Force output to stdout and stderr
 
-
     # Also write to a log file for debugging
     log_file = dest_root / "backup_log.txt"
     with open(log_file, "a", encoding="utf-8") as f:

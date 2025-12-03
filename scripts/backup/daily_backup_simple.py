@@ -12,6 +12,7 @@ import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -22,18 +23,18 @@ try:
     from scripts.utils.error_monitoring import fatal_error, get_error_monitor
 except ImportError:
     # Fallback if monitoring not available
-    def get_error_monitor(script_name="backup"):
+    def get_error_monitor(script_name: str | None = None) -> Any:  # type: ignore[misc]
         class MockMonitor:
-            def critical_error(self, msg, exc=None):
+            def critical_error(self, msg: str, exc: Exception | None = None) -> None:
                 if exc:
                     pass
 
         return MockMonitor()
 
-    def fatal_error(msg, exc=None):
+    def fatal_error(message: str, exception: Exception | None = None) -> Any:  # type: ignore[misc]
         import sys
 
-        if exc:
+        if exception:
             pass
         sys.exit(1)
 
@@ -54,7 +55,7 @@ def log(message, level="INFO"):
 
 def find_database_files(root_dir: Path) -> list[Path]:
     """Find all SQLite database files in the project."""
-    db_files = []
+    db_files: list[Path] = []
 
     # Common database file patterns
     patterns = ["*.db", "*.sqlite", "*.sqlite3"]
@@ -337,8 +338,8 @@ def main():
         }
 
         manifest_file = backup_dir / "manifest.json"
-        with open(manifest_file, "w") as f:
-            json.dump(manifest, f, indent=2)
+        with open(manifest_file, "w") as manifest_handle:
+            json.dump(manifest, manifest_handle, indent=2)
 
         # Create status file for dashboard monitoring
         status_file = backup_root / "backup_status.json"
@@ -354,8 +355,8 @@ def main():
             "failures": [item for item in backup_items if item["status"] == "failed"],
             "warnings": warnings_list,
         }
-        with open(status_file, "w") as f:
-            json.dump(status_info, f, indent=2)
+        with open(status_file, "w") as status_handle:
+            json.dump(status_info, status_handle, indent=2)
 
         if success:
             status_msg = "✅ Backup completed successfully!"

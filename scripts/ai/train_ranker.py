@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Phase 2.3: Train Ranking Model
@@ -94,7 +96,7 @@ class RankingModel(nn.Module):
 
 def load_embeddings_cache(cache_file: Path) -> dict[str, np.ndarray]:
     """Load embedding cache mapping image_path -> embedding."""
-    cache = {}
+    cache: dict[str, Any] = {}
 
     if not cache_file.exists():
         return cache
@@ -122,7 +124,7 @@ def load_training_data(log_file: Path, embeddings: dict[str, np.ndarray]) -> lis
         'group_id': str
       }
     """
-    examples = []
+    examples: list[Any] = []
     skipped = 0
     skipped_reasons = {"missing_winner": 0, "missing_losers": 0, "parse_error": 0}
 

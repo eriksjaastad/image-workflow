@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Test and Compare Ranking Models
@@ -193,7 +195,6 @@ def load_validation_data(cache: dict, filename_cache: dict, anomaly_set: set):
         -int(len(anomaly_pairs) * 0.2) :
     ]  # 20% for anomalies since they're rare
 
-
     return normal_val, anomaly_val
 
 
@@ -223,13 +224,12 @@ def evaluate_model(model: nn.Module, pairs: list[dict], desc: str) -> dict:
 
 
 def main():
-
     # Load data
     cache, filename_cache = load_embeddings_cache()
     anomaly_set = load_anomaly_set()
     normal_val, anomaly_val = load_validation_data(cache, filename_cache, anomaly_set)
 
-    results = {}
+    results: dict[str, dict[str, Any] | None] = {}
 
     # Test ranker v2
 
@@ -240,7 +240,6 @@ def main():
 
         v2_normal = evaluate_model(model_v2, normal_val, "Ranker v2 - Normal cases")
         v2_anomaly = evaluate_model(model_v2, anomaly_val, "Ranker v2 - Anomaly cases")
-
 
         results["ranker_v2"] = {
             "normal": v2_normal,
@@ -263,7 +262,6 @@ def main():
         v3_normal = evaluate_model(model_v3, normal_val, "Ranker v3 - Normal cases")
         v3_anomaly = evaluate_model(model_v3, anomaly_val, "Ranker v3 - Anomaly cases")
 
-
         results["ranker_v3"] = {
             "normal": v3_normal,
             "anomaly": v3_anomaly,
@@ -277,12 +275,9 @@ def main():
 
     # Comparison
     if results["ranker_v2"] and results["ranker_v3"]:
-
         v2_anom = results["ranker_v2"]["anomaly"]["accuracy"]
         v3_anom = results["ranker_v3"]["anomaly"]["accuracy"]
         (v3_anom - v2_anom) * 100
-
-
 
         if v3_anom > v2_anom:
             pass
@@ -295,7 +290,6 @@ def main():
 
     with results_path.open("w") as f:
         json.dump(results, f, indent=2)
-
 
 
 if __name__ == "__main__":

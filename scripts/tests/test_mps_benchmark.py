@@ -93,7 +93,7 @@ def benchmark_cpu_vs_mps(torch):
         _ = torch.matmul(a_cpu, b_cpu)
     cpu_time = time.time() - start
 
-    print(f"CPU Time: {cpu_time:.3f}s ({cpu_time/iterations:.4f}s per iteration)")
+    print(f"CPU Time: {cpu_time:.3f}s ({cpu_time / iterations:.4f}s per iteration)")
 
     # MPS Benchmark
     if torch.backends.mps.is_available():
@@ -115,7 +115,7 @@ def benchmark_cpu_vs_mps(torch):
         torch.mps.synchronize()  # Wait for GPU to finish
         mps_time = time.time() - start
 
-        print(f"MPS Time: {mps_time:.3f}s ({mps_time/iterations:.4f}s per iteration)")
+        print(f"MPS Time: {mps_time:.3f}s ({mps_time / iterations:.4f}s per iteration)")
 
         # Speedup
         speedup = cpu_time / mps_time
@@ -181,7 +181,7 @@ def test_embedding_simulation(torch):
 
         print(f"Time: {elapsed:.3f}s")
         print(f"Throughput: {imgs_per_sec:.1f} images/second")
-        print(f"Per image: {1000*elapsed/total_images:.2f}ms")
+        print(f"Per image: {1000 * elapsed / total_images:.2f}ms")
 
 
 def test_memory_info(torch):

@@ -10,6 +10,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
+from typing import Any
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -22,9 +23,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 class WebCharacterSorterTest:
     def __init__(self):
-        self.driver = None
-        self.server_process = None
-        self.test_data_dir = None
+        self.driver: Any = None
+        self.server_process: Any = None
+        self.test_data_dir: Path | None = None
 
     def setup(self):
         """Set up test environment with browser and test server"""
@@ -58,9 +59,7 @@ class WebCharacterSorterTest:
             # Server has exited, check output
             stdout, stderr = self.server_process.communicate()
             msg = f"Server failed to start. STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
-            raise Exception(
-                msg
-            )
+            raise Exception(msg)
 
         # Setup headless Chrome
         chrome_options = Options()
@@ -84,14 +83,13 @@ class WebCharacterSorterTest:
             if self.server_process.poll() is not None:
                 stdout, stderr = self.server_process.communicate()
                 msg = f"Server connection failed. Server output - STDOUT: {stdout.decode()}, STDERR: {stderr.decode()}"
-                raise Exception(
-                    msg
-                )
+                raise Exception(msg)
             raise e
 
     def create_test_data(self):
         """Create test data structure for character sorting"""
         # Create minimal test structure that character sorter expects
+        assert self.test_data_dir is not None
         (self.test_data_dir / "person_1").mkdir(parents=True)
         (self.test_data_dir / "person_2").mkdir(parents=True)
 

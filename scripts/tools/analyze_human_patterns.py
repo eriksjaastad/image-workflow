@@ -60,9 +60,9 @@ def analyze_human_patterns(csv_path):
             current_session = [crops[i]]
     sessions.append(current_session)
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("HUMAN CROPPING PATTERN ANALYSIS")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     # Analyze time between crops within sessions
     within_session_times = []
@@ -97,7 +97,7 @@ def analyze_human_patterns(csv_path):
         print(f"  Std Dev: {statistics.stdev(within_session_times):6.2f}s")
 
     # Analyze speed changes throughout a session
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("FATIGUE/WARMUP PATTERNS")
     print("=" * 80)
 
@@ -143,7 +143,7 @@ def analyze_human_patterns(csv_path):
             print(f"  Quarter {i}: {speed:6.1f} crops/hr ({pct_change:+5.1f}%)")
 
     # Analyze work patterns by hour of day
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("PRODUCTIVITY BY HOUR OF DAY")
     print("=" * 80)
 
@@ -195,7 +195,7 @@ def analyze_human_patterns(csv_path):
             print(f" {time_str} | {speed:8.1f} | {count:11d}")
 
     # Generate recommended timing parameters
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("RECOMMENDED TIMER PARAMETERS")
     print("=" * 80)
 
@@ -222,14 +222,16 @@ def analyze_human_patterns(csv_path):
         print(f"  Average session length: {avg_session_min:.1f} minutes")
         print(f"  Average crops per session: {avg_session_crops:.1f}")
         print(
-            f"  Sessions per day (6hr workday): {(6*60) / (avg_session_min + 20.5):.1f}"
+            f"  Sessions per day (6hr workday): {(6 * 60) / (avg_session_min + 20.5):.1f}"
         )
 
         print("\nVariability parameters:")
         print(
             f"  Std dev: {statistics.stdev(within_session_times):.2f}s (use for random variation)"
         )
-        print(f"  Add random jitter: ±{statistics.stdev(within_session_times)/2:.2f}s")
+        print(
+            f"  Add random jitter: ±{statistics.stdev(within_session_times) / 2:.2f}s"
+        )
 
     # Prepare timing distribution for processor
     timing_data = {
@@ -292,7 +294,7 @@ def main() -> None:
     with open(out_path, "w") as f:
         json.dump(timing_data, f, indent=2)
     print(f"\n✓ Timing patterns saved to: {out_path}")
-    print(f"\n{'='*80}\n")
+    print(f"\n{'=' * 80}\n")
 
 
 if __name__ == "__main__":

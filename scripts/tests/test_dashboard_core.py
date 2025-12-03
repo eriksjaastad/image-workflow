@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from scripts.dashboard.current_project_dashboard_v2 import (
     _parse_iso,
@@ -55,5 +56,5 @@ def test_windows_safe_date_keys_compute_hours():
 def test_division_guards_baseline_and_rate():
     # rate should be zero when hours is zero
     # Indirectly tested via simple compute; compute_phase_hours returns 0 if invalid
-    ts_project = {"daily_hours": {}}
+    ts_project: dict[str, Any] = {"daily_hours": {}}
     assert compute_phase_hours(ts_project, None, None) == 0.0

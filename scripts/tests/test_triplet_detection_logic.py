@@ -171,7 +171,7 @@ def test_all_consecutive_combinations():
                     for i in range(len(stages) - 1):
                         assert (
                             stages[i + 1] > stages[i]
-                        ), f"{description}: Stage {stages[i+1]} should be > {stages[i]}"
+                        ), f"{description}: Stage {stages[i + 1]} should be > {stages[i]}"
 
                         # Stages should be in the ordered_stages list and progressing forward
                         # This allows 1→2, 1→3, 1.5→3, etc. as long as they're in order
@@ -183,7 +183,7 @@ def test_all_consecutive_combinations():
                             ), f"{description}: Stage {stages[i]} not in valid stages"
                             assert (
                                 stages[i + 1] in valid_stages
-                            ), f"{description}: Stage {stages[i+1]} not in valid stages"
+                            ), f"{description}: Stage {stages[i + 1]} not in valid stages"
 
         print("✅ All consecutive combinations test PASSED")
 
@@ -227,7 +227,7 @@ def test_same_stage_not_grouped():
             print(f"  Found {len(groups)} groups")
             for i, group in enumerate(groups):
                 filenames = [f.name for f in group]
-                print(f"  Group {i+1}: {filenames}")
+                print(f"  Group {i + 1}: {filenames}")
 
             # CRITICAL TEST: Same stages should NOT be grouped together
             # This test would have FAILED with the old broken logic!
@@ -277,7 +277,7 @@ def test_stage_progression_order():
             print(f"  Found {len(groups)} groups")
             for i, group in enumerate(groups):
                 filenames = [f.name for f in group]
-                print(f"  Group {i+1}: {filenames}")
+                print(f"  Group {i + 1}: {filenames}")
 
             # Should have exactly 1 group with all 4 files
             assert len(groups) == 1, f"Expected 1 group, got {len(groups)}"
@@ -344,7 +344,7 @@ def test_backwards_stage_breaks_group():
             print(f"  Found {len(groups)} groups")
             for i, group in enumerate(groups):
                 filenames = [f.name for f in group]
-                print(f"  Group {i+1}: {filenames}")
+                print(f"  Group {i + 1}: {filenames}")
 
             # Should have 2 groups: [stage2, stage3] and [stage1, stage2]
             assert len(groups) == 2, f"Expected 2 groups, got {len(groups)}"

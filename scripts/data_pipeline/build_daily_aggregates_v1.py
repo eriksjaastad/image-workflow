@@ -16,7 +16,7 @@ import json
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # Load config
 CONFIG_PATH = Path(__file__).resolve().parents[2] / "configs" / "metrics_config.json"
@@ -36,7 +36,7 @@ def parse_timestamp(ts_str: str) -> datetime:
 
 def build_aggregate_for_day(events: list[dict[str, Any]]) -> dict[str, Any]:
     """Build aggregate statistics for a single day."""
-    by_script = defaultdict(
+    by_script: dict[str, Any] = defaultdict(
         lambda: {
             "operations": defaultdict(int),
             "files_processed": 0,
@@ -45,7 +45,7 @@ def build_aggregate_for_day(events: list[dict[str, Any]]) -> dict[str, Any]:
         }
     )
 
-    by_operation = defaultdict(int)
+    by_operation: dict[str, int] = defaultdict(int)
     projects = set()
     all_timestamps = []
 
@@ -78,12 +78,13 @@ def build_aggregate_for_day(events: list[dict[str, Any]]) -> dict[str, Any]:
     script_stats = {}
     for script, data in by_script.items():
         if data["timestamps"]:
+            timestamps = cast(list[datetime], data["timestamps"])
             script_stats[script] = {
-                "operations": dict(data["operations"]),
-                "files_processed": data["files_processed"],
-                "event_count": data["event_count"],
-                "first_op_ts": min(data["timestamps"]).isoformat(),
-                "last_op_ts": max(data["timestamps"]).isoformat(),
+                "operations": dict(cast(dict[str, int], data["operations"])),
+                "files_processed": cast(int, data["files_processed"]),
+                "event_count": cast(int, data["event_count"]),
+                "first_op_ts": min(timestamps).isoformat(),
+                "last_op_ts": max(timestamps).isoformat(),
             }
 
     return {
@@ -142,8 +143,6 @@ def main():
 
         with open(output_file, "w") as f:
             json.dump(aggregate, f, indent=2)
-
-
 
     # Show sample
     if by_day:

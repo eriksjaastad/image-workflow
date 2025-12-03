@@ -18,7 +18,7 @@ import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT_DIR = PROJECT_ROOT / "snapshot"
@@ -44,7 +44,7 @@ KNOWN_OPERATIONS = {"move", "copy", "delete", "create", "send_to_trash", "stage_
 
 def count_raw_events_by_day() -> dict[str, int]:
     """Count events in raw logs by day."""
-    by_day = defaultdict(int)
+    by_day: dict[str, int] = defaultdict(int)
 
     # Count from current logs
     if LOGS_DIR.exists():
@@ -88,7 +88,7 @@ def count_raw_events_by_day() -> dict[str, int]:
 
 def count_snapshot_events_by_day() -> dict[str, int]:
     """Count events in operation_events snapshot by day."""
-    by_day = {}
+    by_day: dict[str, int] = {}
 
     events_dir = SNAPSHOT_DIR / "operation_events_v1"
     if not events_dir.exists():
@@ -180,8 +180,8 @@ def validate_scripts_operations() -> tuple[bool, list[str]]:
     if not events_dir.exists():
         return False, ["operation_events_v1 not found"]
 
-    scripts = Counter()
-    operations = Counter()
+    scripts: Counter[str] = Counter()
+    operations: Counter[str] = Counter()
 
     for day_dir in events_dir.glob("day=*"):
         events_file = day_dir / "events.jsonl"
@@ -263,7 +263,7 @@ def validate_session_integrity() -> tuple[bool, list[str]]:
 
 def validate_snapshots() -> dict[str, Any]:
     """Run all validation checks."""
-    results = {"timestamp": datetime.now().isoformat(), "checks": {}}
+    results: dict[str, Any] = {"timestamp": datetime.now().isoformat(), "checks": {}}
 
     # Run checks
     checks = [
@@ -312,7 +312,6 @@ def main():
 
     with open(report_file, "w") as f:
         json.dump(results, f, indent=2)
-
 
     # Exit with appropriate code
     return 0 if results["all_passed"] else 1

@@ -48,9 +48,19 @@ def normalize_project(
             return None
 
         # Parse timestamps
-        created_at = parse_timestamp(raw_project.get("createdAt"))
-        started_at = parse_timestamp(raw_project.get("startedAt"))
-        finished_at = parse_timestamp(raw_project.get("finishedAt"))
+        created_at_str = raw_project.get("createdAt")
+        started_at_str = raw_project.get("startedAt")
+        finished_at_str = raw_project.get("finishedAt")
+
+        created_at = (
+            parse_timestamp(created_at_str) if created_at_str is not None else None
+        )
+        started_at = (
+            parse_timestamp(started_at_str) if started_at_str is not None else None
+        )
+        finished_at = (
+            parse_timestamp(finished_at_str) if finished_at_str is not None else None
+        )
 
         # Build normalized project
         normalized = {
@@ -124,7 +134,6 @@ def main():
     duplicate_count = 0
 
     for project_file in sorted(project_files):
-
         try:
             with open(project_file, encoding="utf-8") as f:
                 raw_project = json.load(f)
@@ -145,7 +154,6 @@ def main():
         seen_project_ids.add(project_id)
         projects.append(normalized)
 
-
     # Write output (single file)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     output_file = OUTPUT_DIR / "projects.jsonl"
@@ -153,7 +161,6 @@ def main():
     with open(output_file, "w") as f:
         for project in sorted(projects, key=lambda p: p["project_id"]):
             f.write(json.dumps(project) + "\n")
-
 
     # Show sample
     if projects:

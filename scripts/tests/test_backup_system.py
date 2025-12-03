@@ -269,7 +269,7 @@ class TestBackupSystem:
         print("TEST RESULTS SUMMARY")
         print("=" * 60)
         print(f"Tests Passed: {passed}/{total}")
-        print(f"Success Rate: {(passed/total)*100:.1f}%")
+        print(f"Success Rate: {(passed / total) * 100:.1f}%")
 
         if self.errors:
             print(f"\n❌ CRITICAL ERRORS ({len(self.errors)}):")

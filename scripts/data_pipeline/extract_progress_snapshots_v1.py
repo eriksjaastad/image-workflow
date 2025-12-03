@@ -79,7 +79,11 @@ def normalize_crop_progress(
     base_directory = raw_progress.get("base_directory", "unknown")
     session_start = raw_progress.get("session_start")
 
-    snapshot_ts = parse_timestamp(session_start) or datetime.now(UTC)
+    snapshot_ts = (
+        parse_timestamp(session_start)
+        if session_start is not None
+        else datetime.now(UTC)
+    )
     day_str = snapshot_ts.strftime("%Y%m%d")
 
     # Get file modification time as fallback
@@ -145,7 +149,9 @@ def normalize_sorter_progress(
     updated_at = raw_progress.get("updated_at")
 
     snapshot_ts = (
-        parse_timestamp(updated_at) or parse_timestamp(started_at) or datetime.now(UTC)
+        (parse_timestamp(updated_at) if updated_at is not None else None)
+        or (parse_timestamp(started_at) if started_at is not None else None)
+        or datetime.now(UTC)
     )
     day_str = snapshot_ts.strftime("%Y%m%d")
 
@@ -221,7 +227,6 @@ def main():
         for p in SORTER_PROGRESS_DIR.glob("*.json"):
             progress_files.append((p, "sorter"))
 
-
     # Extract snapshots
     by_day = defaultdict(list)
     seen_progress_ids = set()
@@ -242,7 +247,6 @@ def main():
             day = snapshot["day"]
             by_day[day].append(snapshot)
 
-
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -261,7 +265,6 @@ def main():
                 f.write(json.dumps(snapshot) + "\n")
 
         total_written += len(day_snapshots)
-
 
 
 if __name__ == "__main__":

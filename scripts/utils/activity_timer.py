@@ -50,7 +50,7 @@ import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 
 @dataclass
@@ -64,8 +64,8 @@ class ActivitySession:
     active_time: float = 0.0
     idle_time: float = 0.0
     last_activity: float = 0.0
-    batches: list[dict[str, Any]] = None
-    operations: list[dict[str, Any]] = None
+    batches: list[dict[str, Any]] | None = None
+    operations: list[dict[str, Any]] | None = None
 
     def __post_init__(self):
         if self.batches is None:
@@ -83,12 +83,12 @@ class ActivityTimer:
         self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Timer state
-        self.session_start = None
-        self.last_activity = None
+        self.session_start: float | None = None
+        self.last_activity: float | None = None
         self.active_time = 0.0
         self.idle_time = 0.0
         self.is_active = False
-        self.current_batch = None
+        self.current_batch: str | None = None
 
         # Data storage
         self.data_dir = Path(__file__).parent.parent.parent / "data" / "timer_data"
@@ -104,7 +104,7 @@ class ActivityTimer:
         )
 
         # Background monitoring
-        self._monitor_thread = None
+        self._monitor_thread: threading.Thread | None = None
         self._stop_monitoring = False
 
     def start_session(self):
@@ -112,7 +112,6 @@ class ActivityTimer:
         self.session_start = time.time()
         self.last_activity = self.session_start
         self.is_active = True
-
 
         # Start background monitoring
         self._start_monitoring()
@@ -164,7 +163,6 @@ class ActivityTimer:
                 )
                 last_batch["summary"] = summary
 
-
         self.current_batch = None
         self._save_session_data()
 
@@ -214,7 +212,9 @@ class ActivityTimer:
             "batches_completed": len(
                 [b for b in self.current_session.batches if "end_time" in b]
             ),
-            "total_operations": len(self.current_session.operations),
+            "total_operations": len(
+                cast(list[dict[str, Any]], self.current_session.operations)
+            ),
             "files_processed": sum(
                 op.get("file_count", 0)
                 for op in self.current_session.operations
@@ -226,7 +226,6 @@ class ActivityTimer:
     def print_live_stats(self):
         """Print current session statistics"""
         self.get_current_stats()
-
 
     def end_session(self):
         """End the current activity session"""
@@ -251,7 +250,7 @@ class ActivityTimer:
         self.current_session.end_time = current_time
         self.current_session.active_time = self.active_time
         self.current_session.idle_time = self.idle_time
-        self.current_session.last_activity = self.last_activity
+        self.current_session.last_activity = cast(float, self.last_activity)
 
         # Save final session data
         self._save_session_data()
@@ -380,7 +379,6 @@ class TimerReporter:
         if not summary:
             return
 
-
         for _script, stats in summary["script_breakdown"].items():
             (
                 (stats["active_time"] / stats["total_time"] * 100)
@@ -408,12 +406,13 @@ class TimerReporter:
                 totals["total_session_time"] += daily["total_session_time"]
                 totals["total_files_processed"] += daily["total_files_processed"]
                 totals["total_operations"] += daily["total_operations"]
-                totals["daily_breakdown"].append(daily)
+                cast(list[dict[str, Any]], totals["daily_breakdown"]).append(daily)
 
                 # Aggregate script totals
+                script_totals = cast(dict[str, dict[str, int]], totals["script_totals"])
                 for script, stats in daily["script_breakdown"].items():
-                    if script not in totals["script_totals"]:
-                        totals["script_totals"][script] = {
+                    if script not in script_totals:
+                        script_totals[script] = {
                             "active_time": 0,
                             "total_time": 0,
                             "files_processed": 0,
@@ -428,7 +427,7 @@ class TimerReporter:
                         "operations",
                         "sessions",
                     ]:
-                        totals["script_totals"][script][key] += stats[key]
+                        script_totals[script][key] += cast(int, stats[key])
 
         return totals
 
@@ -436,12 +435,8 @@ class TimerReporter:
         """Print cross-script summary for the last N days"""
         totals = self.cross_script_totals(days)
 
-
         if totals["total_session_time"] > 0:
-            (
-                totals["total_active_time"] / totals["total_session_time"] * 100
-            )
-
+            (totals["total_active_time"] / totals["total_session_time"] * 100)
 
         for _script, stats in totals["script_totals"].items():
             (
@@ -454,7 +449,6 @@ class TimerReporter:
                 if stats["active_time"] > 0
                 else 0
             )
-
 
 
 # Convenience functions for quick reporting

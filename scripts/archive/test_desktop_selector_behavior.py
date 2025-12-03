@@ -15,8 +15,8 @@ def _load_desktop_tool(project_root: Path):
     script_path = project_root / "scripts/01_desktop_image_selector_crop.py"
     loader = SourceFileLoader("desktop_selector_crop", str(script_path))
     spec = importlib.util.spec_from_loader(loader.name, loader)
-    module = importlib.util.module_from_spec(spec)
     assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)  # type: ignore[attr-defined]
     return module.DesktopImageSelectorCrop
 

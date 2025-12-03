@@ -43,7 +43,6 @@ def find_mismatched_files_recursive(root_directory):
     """Recursively find PNG files without matching metadata files and vice versa."""
     root_directory = Path(root_directory)
 
-
     # Get all PNG and metadata files recursively, organized by directory
     all_orphaned_pngs = []
     all_orphaned_metadata = []
@@ -86,7 +85,6 @@ def find_mismatched_files_recursive(root_directory):
             [metadata_files[stem] for stem in metadata_without_png]
         )
         total_pairs += pairs_in_dir
-
 
     return {
         "orphaned_pngs": all_orphaned_pngs,
@@ -151,7 +149,6 @@ def cleanup_and_verify(directory, recursive=False):
             for f in sorted(files):
                 pass
 
-
     # Ask user what to do
     len(results["orphaned_metadata"]) + len(results["orphaned_pngs"])
     while True:
@@ -183,7 +180,6 @@ def perform_cleanup(results):
                 send2trash(str(f))
             except Exception:
                 pass
-
 
 
 def main():

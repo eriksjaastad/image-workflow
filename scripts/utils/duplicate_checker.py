@@ -44,7 +44,6 @@ def find_all_files(
 
     file_map = defaultdict(list)
 
-
     for ext in extensions:
         pattern = f"**/*{ext}"
         for file_path in root_dir.rglob(pattern):
@@ -74,13 +73,11 @@ def analyze_directories(root_dir: Path, extensions: list[str]) -> None:
     sum(len(paths) for paths in file_map.values())
     len(file_map)
 
-
     # Find duplicates
     duplicates = find_duplicates(file_map)
 
     if not duplicates:
         return
-
 
     # Group duplicates by directory pairs
     duplicate_pairs = defaultdict(list)
@@ -106,7 +103,7 @@ def analyze_directories(root_dir: Path, extensions: list[str]) -> None:
             pass
 
     # Summary by directory
-    dir_counts = defaultdict(int)
+    dir_counts: dict[str, int] = defaultdict(int)
 
     for filename, paths in duplicates.items():
         for path in paths:

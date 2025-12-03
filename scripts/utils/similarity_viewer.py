@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Utility: Similarity Viewer - Optional Analysis Tool
@@ -104,7 +106,7 @@ def similarity_sort_images(images, neighbors_data):
 
     # Build similarity graph for this set of images
     image_set = set(images)
-    similarity_graph = {}
+    similarity_graph: dict[str, Any] = {}
 
     for img in images:
         similarity_graph[img] = []
@@ -707,7 +709,6 @@ def main():
 
     if missing_files:
         sys.exit(1)
-
 
     app = create_app(args.output_dir)
 

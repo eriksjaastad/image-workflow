@@ -40,7 +40,6 @@ def run_extractor(script_name: str) -> bool:
     if not script_path.exists():
         return False
 
-
     try:
         result = subprocess.run(
             [sys.executable, str(script_path)],
@@ -65,7 +64,6 @@ def backfill(start_date: datetime, end_date: datetime) -> None:
     """
     (end_date - start_date).days + 1
 
-
     # Run all extractors
     failed = []
 
@@ -81,7 +79,6 @@ def backfill(start_date: datetime, end_date: datetime) -> None:
             pass
     else:
         pass
-
 
     # Run validation
     validation_script = (

@@ -75,7 +75,6 @@ def move_files(source_dir: Path, dest_dir: Path, dry_run: bool = False) -> None:
     if not image_files:
         return
 
-
     # Use shared utility function
     results = move_multiple_files_with_companions(
         image_files, dest_dir, dry_run, tracker

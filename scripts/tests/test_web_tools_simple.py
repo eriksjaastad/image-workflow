@@ -159,11 +159,11 @@ class SimpleWebToolsTest:
     def test_recent_enhancements_in_code(self):
         """Test that recent enhancements are present in the code"""
         # Test Web Image Selector enhancements
-        selector_content = Path(__file__).parent.parent / "01_ai_assisted_reviewer.py"
-        if not selector_content.exists():
+        selector_path = Path(__file__).parent.parent / "01_ai_assisted_reviewer.py"
+        if not selector_path.exists():
             print("⚠️  Web image selector not found, skipping")
             return True
-        selector_content = selector_content.read_text()
+        selector_content = selector_path.read_text()
 
         # Check for unselect functionality
         if "UNSELECT FUNCTIONALITY" not in selector_content:
@@ -243,7 +243,7 @@ class SimpleWebToolsTest:
 
         # Print summary
         print("\n📊 SIMPLIFIED TEST SUMMARY")
-        print(f"{'='*50}")
+        print(f"{'=' * 50}")
 
         for test_name, result in self.results.items():
             status = "✅" if result == "PASSED" else "❌"

@@ -35,6 +35,7 @@ import json
 import sqlite3
 from datetime import datetime
 from pathlib import Path
+from typing import Any, cast
 
 import cv2
 
@@ -147,7 +148,7 @@ class CropCoordinateValidator:
     def scan_cropped_images(self) -> list[Path]:
         """Find all cropped images recursively."""
         patterns = ["**/*.png", "**/*.jpg", "**/*.jpeg"]
-        images = []
+        images: list[Path] = []
         for pattern in patterns:
             images.extend(self.cropped_dir.glob(pattern))
         return sorted(images)
@@ -197,7 +198,7 @@ class CropCoordinateValidator:
         # Get all crop records from database
         crop_records = self.get_crop_records_from_database()
 
-        results = {
+        results: dict[str, Any] = {
             "total_crop_records": len(crop_records),
             "cropped_file_found": 0,
             "cropped_file_not_found": 0,
@@ -219,16 +220,20 @@ class CropCoordinateValidator:
             # Find cropped file (recursive search)
             cropped_matches = list(self.cropped_dir.glob(f"**/{filename}"))
             if not cropped_matches:
-                results["cropped_file_not_found"] += 1
+                results["cropped_file_not_found"] = (
+                    cast(int, results["cropped_file_not_found"]) + 1
+                )
                 continue
 
             cropped_path = cropped_matches[0]
-            results["cropped_file_found"] += 1
+            results["cropped_file_found"] = cast(int, results["cropped_file_found"]) + 1
 
             # Find original image (recursive search in original dir)
             original_matches = list(self.original_dir.glob(f"**/{filename}"))
             if not original_matches:
-                results["original_not_found"] += 1
+                results["original_not_found"] = (
+                    cast(int, results["original_not_found"]) + 1
+                )
                 continue
 
             original_path = original_matches[0]
@@ -236,7 +241,9 @@ class CropCoordinateValidator:
             # Extract coordinates from physical images
             match_result = extract_crop_coordinates(original_path, cropped_path)
             if not match_result:
-                results["template_match_failed"] += 1
+                results["template_match_failed"] = (
+                    cast(int, results["template_match_failed"]) + 1
+                )
                 continue
 
             physical_coords, confidence = match_result
@@ -244,10 +251,14 @@ class CropCoordinateValidator:
 
             # Compare coordinates
             if coords_match(physical_coords, db_coords):
-                results["coordinates_match"] += 1
+                results["coordinates_match"] = (
+                    cast(int, results["coordinates_match"]) + 1
+                )
             else:
-                results["coordinates_mismatch"] += 1
-                results["mismatches"].append(
+                results["coordinates_mismatch"] = (
+                    cast(int, results["coordinates_mismatch"]) + 1
+                )
+                cast(list[dict[str, Any]], results["mismatches"]).append(
                     {
                         "filename": filename,
                         "group_id": record["group_id"],
@@ -260,7 +271,9 @@ class CropCoordinateValidator:
                 # Correct if not dry run
                 if not self.dry_run:
                     if self.update_database_coords(record["group_id"], physical_coords):
-                        results["corrections_made"] += 1
+                        results["corrections_made"] = (
+                            cast(int, results["corrections_made"]) + 1
+                        )
                     else:
                         pass
 

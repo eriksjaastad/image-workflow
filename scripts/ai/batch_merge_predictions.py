@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Batch Merge AI Predictions - All Projects
@@ -49,7 +51,7 @@ def main():
     args = parser.parse_args()
 
     # Track results
-    results = {"successful": [], "failed": [], "skipped": []}
+    results: dict[str, Any] = {"successful": [], "failed": [], "skipped": []}
 
     start_time = datetime.now()
 

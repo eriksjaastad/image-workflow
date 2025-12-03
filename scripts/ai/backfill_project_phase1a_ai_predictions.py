@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 r"""
 Phase 1A: Create Temp Database with AI Predictions
@@ -125,7 +127,7 @@ def group_original_images(original_dir: Path) -> list[tuple[str, list[Path]]]:
     """
     # Find all images recursively
     image_extensions = {".png", ".jpg", ".jpeg"}
-    all_images = []
+    all_images: list[Any] = []
     for ext in image_extensions:
         all_images.extend(original_dir.rglob(f"*{ext}"))
 

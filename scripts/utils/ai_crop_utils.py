@@ -155,9 +155,7 @@ def headless_crop(
         # Final validation against image dimensions
         if x2 > width or y2 > height:
             msg = f"Crop coordinates ({x1}, {y1}, {x2}, {y2}) exceed image dimensions ({width}, {height})"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         # Perform crop
         cropped = img.crop((x1, y1, x2, y2))

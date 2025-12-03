@@ -108,7 +108,6 @@ else:
     ai_correct = 0
     ai_wrong = 0
 
-
     for _i, case in enumerate(anomaly_cases[:20]):  # Show first 20
         winner_emb = torch.from_numpy(case["winner_emb"]).float().unsqueeze(0)
         loser_emb = torch.from_numpy(case["loser_emb"]).float().unsqueeze(0)
@@ -126,10 +125,8 @@ else:
             ai_wrong += 1
             result = "❌ WRONG"
 
-
     if len(anomaly_cases) > 20:
         pass
-
 
     if ai_correct / len(anomaly_cases) > 0.5:
         pass

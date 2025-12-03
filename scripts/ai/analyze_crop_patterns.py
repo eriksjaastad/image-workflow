@@ -13,12 +13,13 @@ import csv
 import statistics
 import sys
 from pathlib import Path
+from typing import Any
 
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
-def analyze_crop_data():
+def analyze_crop_data() -> None:
     """Analyze crop patterns in training data."""
     training_dir = Path(__file__).parent.parent.parent / "data" / "training"
     csv_path = training_dir / "select_crop_log.csv"
@@ -32,7 +33,7 @@ def analyze_crop_data():
         rows = list(reader)
 
     # Filter rows with valid crop coordinates and dimensions
-    valid_crops = []
+    valid_crops: list[dict[str, Any]] = []
     for row in rows:
         try:
             x1 = float(row.get("crop_x1", 0))
@@ -69,14 +70,14 @@ def analyze_crop_data():
         return
 
     # Calculate normalized crop statistics
-    crop_widths = []  # As percentage of original
-    crop_heights = []
-    crop_areas = []
-    crop_x_centers = []  # Normalized [0, 1]
-    crop_y_centers = []
+    crop_widths: list[float] = []  # As percentage of original
+    crop_heights: list[float] = []
+    crop_areas: list[float] = []
+    crop_x_centers: list[float] = []  # Normalized [0, 1]
+    crop_y_centers: list[float] = []
 
-    x1_positions = []
-    y1_positions = []
+    x1_positions: list[float] = []
+    y1_positions: list[float] = []
 
     for crop in valid_crops:
         # Calculate crop dimensions as percentage

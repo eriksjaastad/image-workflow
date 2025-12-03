@@ -46,7 +46,9 @@ def get_latest_file_from_history(history_dir: str) -> str:
     return latest.get("id")
 
 
-def recover_file(history_dir: str, resource_url: str, latest_file_id: str | None = None):
+def recover_file(
+    history_dir: str, resource_url: str, latest_file_id: str | None = None
+):
     """Recover a file from Cursor history"""
     history_path = (
         Path.home() / "Library/Application Support/Cursor/User/History" / history_dir

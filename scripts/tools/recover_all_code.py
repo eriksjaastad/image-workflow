@@ -64,7 +64,7 @@ recovered = 0
 failed = []
 
 for file_path in FILES:
-    print(f"\n[{recovered+1}/{len(FILES)}] {file_path}...")
+    print(f"\n[{recovered + 1}/{len(FILES)}] {file_path}...")
 
     # Create parent dir
     full_path = REPO / file_path

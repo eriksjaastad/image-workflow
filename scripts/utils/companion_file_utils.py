@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Standardized Companion File Utilities
@@ -605,7 +607,6 @@ def move_multiple_files_with_companions(
             skipped_count += 1
             continue
 
-
         if not dry_run:
             try:
                 # Use wildcard logic to move image and ALL companion files
@@ -674,9 +675,7 @@ def safe_delete_paths(
                 "send2trash is not installed. Install with: pip install send2trash\n"
                 "Or set hard_delete=True to permanently delete files (dangerous)."
             )
-            raise RuntimeError(
-                msg
-            )
+            raise RuntimeError(msg)
         for p in paths:
             try:
                 if p.exists():
@@ -795,9 +794,7 @@ def log_crop_decision(
             f"Got: {project_id!r}\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 2. Validate filename (no paths!)
     if not filename or not filename.strip():
@@ -809,9 +806,7 @@ def log_crop_decision(
             f"Got: {filename!r}\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     if "/" in filename or "\\" in filename:
         msg = (
@@ -823,9 +818,7 @@ def log_crop_decision(
             f"Expected: Just the filename (e.g., '20250705_230713_stage3.png')\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 3. Validate crop coordinates
     x1, y1, x2, y2 = crop_coords
@@ -842,9 +835,7 @@ def log_crop_decision(
             f"  • x1 < x2 and y1 < y2\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 4. Validate dimensions
     if width <= 0 or height <= 0:
@@ -858,9 +849,7 @@ def log_crop_decision(
             f"Both width and height must be positive integers.\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 5. Generate or validate timestamp
     if timestamp is None:
@@ -879,9 +868,7 @@ def log_crop_decision(
                 f"Error: {e}\n"
                 f"{'=' * 70}\n"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     # ========================================================================
     # Write to NEW minimal schema CSV
@@ -965,9 +952,7 @@ def log_select_crop_entry(
                 f"   Ensure it passes actual image dimensions, not (0, 0).\n"
                 f"{'=' * 70}\n"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     # 2. Validate crop coordinates if provided
     if crop_norm is not None:
@@ -985,9 +970,7 @@ def log_select_crop_entry(
                 f"🔧 FIX: Check crop coordinate calculation in calling code.\n"
                 f"{'=' * 70}\n"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     # ========================================================================
     # Build and write CSV row (only reached if validation passed)
@@ -1066,9 +1049,7 @@ def log_selection_only_entry(
             f"   Ensure chosen_path is a valid file path.\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 2. Validate negative paths is a list
     if not isinstance(negative_paths, list):
@@ -1081,9 +1062,7 @@ def log_selection_only_entry(
             f"🔧 FIX: Pass a list of paths as negative_paths.\n"
             f"{'=' * 70}\n"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # 3. Validate we have at least one alternative (otherwise why log?)
     if len(negative_paths) == 0:
@@ -1444,7 +1423,7 @@ def get_file_operation_metrics(file_operations: list[dict]) -> dict[str, any]:
     work_time_seconds = calculate_work_time_from_file_operations(file_operations)
 
     # Count operations by type
-    operation_types = {}
+    operation_types: dict[str, Any] = {}
     total_files = 0
 
     for op in file_operations:

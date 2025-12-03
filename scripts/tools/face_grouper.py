@@ -67,6 +67,7 @@ import json
 import shutil
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 # Deps (install in your 3.11 venv):
 # pip install onnxruntime insightface torch torchvision torchreid scikit-learn hdbscan opencv-python-headless
@@ -463,7 +464,7 @@ def move_image_metadata_pairs(
     tracker=None,
 ) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
-    manifest = {"groups": [], "moved_pairs": 0, "errors": []}
+    manifest: dict[str, Any] = {"groups": [], "moved_pairs": 0, "errors": []}
     by_label: dict[int, list[int]] = {}
     for i, lab in enumerate(labels):
         by_label.setdefault(int(lab), []).append(i)
@@ -472,7 +473,8 @@ def move_image_metadata_pairs(
     for lab, idxs in sorted(by_label.items(), key=lambda kv: kv[0]):
         group_dir = out_dir / ("unknown" if lab == -1 else f"person_{int(lab):04d}")
         group_dir.mkdir(parents=True, exist_ok=True)
-        moved_files, group_errors = [], []
+        moved_files: list[str] = []
+        group_errors: list[str] = []
 
         for i in idxs:
             image_path = paths[i]
@@ -608,7 +610,7 @@ def write_similarity_map(
             for loc, i in enumerate(idxs):
                 row_d = dists[loc]  # distances to candidates
                 order = np.argsort(row_d)  # ascending (closest first)
-                neigh = []
+                neigh: list[dict[str, Any]] = []
                 for jloc in order:
                     if len(neigh) >= topk:
                         break
@@ -640,10 +642,15 @@ def write_similarity_map(
 
                 # collect edges (undirected, dedupe with sorted (i,j))
                 for n in neigh:
-                    a, b = (i, n["index"]) if i < n["index"] else (n["index"], i)
-                    key = (a, b)
-                    if a != b and key not in edge_set:
-                        edge_set.add(key)
+                    if i < cast(int, n["index"]):
+                        a = i
+                        b = cast(int, n["index"])
+                    else:
+                        a = cast(int, n["index"])
+                        b = i
+                    edge_key = (a, b)
+                    if a != b and edge_key not in edge_set:
+                        edge_set.add(edge_key)
                         edges.append(
                             (
                                 a,
@@ -861,7 +868,7 @@ def main():
             w.writerow(["label", "filename"])
             for p, lab in zip(kept_paths, labels, strict=False):
                 w.writerow([int(lab), p.name])
-        print(f"📝 wrote preview: {out_dir/'preview.csv'}")
+        print(f"📝 wrote preview: {out_dir / 'preview.csv'}")
 
         if not args.dry_run:
             print("\n📁 Moving image/metadata pairs to groups…")
@@ -904,7 +911,7 @@ def main():
 
     kept = [u for u in np.unique(labels) if u != -1]
     print(
-        f"   • clusters (named): {len(kept)}  • assigned from unknown: {assigned}  • unknown left: {(labels==-1).sum()}"
+        f"   • clusters (named): {len(kept)}  • assigned from unknown: {assigned}  • unknown left: {(labels == -1).sum()}"
     )
 
     if args.emit_map:
@@ -926,7 +933,7 @@ def main():
         w.writerow(["label", "filename"])
         for p, lab in zip(kept_paths, labels, strict=False):
             w.writerow([int(lab), p.name])
-    print(f"📝 wrote preview: {out_dir/'preview.csv'}")
+    print(f"📝 wrote preview: {out_dir / 'preview.csv'}")
 
     if not args.dry_run:
         print("\n📁 Moving image/metadata pairs to groups…")

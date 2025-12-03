@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Test Suite: Snapshot Data Integrity
@@ -112,7 +114,7 @@ def test_data_consistency():
         snapshot_ops = engine._load_from_snapshot_aggregates(snapshot_dir)
 
         # Group by date
-        snapshot_by_day = {}
+        snapshot_by_day: dict[str, Any] = {}
         for op in snapshot_ops:
             day = op.get("date")
             if day:

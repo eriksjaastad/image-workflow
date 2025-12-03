@@ -254,7 +254,7 @@ def generate_report(
     anomalies = [e for e in selection_entries if e["is_anomaly"]]
 
     # Count stage preferences
-    stage_counts = defaultdict(int)
+    stage_counts: dict[str, int] = defaultdict(int)
     for entry in selection_entries:
         stage_counts[entry["chosen_stage"]] += 1
 

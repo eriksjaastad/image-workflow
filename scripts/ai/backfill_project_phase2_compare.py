@@ -299,7 +299,12 @@ def main():
     overlapping_images = set(temp_image_map.keys()) & set(real_image_map.keys())
 
     # Compare all records
-    actions = {"add": [], "fill_nulls": [], "update_coords": [], "skip": []}
+    actions: dict[str, Any] = {
+        "add": [],
+        "fill_nulls": [],
+        "update_coords": [],
+        "skip": [],
+    }
 
     # Track which temp records matched with real records
     matched_temp_group_ids = set()

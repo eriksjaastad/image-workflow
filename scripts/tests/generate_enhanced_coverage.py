@@ -194,7 +194,7 @@ def enhance_coverage_html(selenium_results):
                 text-align: center;
             ">
                 <div style="color: #a0a3b1; font-size: 0.8rem; margin-bottom: 0.25rem;">Failed</div>
-                <div style="color: #ff6b6b; font-size: 2rem; font-weight: 600;">{selenium_results['failed']}</div>
+                <div style="color: #ff6b6b; font-size: 2rem; font-weight: 600;">{selenium_results["failed"]}</div>
             </div>
             
             <div style="
@@ -204,7 +204,7 @@ def enhance_coverage_html(selenium_results):
                 text-align: center;
             ">
                 <div style="color: #a0a3b1; font-size: 0.8rem; margin-bottom: 0.25rem;">Pass Rate</div>
-                <div style="color: {('#51cf66' if pass_rate > 90 else '#ffd43b' if pass_rate > 70 else '#ff6b6b')}; font-size: 2rem; font-weight: 600;">{pass_rate:.0f}%</div>
+                <div style="color: {("#51cf66" if pass_rate > 90 else "#ffd43b" if pass_rate > 70 else "#ff6b6b")}; font-size: 2rem; font-weight: 600;">{pass_rate:.0f}%</div>
             </div>
         </div>
         

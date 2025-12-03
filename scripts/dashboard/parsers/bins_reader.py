@@ -114,7 +114,7 @@ class BinsReader:
             return self._format_bins_for_output(bins, groupby)
 
         # Otherwise, re-aggregate to target time slice
-        aggregated = defaultdict(
+        aggregated: dict[str, Any] = defaultdict(
             lambda: defaultdict(
                 lambda: {"file_count": 0, "event_count": 0, "work_seconds": 0.0}
             )

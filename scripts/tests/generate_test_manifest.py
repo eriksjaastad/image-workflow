@@ -35,7 +35,7 @@ def analyze_directory(content_dir):
     )
 
     # Analyze filename patterns
-    stage_patterns = defaultdict(int)
+    stage_patterns: dict[str, int] = defaultdict(int)
     timestamp_patterns = set()
 
     for png_file in png_files:

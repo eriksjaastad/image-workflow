@@ -19,7 +19,7 @@ import threading
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 logger = logging.getLogger(__name__)
 
@@ -55,15 +55,15 @@ class DashboardAnalytics:
         print(f"[INIT DEBUG] Timesheet path: {timesheet_path}")
 
         # PERFORMANCE FIX: Cache file operations to avoid reloading 19+ times
-        self._cached_file_ops = None
-        self._cached_file_ops_for_daily = None
-        self._cache_timestamp = None
+        self._cached_file_ops: list[dict[str, Any]] | None = None
+        self._cached_file_ops_for_daily: list[dict[str, Any]] | None = None
+        self._cache_timestamp: float | None = None
 
         # Thread safety: Lock for cache invalidation to prevent race conditions
         self._cache_lock = threading.RLock()
 
         # Track timesheet modification time for cache invalidation
-        self._timesheet_mtime = None
+        self._timesheet_mtime: float | None = None
 
     def generate_dashboard_response(
         self, time_slice: str, lookback_days: int, project_id: str | None = None
@@ -98,7 +98,7 @@ class DashboardAnalytics:
         print(f"[TIMING] ✓ engine.generate_dashboard_data: {step_time:.3f}s")
 
         # Store raw_data for later use (e.g., in _build_billed_vs_actual)
-        self.engine._raw_data = raw_data
+        self.engine._cache["_raw_data"] = raw_data
 
         # Get project metrics (now includes daily summaries merged with logs)
         step_start = time.time()
@@ -114,7 +114,7 @@ class DashboardAnalytics:
 
         # Transform to UI contract
         step_start = time.time()
-        response = {
+        response: dict[str, Any] = {
             "metadata": {
                 "generated_at": datetime.now().isoformat(),
                 "time_slice": time_slice,
@@ -261,7 +261,7 @@ class DashboardAnalytics:
                     else:
                         dt = datetime.fromisoformat(ts)
                 else:
-                    dt = ts
+                    dt = cast(datetime, ts)
                 if not isinstance(dt, datetime):
                     return False
                 started = project.get("startedAt") if project else None
@@ -295,7 +295,7 @@ class DashboardAnalytics:
                         # Treat naive timestamps as already UTC
                         dt = datetime.fromisoformat(ts)
                 else:
-                    dt = ts
+                    dt = cast(datetime, ts)
                 if not isinstance(dt, datetime):
                     continue
                 if dt.date() < start_cutoff:
@@ -381,7 +381,7 @@ class DashboardAnalytics:
 
     def _build_charts(
         self, raw_data: dict[str, Any], baseline_labels: list[str], time_slice: str
-    ) -> dict[str, Any]:
+    ) -> dict[str, dict[str, list[Any]]]:
         """
         Build charts data aligned to baseline labels.
 
@@ -392,7 +392,7 @@ class DashboardAnalytics:
                 "by_project": { "<ProjectName>": { "dates": [...], "counts": [...] } }
             }
         """
-        charts = {"by_script": {}, "by_operation": {}, "by_project": {}}
+        charts: dict[str, Any] = {"by_script": {}, "by_operation": {}, "by_project": {}}
 
         # Extract file operations data
         file_ops_data = raw_data.get("file_operations_data", {})
@@ -452,21 +452,24 @@ class DashboardAnalytics:
         label_index = {label: idx for idx, label in enumerate(baseline_labels)}
 
         # Group records by group_field
-        grouped = defaultdict(lambda: defaultdict(float))
+        grouped: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
         for record in records:
             time_key = record.get("time_slice")
             group_key = record.get(group_field)
             value = record.get(value_field, 0) or 0
 
             if time_key and group_key:
+                group_key = cast(str, group_key)
+                time_key = cast(str, time_key)
                 # Optionally remap names to display names (charts expect human-friendly labels)
                 if map_display_names and group_field == "script":
                     group_key = self.engine.get_display_name(group_key)
                 grouped[group_key][time_key] += float(value)
 
         # Align to baseline labels (fill gaps with zeros)
-        result = {}
+        result: dict[str, dict[str, list[Any]]] = {}
         for group_key, time_values in grouped.items():
+            group_key = cast(str, group_key)
             counts = [0.0] * len(baseline_labels)
             for time_key, value in time_values.items():
                 if time_key in label_index:
@@ -1238,7 +1241,7 @@ class DashboardAnalytics:
         )
 
         # Get raw data for project dates
-        raw_data = self.engine._raw_data if hasattr(self.engine, "_raw_data") else {}
+        raw_data = self.engine._cache.get("_raw_data", {})
         projects_list = raw_data.get("projects", [])
         projects_by_id = {p.get("projectId"): p for p in projects_list}
 
@@ -1380,9 +1383,7 @@ class DashboardAnalytics:
 
         try:
             # Get raw data for project info
-            raw_data = (
-                self.engine._raw_data if hasattr(self.engine, "_raw_data") else {}
-            )
+            raw_data = self.engine._cache.get("_raw_data", {})
             projects_list = raw_data.get("projects", [])
             projects_by_id = {p.get("projectId"): p for p in projects_list}
 

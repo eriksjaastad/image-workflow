@@ -257,9 +257,7 @@ def prezip_stage(cfg: StagerConfig) -> dict:
         "eligibleCount": len(eligible),
         "byExtIncluded": by_ext_included,
         "excludedCounts": {k: int(v) for k, v in excluded.items()},
-        "excludedUniqueNames": {
-            k: sorted(v) for k, v in excluded_unique_names.items()
-        },
+        "excludedUniqueNames": {k: sorted(v) for k, v in excluded_unique_names.items()},
         "incomingByExt": incoming_by_ext,
     }
 

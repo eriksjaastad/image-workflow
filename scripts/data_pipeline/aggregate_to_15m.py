@@ -339,7 +339,6 @@ def aggregate_day(
     if not records:
         return 0
 
-
     # Aggregate to bins
     bins = aggregate_to_bins(records, bin_version=bin_version)
 
@@ -400,7 +399,6 @@ def main():
     if not data_dir.exists():
         sys.exit(1)
 
-
     if args.day:
         # Process single day
         days = [args.day]
@@ -426,7 +424,6 @@ def main():
             import traceback
 
             traceback.print_exc()
-
 
 
 if __name__ == "__main__":

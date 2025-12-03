@@ -197,7 +197,7 @@ class TestNearestUpGrouping(unittest.TestCase):
             # stage1, then many stage3s, then stage2 far away
             test_files = ["20250705_214626_stage1_generated.png"]
             for i in range(20):
-                test_files.append(f"20250705_214{700+i:03d}_stage3_enhanced.png")
+                test_files.append(f"20250705_214{700 + i:03d}_stage3_enhanced.png")
             test_files.append("20250705_214950_stage2_upscaled.png")
 
             file_paths = [temp_path / f for f in test_files]

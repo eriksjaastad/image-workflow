@@ -134,7 +134,7 @@ class ProjectArchiver:
         total_work_seconds = sum(b.get("work_seconds", 0) for b in bins)
 
         # Group by script
-        by_script = defaultdict(
+        by_script: dict[str, Any] = defaultdict(
             lambda: {"file_count": 0, "event_count": 0, "work_seconds": 0.0}
         )
 
@@ -145,7 +145,9 @@ class ProjectArchiver:
             by_script[script]["work_seconds"] += bin_record.get("work_seconds", 0)
 
         # Group by operation
-        by_operation = defaultdict(lambda: {"file_count": 0, "event_count": 0})
+        by_operation: dict[str, Any] = defaultdict(
+            lambda: {"file_count": 0, "event_count": 0}
+        )
 
         for bin_record in bins:
             operation = bin_record.get("operation", "unknown")
@@ -234,7 +236,6 @@ class ProjectArchiver:
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
 
-
         return archive_dir
 
     def merge_into_overall(
@@ -301,7 +302,6 @@ class ProjectArchiver:
 
         shutil.move(str(tmp_path), str(overall_path))
 
-
     def archive_project(
         self, project_id: str, dry_run: bool = False, skip_merge: bool = False
     ) -> bool:
@@ -334,7 +334,6 @@ class ProjectArchiver:
         if not started_at:
             return False
 
-
         # Collect project bins
         bins = self.collect_project_bins(project_id, started_at, finished_at)
 
@@ -353,7 +352,6 @@ class ProjectArchiver:
         # Merge into overall (unless skipped)
         if not skip_merge and bins:
             self.merge_into_overall(project_id, bins, dry_run=dry_run)
-
 
         return True
 
@@ -393,7 +391,6 @@ class ProjectArchiver:
         if project_bins_found == 0:
             return True
 
-
         if dry_run:
             return True
 
@@ -407,8 +404,6 @@ class ProjectArchiver:
                 tmp_file.write("\n")
 
         shutil.move(str(tmp_path), str(overall_path))
-
-
 
         return True
 

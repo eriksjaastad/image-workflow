@@ -9,9 +9,9 @@ AVG_CROPS_PER_SESSION = 205.5
 MEDIAN_BREAK_MIN = 20.5
 
 # Calculations
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("MOJO3 PROJECT TIMELINE ESTIMATE")
-print(f"{'='*80}\n")
+print(f"{'=' * 80}\n")
 
 print(f"Total images to crop: {TOTAL_IMAGES:,}")
 print("\nBased on your historical patterns:")
@@ -23,20 +23,20 @@ print(f"  Median break: {MEDIAN_BREAK_MIN:.1f} minutes")
 
 # Method 1: Simple calculation
 pure_crop_hours = TOTAL_IMAGES / MEDIAN_CROPS_PER_HOUR
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("METHOD 1: Pure cropping time")
-print(f"{'='*80}")
+print(f"{'=' * 80}")
 print(
-    f"  Time needed: {pure_crop_hours:.1f} hours ({pure_crop_hours/24:.1f} days of 24/7 work)"
+    f"  Time needed: {pure_crop_hours:.1f} hours ({pure_crop_hours / 24:.1f} days of 24/7 work)"
 )
 
 # Method 2: Session-based calculation (more realistic)
 sessions_needed = TOTAL_IMAGES / AVG_CROPS_PER_SESSION
 total_session_time_min = sessions_needed * AVG_SESSION_LENGTH_MIN
 total_session_time_hr = total_session_time_min / 60
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("METHOD 2: Session-based estimate (more realistic)")
-print(f"{'='*80}")
+print(f"{'=' * 80}")
 print(f"  Sessions needed: {sessions_needed:.1f}")
 print(f"  Active cropping time: {total_session_time_hr:.1f} hours")
 
@@ -50,20 +50,20 @@ print(f"  Break time: {total_break_time_hr:.1f} hours ({num_breaks:.0f} breaks)"
 print(f"  TOTAL time: {total_time_with_breaks:.1f} hours")
 
 # Realistic daily work estimates
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("REALISTIC TIMELINE (with breaks)")
-print(f"{'='*80}")
+print(f"{'=' * 80}")
 
 for hours_per_day in [4, 6, 8]:
     days_needed = total_time_with_breaks / hours_per_day
     print(
-        f"  At {hours_per_day} hours/day: {days_needed:.1f} days ({days_needed/7:.1f} weeks)"
+        f"  At {hours_per_day} hours/day: {days_needed:.1f} days ({days_needed / 7:.1f} weeks)"
     )
 
 # Speed improvement scenarios
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("QUEUE MODE SPEED BOOST")
-print(f"{'='*80}")
+print(f"{'=' * 80}")
 print("\nCurrent median time between crops: 0.31 seconds (batch submit time)")
 print("If you eliminate processing wait time, you could potentially:")
 
@@ -75,4 +75,4 @@ for boost_pct in [25, 50, 100]:
         f"  {boost_pct:3d}% faster: {boosted_rate:6.1f} crops/hr → {boosted_hours:5.1f} hours (save {improvement:4.1f} hours)"
     )
 
-print(f"\n{'='*80}\n")
+print(f"\n{'=' * 80}\n")

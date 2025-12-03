@@ -65,6 +65,7 @@ FEATURES:
 import argparse
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 # Set matplotlib backend before importing pyplot
 import matplotlib
@@ -94,8 +95,9 @@ from send2trash import send2trash
 
 # Add the project root to the path for importing
 sys.path.append(str(Path(__file__).parent.parent))
-from scripts.file_tracker import FileTracker
 from util_activity_timer import ActivityTimer
+
+from scripts.file_tracker import FileTracker
 
 
 class BatchCropTool:
@@ -110,9 +112,10 @@ class BatchCropTool:
         self.activity_timer.start_session()
         
         # Get all PNG files
-        self.png_files = sorted([f for f in self.directory.glob("*.png")])
+        self.png_files = sorted(list(self.directory.glob("*.png")))
         if not self.png_files:
-            raise ValueError(f"No PNG files found in {directory}")
+            msg = f"No PNG files found in {directory}"
+            raise ValueError(msg)
         
         self.current_batch = 0
         self.total_batches = (len(self.png_files) + 2) // 3  # Round up division
@@ -131,14 +134,13 @@ class BatchCropTool:
         self.fig = None
         self.setup_display()
         
-    def _parse_aspect_ratio(self, ratio_str: str) -> float:
+    def _parse_aspect_ratio(self, ratio_str: str) -> float | None:
         """Parse aspect ratio string like '16:9' into float."""
         try:
             if ':' in ratio_str:
                 width, height = map(float, ratio_str.split(':'))
                 return width / height
-            else:
-                return float(ratio_str)
+            return float(ratio_str)
         except Exception:
             print(f"⚠️  Invalid aspect ratio: {ratio_str}. Using original image ratio.")
             return None
@@ -171,12 +173,14 @@ class BatchCropTool:
         
         # Create figure with optimized dimensions
         self.fig, self.axes = plt.subplots(1, 3, figsize=(max_width, max_height))
+        # Help mypy understand that fig is not None after creation
+        assert self.fig is not None
         self.fig.suptitle("", fontsize=14, y=0.98)  # Higher title position
         
         # Hide the matplotlib toolbar completely
         try:
             # Multiple approaches to disable toolbar
-            self.fig.canvas.toolbar_visible = False
+            self.fig.canvas.toolbar_visible = False  # type: ignore
             if hasattr(self.fig.canvas, 'toolbar'):
                 self.fig.canvas.toolbar = None
             # Set matplotlib to not show toolbar globally
@@ -271,10 +275,10 @@ class BatchCropTool:
                 
                 # Create RectangleSelector with enhanced handles
                 selector = RectangleSelector(
-                    ax, 
-                    lambda eclick, erelease, idx=i: self.on_crop_select(eclick, erelease, idx),
+                    ax,
+                    lambda eclick, erelease, idx=i: self.on_crop_select(eclick, erelease, idx),  # type: ignore
                     useblit=True,
-                    button=[1],  # Only left mouse button
+                    button=[1],  # type: ignore # Only left mouse button
                     minspanx=5, minspany=5,
                     spancoords='pixels',
                     interactive=True,
@@ -328,7 +332,7 @@ class BatchCropTool:
         self.update_control_labels()
         
         # Force tight layout and redraw for maximum space utilization
-        plt.tight_layout(rect=[0, 0.02, 1, 0.98])  # Minimal space reservations
+        plt.tight_layout(rect=(0, 0.02, 1, 0.98))  # Minimal space reservations
         plt.draw()
         
     def update_control_labels(self):
@@ -339,7 +343,7 @@ class BatchCropTool:
             "[R] Skip  [F] Delete  [V] Reset"
         ]
         
-        for i, (ax, control_text) in enumerate(zip(self.axes, controls)):
+        for i, (ax, control_text) in enumerate(zip(self.axes, controls, strict=False)):
             if i < len(self.current_images):
                 ax.set_xlabel(control_text, fontsize=10)
                 
@@ -377,14 +381,14 @@ class BatchCropTool:
                     # Use width as constraint, adjust height
                     new_height = target_height_from_width
                     height_diff = sel_height - new_height
-                    y1 += height_diff / 2
-                    y2 = y1 + new_height
+                    y1 += height_diff / 2  # type: ignore
+                    y2 = y1 + new_height  # type: ignore
                 else:
                     # Use height as constraint, adjust width
                     new_width = target_width_from_height
                     width_diff = sel_width - new_width
-                    x1 += width_diff / 2
-                    x2 = x1 + new_width
+                    x1 += width_diff / 2  # type: ignore
+                    x2 = x1 + new_width  # type: ignore
                 
                 # Ensure coordinates are integers
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
@@ -433,16 +437,13 @@ class BatchCropTool:
             return
         
         # Global controls
-        if key == 'q':  # Q is now quit
+        if key == 'q' or key == 'escape':  # Q is now quit
             self.quit()
             return
-        elif key == 'escape':  # Keep escape as backup quit
-            self.quit()
-            return
-        elif key == 'enter':
+        if key == 'enter':
             self.submit_batch()
             return
-        elif key == ' ':  # Space to toggle aspect ratio lock
+        if key == ' ':  # Space to toggle aspect ratio lock
             self.aspect_ratio_locked = not self.aspect_ratio_locked
             lock_str = "🔒 locked" if self.aspect_ratio_locked else "🔓 unlocked"
             print(f"Aspect ratio {lock_str}")
@@ -522,7 +523,7 @@ class BatchCropTool:
         
         processed_count = 0
         
-        for i, (image_info, state) in enumerate(zip(self.current_images, self.image_states)):
+        for i, (image_info, state) in enumerate(zip(self.current_images, self.image_states, strict=False)):
             png_path = image_info['path']
             yaml_path = png_path.with_suffix('.yaml')
             
@@ -584,8 +585,8 @@ class BatchCropTool:
         # Log the operation
         self.tracker.log_operation(
             "crop", str(png_path.parent), "cropped", 2,
-            f"Cropped to ({x1},{y1},{x2},{y2})", 
-            [png_path.name, yaml_path.name]
+            f"Cropped to ({x1},{y1},{x2},{y2})",  # type: ignore
+            [png_path.name, yaml_path.name]  # type: ignore
         )
         
         # Log operation in activity timer
@@ -614,7 +615,8 @@ class BatchCropTool:
         
         self.tracker.log_operation(
             "move", str(png_path.parent), "cropped", file_count,
-            f"Image {reason}", files
+            f"Image {reason}",  # type: ignore
+            files  # type: ignore
         )
         
         # Log operation in activity timer
@@ -638,7 +640,8 @@ class BatchCropTool:
         # Log the operation
         self.tracker.log_operation(
             "delete", str(png_path.parent), "trash", len(files_deleted),
-            "Image deleted", files_deleted
+            "Image deleted",  # type: ignore
+            files_deleted  # type: ignore
         )
         
         # Log operation in activity timer
@@ -706,7 +709,8 @@ def parse_aspect_ratio(ratio_str):
         w, h = map(float, ratio_str.split(':'))
         return w / h
     except Exception:
-        raise ValueError(f"Invalid aspect ratio format: {ratio_str}")
+        msg = f"Invalid aspect ratio format: {ratio_str}"
+        raise ValueError(msg)
 
 def main():
     parser = argparse.ArgumentParser(description="Enhanced Batch Crop Tool - Process 3 images at once")

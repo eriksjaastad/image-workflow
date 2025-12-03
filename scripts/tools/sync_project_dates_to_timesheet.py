@@ -16,6 +16,7 @@ import json
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import cast
 
 WORKSPACE = Path(__file__).resolve().parents[2]
 TIMESHEET_PATH = WORKSPACE / "data/timesheet.csv"
@@ -87,7 +88,9 @@ def parse_timesheet():
                     # Update end date and add to dates list
                     projects[normalized_id]["end_date"] = normalized_date
                     if normalized_date not in projects[normalized_id]["dates"]:
-                        projects[normalized_id]["dates"].append(normalized_date)
+                        cast(list[str], projects[normalized_id]["dates"]).append(
+                            normalized_date
+                        )
 
     return projects
 

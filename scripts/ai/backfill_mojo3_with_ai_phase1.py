@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Phase 1: Backfill mojo3 Database with AI Predictions
@@ -143,7 +145,7 @@ def group_original_images(original_dir: Path) -> list[tuple[str, list[Path]]]:
     """Group original images using the grouping logic."""
     # Get all image files
     patterns = ["**/*.png", "**/*.jpg", "**/*.jpeg"]
-    all_images = []
+    all_images: list[Any] = []
     for pattern in patterns:
         all_images.extend(original_dir.glob(pattern))
 

@@ -49,7 +49,6 @@ def demo_file_operations():
     project_id = "TEST-demo-example"
     manifest_path = sandbox.projects_dir / f"{project_id}.project.json"
 
-
     # Write a simple test manifest
     test_manifest = {
         "projectId": project_id,
@@ -74,7 +73,6 @@ def demo_filetracker_integration():
     # Create FileTracker with sandbox configuration
     tracker = FileTracker(script_name="demo_sandbox", sandbox_config=sandbox)
 
-
     # Log a test operation
     tracker.log_operation(
         operation="test",
@@ -83,7 +81,6 @@ def demo_filetracker_integration():
         file_count=5,
         notes="This is a sandbox test operation",
     )
-
 
 
 def demo_cleanup():
@@ -97,7 +94,6 @@ def main():
         demo_file_operations()
         demo_filetracker_integration()
         demo_cleanup()
-
 
     except Exception:
         import traceback

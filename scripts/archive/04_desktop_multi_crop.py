@@ -85,7 +85,7 @@ import json
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
@@ -101,6 +101,7 @@ from utils.companion_file_utils import (
 )
 
 # AI Training (optional, non-blocking)
+capture_crop_decision: Optional[Any] = None
 try:
     from scripts.ai.training_snapshot import capture_crop_decision
     HAS_AI_LOGGING = True
@@ -114,7 +115,6 @@ try:
 except ImportError:
     HAS_SQLITE_V3 = False
     print("[!] Warning: SQLite v3 utilities not available")
-    capture_crop_decision = None
 """
 NOTE: Focus timer durations can be edited via FOCUS_TIMER_WORK_MIN and
 FOCUS_TIMER_REST_MIN constants below. Search this file for
@@ -147,22 +147,25 @@ class _FocusTimer:
         self.remaining = self.work_total
         self._running = False
         self._last_tick = None  # type: Optional[float]
-        self._timer = None
+        self._timer: Optional[Any] = None
 
         # Axes/controls placeholders
-        self.bg_ax = None
-        self.work_txt = None
-        self.rest_txt = None
-        self.start_btn = None
-        self.reset_btn = None
+        self.bg_ax: Optional[Any] = None
+        self.work_txt: Optional[Any] = None
+        self.rest_txt: Optional[Any] = None
+        self.start_btn: Optional[Any] = None
+        self.reset_btn: Optional[Any] = None
 
     def init_ui(self) -> None:
+        # Help mypy understand that fig is not None after setup_display
+        assert self.fig is not None
+
         # Reserve a slim band near the very top, above the subplot area
         # Keep within [0.983, 1.0] to avoid overlapping tight_layout top=0.98
         band_bottom = 0.983
         band_height = 0.015
         left_base = 0.58
-        self.bg_ax = self.fig.add_axes([left_base, band_bottom, 0.40, band_height])
+        self.bg_ax = self.fig.add_axes((left_base, band_bottom, 0.40, band_height))
         self.bg_ax.set_xticks([])
         self.bg_ax.set_yticks([])
         self.bg_ax.set_facecolor('white')
@@ -176,8 +179,8 @@ class _FocusTimer:
                                         va='center', ha='left', fontsize=9, color='#2f9e44')
 
         # Buttons (tiny) – place to the right within the band
-        self.start_ax = self.fig.add_axes([left_base + 0.26, band_bottom + 0.001, 0.08, band_height - 0.002])
-        self.reset_ax = self.fig.add_axes([left_base + 0.35, band_bottom + 0.001, 0.07, band_height - 0.002])
+        self.start_ax = self.fig.add_axes((left_base + 0.26, band_bottom + 0.001, 0.08, band_height - 0.002))
+        self.reset_ax = self.fig.add_axes((left_base + 0.35, band_bottom + 0.001, 0.07, band_height - 0.002))
         self.start_btn = Button(self.start_ax, 'Start', color='#e9ecef', hovercolor='#dee2e6')
         self.reset_btn = Button(self.reset_ax, 'Reset', color='#e9ecef', hovercolor='#dee2e6')
         self.start_btn.on_clicked(lambda _evt: self.start_pause())
@@ -294,10 +297,10 @@ class MultiDirectoryProgressTracker:
         safe_name = str(base_directory).replace('/', '_').replace(' ', '_').replace('(', '').replace(')', '')
         self.progress_file = self.progress_dir / f"{safe_name}_progress.json"
         
-        self.directories = []
+        self.directories: List[Dict[str, Any]] = []
         self.current_directory_index = 0
         self.current_file_index = 0
-        self.session_data = {}
+        self.session_data: Dict[str, Any] = {}
         
         self.discover_directories()
         self.load_progress()
@@ -305,7 +308,7 @@ class MultiDirectoryProgressTracker:
     def discover_directories(self):
         """Discover all subdirectories containing PNG files, sorted alphabetically.
         Skips directories ending with '_cropped' as those contain processed files."""
-        subdirs = []
+        subdirs: List[Dict[str, Any]] = []
         
         for item in self.base_directory.iterdir():
             if item.is_dir():
@@ -667,7 +670,7 @@ class MultiCropTool(BaseDesktopImageTool):
         
         # Reset state for new batch
         self.current_images = []
-        self.image_states = []
+        self.image_states: List[Any] = []
         self.reset_batch_flags()
         self.clear_selectors()
         
@@ -687,7 +690,7 @@ class MultiCropTool(BaseDesktopImageTool):
         self.update_image_titles(self.image_states)
         self.update_control_labels()
         
-        plt.tight_layout(rect=[0, 0.02, 1, 0.98])
+        plt.tight_layout(rect=(0, 0.02, 1, 0.98))
 
         plt.draw()
     
@@ -908,7 +911,7 @@ class MultiCropTool(BaseDesktopImageTool):
         #     print(f"  Image {i+1}: action={state.get('action')}, has_selection={state.get('has_selection')}, crop_coords={state.get('crop_coords')}")
             
         # Collect operations first (faster than processing one-by-one)
-        operations = []
+        operations: List[Tuple[str, Path, Path, Optional[Any]]] = []
         processed_count = 0
         
         for i, (image_info, state) in enumerate(zip(self.current_images, self.image_states)):
@@ -959,6 +962,7 @@ class MultiCropTool(BaseDesktopImageTool):
                 elif op_type == 'delete':
                     self.safe_delete(png_path, yaml_path)
                 elif op_type == 'crop':
+                    assert extra is not None  # For crop operations, extra is always a tuple
                     image_info, crop_coords = extra
                     self.crop_and_save(image_info, crop_coords)
             except Exception as e:

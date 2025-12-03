@@ -200,7 +200,7 @@ def extract_from_log_file(log_path: Path) -> list[dict[str, Any]]:
 def main():
     """Main entry point."""
     # Collect all log files
-    log_files = []
+    log_files: list[Any] = []
 
     if LOGS_DIR.exists():
         log_files.extend(LOGS_DIR.glob("*.log"))
@@ -208,7 +208,6 @@ def main():
 
     if ARCHIVES_DIR.exists():
         log_files.extend(ARCHIVES_DIR.glob("*.gz"))
-
 
     # Extract and group by day
     by_day = defaultdict(list)
@@ -230,7 +229,6 @@ def main():
             day = event["day"]
             by_day[day].append(event)
 
-
     # Write partitioned output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -249,7 +247,6 @@ def main():
                 f.write(json.dumps(event) + "\n")
 
         total_written += len(day_events)
-
 
     # Show sample
     if by_day:

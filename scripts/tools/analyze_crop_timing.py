@@ -39,9 +39,9 @@ def analyze_crop_timing(csv_path):
     # Sort by timestamp
     crops.sort(key=lambda x: x["timestamp"])
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("CROP TIMING ANALYSIS")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"\nTotal crops: {len(crops)}")
     print(
         f"Date range: {crops[0]['timestamp'].date()} to {crops[-1]['timestamp'].date()}"
@@ -69,9 +69,9 @@ def analyze_crop_timing(csv_path):
 
     sessions.append(current_session)  # Add last session
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("SESSION ANALYSIS")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"\nTotal sessions: {len(sessions)}")
 
     session_lengths = []
@@ -123,9 +123,9 @@ def analyze_crop_timing(csv_path):
                 within_session_diffs.append(diff)
 
     if within_session_diffs:
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("TIME BETWEEN CROPS (within sessions, < 60s)")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
         print("\nSeconds between crops:")
         print(f"  Min: {min(within_session_diffs):.2f}")
         print(f"  Max: {max(within_session_diffs):.2f}")
@@ -142,9 +142,9 @@ def analyze_crop_timing(csv_path):
             break_duration = (next_start - prev_end).total_seconds() / 60  # minutes
             break_times.append(break_duration)
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("BREAK ANALYSIS")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
         print("\nBreak durations (minutes):")
         print(f"  Min: {min(break_times):.1f}")
         print(f"  Max: {max(break_times):.1f}")
@@ -162,9 +162,9 @@ def analyze_crop_timing(csv_path):
         print(f"  Long (> 120 min): {len(long_breaks)}")
 
     # Show top 10 longest sessions
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("TOP 10 LONGEST SESSIONS")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     session_details = []
     for session in sessions:
@@ -194,7 +194,7 @@ def analyze_crop_timing(csv_path):
             f"{s['speed']:6.1f} crops/hr"
         )
 
-    print(f"\n{'='*80}\n")
+    print(f"\n{'=' * 80}\n")
 
 
 def _get_repo_root() -> Path:

@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Phase 1A: Create Temp Database with AI Predictions
@@ -98,8 +100,8 @@ class CropProposer(nn.Module):
 
 def load_embeddings_cache() -> tuple[dict, dict]:
     """Load embeddings cache and create filename lookup."""
-    cache = {}
-    filename_cache = {}
+    cache: dict[str, Any] = {}
+    filename_cache: dict[str, list[tuple[str, Any]]] = {}
 
     if not EMBEDDINGS_CACHE.exists():
         return cache, filename_cache
@@ -294,7 +296,7 @@ def group_original_images(original_dir: Path) -> list[tuple[str, list[Path]]]:
     """Group original images using the grouping logic."""
     # Get all image files
     patterns = ["**/*.png", "**/*.jpg", "**/*.jpeg"]
-    all_images = []
+    all_images: list[Path] = []
     for pattern in patterns:
         all_images.extend(original_dir.glob(pattern))
 

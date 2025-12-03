@@ -14,6 +14,7 @@ import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -25,16 +26,16 @@ from scripts.utils.error_monitoring import get_error_monitor
 class DailyValidationReport:
     """Comprehensive daily validation system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.monitor = get_error_monitor("daily_validation")
-        self.report = {
+        self.report: dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "checks": {},
             "issues": [],
             "summary": {},
         }
 
-    def run_all_checks(self) -> dict:
+    def run_all_checks(self) -> dict[str, Any]:
         """Run all validation checks."""
         print("🔍 Starting Daily Validation Report")
         print("=" * 60)
@@ -52,7 +53,7 @@ class DailyValidationReport:
 
         return self.report
 
-    def check_filetracker_access(self):
+    def check_filetracker_access(self) -> None:
         """Check if FileTracker can be initialized."""
         print("\n📊 Checking FileTracker access...")
 
@@ -77,7 +78,7 @@ class DailyValidationReport:
             )
             print(f"❌ FileTracker access FAILED: {e}")
 
-    def check_database_integrity(self):
+    def check_database_integrity(self) -> None:
         """Check AI training databases integrity."""
         print("\n🗄️ Checking database integrity...")
 
@@ -142,7 +143,7 @@ class DailyValidationReport:
         else:
             print(f"❌ Database integrity ISSUES: {issues}/{total_dbs} databases")
 
-    def check_recent_errors(self):
+    def check_recent_errors(self) -> None:
         """Check for recent error logs."""
         print("\n📋 Checking recent error logs...")
 
@@ -189,7 +190,7 @@ class DailyValidationReport:
             self.report["checks"]["error_logs"] = "PASS"
             print("✅ No recent error logs")
 
-    def check_data_quality(self):
+    def check_data_quality(self) -> None:
         """Run data quality validation tests."""
         print("\n🔍 Running data quality checks...")
 
@@ -230,7 +231,7 @@ class DailyValidationReport:
             )
             print(f"❌ Could not run data quality checks: {e}")
 
-    def check_disk_space(self):
+    def check_disk_space(self) -> None:
         """Check available disk space."""
         print("\n💾 Checking disk space...")
 
@@ -288,7 +289,7 @@ class DailyValidationReport:
             self.report["checks"]["disk_space"] = "ERROR"
             print(f"❌ Could not check disk space: {e}")
 
-    def check_git_status(self):
+    def check_git_status(self) -> None:
         """Check git repository status."""
         print("\n🔄 Checking git status...")
 
@@ -325,7 +326,7 @@ class DailyValidationReport:
             self.report["checks"]["git_status"] = "ERROR"
             print(f"❌ Could not check git status: {e}")
 
-    def generate_summary(self):
+    def generate_summary(self) -> None:
         """Generate summary statistics."""
         total_checks = len(self.report["checks"])
         passed = sum(

@@ -661,6 +661,7 @@ def create_app(output_dir):
 
             # Sanitize filename to prevent directory traversal
             from werkzeug.utils import secure_filename
+
             safe_image = secure_filename(image)
             if not safe_image or safe_image != image:
                 errors.append(f"Invalid filename: {image}")

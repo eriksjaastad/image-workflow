@@ -7,6 +7,11 @@ the base tool can render exactly 1 panel when requested, and that the
 hide_unused_subplots logic respects the configured min/max bounds.
 """
 
+import pytest
+
+# Skip in CI - requires PyQt5/PySide2 for matplotlib GUI backend
+pytestmark = pytest.mark.local_only
+
 import matplotlib
 
 

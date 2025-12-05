@@ -15,6 +15,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
+# Skip in CI - requires local data directories
+pytestmark = pytest.mark.local_only
+
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))

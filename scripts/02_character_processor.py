@@ -136,33 +136,52 @@ def extract_ethnicity_from_prompt(prompt_lower: str) -> str | None:
 
     Returns:
         Ethnicity value with underscores, or None if not found
+
+    Note:
+        Keywords are ordered with unambiguous ethnicity terms first.
+        "black" and "white" are checked last and with context awareness
+        since they commonly appear in non-ethnicity contexts (black hair,
+        white dress, etc.).
     """
-    ethnicity_keywords = [
+    import re
+
+    # Multi-word phrases first (most specific)
+    multi_word_keywords = [
         "mixed race",
         "middle eastern",
-        "south asian",  # Multi-word phrases first
-        "asian",
-        "indian",
-        "black",
-        "white",
+        "south asian",
+    ]
+
+    for keyword in multi_word_keywords:
+        if keyword in prompt_lower:
+            return keyword.replace(" ", "_")
+
+    # Unambiguous ethnicity terms (check these before black/white)
+    unambiguous_keywords = [
         "latina",
         "latino",
+        "hispanic",
+        "asian",
+        "indian",
         "african",
         "caucasian",
-        "hispanic",
         "arab",
     ]
 
-    import re
+    for keyword in unambiguous_keywords:
+        if re.search(r"\b" + re.escape(keyword) + r"\b", prompt_lower):
+            return keyword
 
-    for keyword in ethnicity_keywords:
-        if " " in keyword:
-            # Multi-word phrase: simple substring check
-            if keyword in prompt_lower:
-                return keyword.replace(" ", "_")
-        # Single word: use word boundaries to avoid false matches
-        elif re.search(r"\b" + re.escape(keyword) + r"\b", prompt_lower):
-            return keyword.replace(" ", "_")
+    # Ambiguous terms - check with context awareness
+    # Skip "black" if followed by common non-ethnicity words
+    ambiguous_patterns = [
+        ("black", r"\bblack\b(?!\s*(?:hair|dress|shirt|top|skirt|pants|outfit|lingerie|bra|panties))"),
+        ("white", r"\bwhite\b(?!\s*(?:hair|dress|shirt|top|skirt|pants|outfit|lingerie|bra|panties))"),
+    ]
+
+    for keyword, pattern in ambiguous_patterns:
+        if re.search(pattern, prompt_lower):
+            return keyword
 
     return None
 

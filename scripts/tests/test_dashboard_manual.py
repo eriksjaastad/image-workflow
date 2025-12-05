@@ -11,6 +11,11 @@ Usage:
 import sys
 from pathlib import Path
 
+import pytest
+
+# Skip in CI - requires local data directories
+pytestmark = pytest.mark.local_only
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 

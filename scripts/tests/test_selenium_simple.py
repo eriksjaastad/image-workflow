@@ -13,6 +13,11 @@ This provides a foundation for more complex integration tests.
 import time
 import unittest
 
+import pytest
+
+# Skip in CI - requires browser/Selenium WebDriver
+pytestmark = pytest.mark.selenium
+
 from flask import Flask
 from selenium.webdriver.common.by import By
 

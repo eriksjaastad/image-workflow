@@ -85,16 +85,15 @@ except ImportError:
 
 try:
     # Prefer local package import
-    from utils.activity_timer import ActivityTimer, FileTracker
+    from utils.activity_timer import ActivityTimer
+    from file_tracker import FileTracker
 except Exception:
     try:
         # Fallback to absolute project-root based import
         project_root = Path(__file__).parent.parent.parent
         sys.path.insert(0, str(project_root))
-        from scripts.utils.activity_timer import (  # type: ignore
-            ActivityTimer,
-            FileTracker,
-        )
+        from scripts.utils.activity_timer import ActivityTimer  # type: ignore
+        from scripts.file_tracker import FileTracker  # type: ignore
     except Exception as e:
         print(
             f"[!] Failed to import ActivityTimer/FileTracker: {e}\n"

@@ -16,7 +16,7 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_root))
 
-from scripts.dashboard.data_engine import DashboardDataEngine
+from scripts.dashboard.engines.data_engine import DashboardDataEngine
 
 
 def test_all_production_scripts_have_mappings():

@@ -4,6 +4,11 @@
 import subprocess
 import time
 
+import pytest
+
+# Skip in CI - requires browser/Selenium WebDriver
+pytestmark = pytest.mark.selenium
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By

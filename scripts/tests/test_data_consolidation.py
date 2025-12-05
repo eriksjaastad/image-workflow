@@ -16,6 +16,11 @@ from datetime import date
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
+# Skip in CI - requires local data directories
+pytestmark = pytest.mark.local_only
+
 # Add the scripts directory to the path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

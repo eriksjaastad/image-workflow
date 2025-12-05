@@ -379,6 +379,10 @@ def classify_operation_phase(op: dict[str, Any]) -> str:
         if dest_base.startswith(("character_group", "__character_group_")):
             return "sort"
 
+        # Sort phase: moved to underscore-prefixed dirs (except trash)
+        if dest_base.startswith("_") and "trash" not in dest_base:
+            return "sort"
+
     return "unknown"
 
 

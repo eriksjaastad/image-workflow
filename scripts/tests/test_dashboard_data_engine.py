@@ -13,6 +13,11 @@ import unittest
 from datetime import date, datetime
 from pathlib import Path
 
+import pytest
+
+# Skip in CI - requires local data directories
+pytestmark = pytest.mark.local_only
+
 # Add the dashboard directory to the path
 sys.path.insert(0, str(Path(__file__).parent.parent / "dashboard"))
 

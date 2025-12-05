@@ -15,6 +15,11 @@ import sys
 import unittest
 from pathlib import Path
 
+import pytest
+
+# Skip in CI - code audit for local review, not automated testing
+pytestmark = pytest.mark.local_only
+
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

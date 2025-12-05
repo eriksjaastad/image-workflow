@@ -12,6 +12,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+import pytest
+
+# Skip in CI - requires browser/Selenium WebDriver
+pytestmark = pytest.mark.selenium
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service

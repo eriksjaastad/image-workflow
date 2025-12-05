@@ -16,6 +16,11 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+import pytest
+
+# Skip in CI - requires browser/Selenium WebDriver
+pytestmark = pytest.mark.selenium
+
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions

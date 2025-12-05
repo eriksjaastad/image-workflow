@@ -16,6 +16,11 @@ import time
 import unittest
 from pathlib import Path
 
+import pytest
+
+# Skip in CI - requires browser/Selenium WebDriver
+pytestmark = pytest.mark.selenium
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService

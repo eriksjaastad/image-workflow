@@ -34,12 +34,6 @@ jobs:
           echo "🧪 Running comprehensive test suite..."
           python -m pytest scripts/tests/ -v --tb=short --durations=10
 
-      - name: Run validation checks
-        run: |
-          echo "🔍 Running validation checks..."
-          python scripts/tests/test_inline_validation.py
-          python scripts/tests/test_file_safety_audit.py
-
       - name: Generate test report
         run: |
           echo "📊 Generating test report..."

@@ -27,12 +27,12 @@ from typing import Any, cast
 # Import DashboardDataEngine at module level for testability
 try:
     # Try direct import first (when running from project root)
-    sys.path.insert(0, str(Path(__file__).parent / "dashboard"))
+    sys.path.insert(0, str(Path(__file__).parent / "dashboard" / "engines"))
     from data_engine import DashboardDataEngine
 except ImportError:
     try:
         # Fallback for test environment
-        from scripts.dashboard.data_engine import DashboardDataEngine
+        from scripts.dashboard.engines.data_engine import DashboardDataEngine
     except ImportError:
         # Will be mocked in tests
         DashboardDataEngine = None
@@ -111,7 +111,7 @@ def consolidate_daily_data(target_date: str, dry_run: bool = False):
         ]:
             archived_log = log_archives_dir / archive_pattern
             if archived_log.exists():
-                with gzip.open(archived_log, "rt") as f:
+                with gzip.open(archived_log, "rt") as f:  # type: ignore[assignment]
                     for line in f:
                         if line.strip():
                             try:

@@ -1,5 +1,52 @@
 # Project - Cursor AI Rules
 
+## 📝 Markdown & Documentation Standards
+
+### YAML Frontmatter (CRITICAL)
+- **ALWAYS preserve YAML frontmatter** when editing `.md` files
+- Every markdown file should have frontmatter with:
+  ```yaml
+  ---
+  tags:
+    - p/image-workflow
+    - type/workflow-tool
+    - domain/image-processing
+    - tech/python
+  status: #status/active
+  created: YYYY-MM-DD
+  ---
+  ```
+
+### Tag Taxonomy
+- Use **nested tags** for hierarchy: `#type/workflow-tool`, `#domain/image-processing`
+- Tag structure:
+  - `#p/image-workflow` - Project namespace
+  - `#type/workflow-tool` - This is a workflow automation tool
+  - `#domain/image-processing` - Image quality control and processing
+  - `#tech/python` - Technology stack
+
+### Obsidian Wikilinks
+- Use `[[image-workflow]]` to link to this project
+- Link to `[[00_Index_image-workflow]]` when referencing documentation
+
+---
+
+## 🚫 Context Window Management
+
+**NEVER waste context on:**
+- `node_modules/`, `__pycache__/`, `.git/`
+- `venv/` - Virtual environment  
+- `mojo1/`, `mojo2/` - Production image directories (thousands of PNG files)
+- `data/ai_data/` - AI embeddings and caches (large binary files)
+- `sandbox/` - Testing data
+
+**When reading files:**
+- Use targeted reads with line ranges for large files
+- Prefer `codebase_search` over reading entire files
+- NEVER try to read thousands of PNG files
+
+---
+
 ## 📚 Documentation References
 
 **Before writing code, read these docs:**
@@ -87,7 +134,7 @@ Before writing ANY file operation code, verify:
 
 ### **Rule #8: Single TODO List Policy**
 
-- Maintain ONE authoritative TODO document: `Documents/core/CURRENT_TODO_LIST.md`
+- Maintain ONE authoritative TODO document: `TODO.md` (root directory)
 - Do NOT create separate TODO lists elsewhere (no duplicates in Documents/, scripts/, etc.)
 - If a sub-area needs grouping, add a section/header inside the single TODO doc (e.g., "AI Automation")
 - When consolidating, move remaining items into the single doc and delete the extra file

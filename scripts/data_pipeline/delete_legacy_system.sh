@@ -16,7 +16,9 @@
 
 set -e  # Exit on error
 
-PROJECT_DIR="/Users/eriksjaastad/projects/Eros Mate"
+# Get project root relative to script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_DIR"
 
 echo "╔════════════════════════════════════════════════════════════════╗"

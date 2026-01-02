@@ -31,8 +31,8 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-# Paths
-PROJECT_ROOT = Path("/Users/eriksjaastad/projects/Eros Mate")
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CROP_LOG = PROJECT_ROOT / "data/training/select_crop_log.csv"
 EMBEDDINGS_CACHE = PROJECT_ROOT / "data/ai_data/cache/processed_images.jsonl"
 EMBEDDINGS_DIR = (
@@ -96,7 +96,7 @@ def normalize_path(path: str) -> str:
     return str(p)
 
 
-def find_image_in_training_data(filename: str) -> Path:
+def find_image_in_training_data(filename: str) -> Path | None:
     """Find image file in training data directories by searching recursively."""
     training_data_dir = PROJECT_ROOT / "training data"
 
@@ -116,7 +116,7 @@ def load_image_dimensions(filename: str) -> tuple[int, int]:
         raise FileNotFoundError(msg)
 
     with Image.open(img_path) as img:
-        return img.size  # Returns (width, height)
+        return img.size  # type: ignore[no-any-return]  # Returns (width, height)
 
 
 def load_crop_data(cache: dict, filename_cache: dict):

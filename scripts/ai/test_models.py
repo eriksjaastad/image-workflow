@@ -23,8 +23,8 @@ import numpy as np
 import torch
 from torch import nn
 
-# Paths
-PROJECT_ROOT = Path("/Users/eriksjaastad/projects/Eros Mate")
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SELECTION_LOG = PROJECT_ROOT / "data/training/selection_only_log.csv"
 ANOMALY_CSV = PROJECT_ROOT / "data/training/anomaly_cases.csv"
 EMBEDDINGS_CACHE = PROJECT_ROOT / "data/ai_data/cache/processed_images.jsonl"

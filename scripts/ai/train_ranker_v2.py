@@ -37,14 +37,11 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-# Paths
-SELECTION_LOG = Path(
-    "/Users/eriksjaastad/projects/Eros Mate/data/training/selection_only_log.csv"
-)
-EMBEDDINGS_CACHE = Path(
-    "/Users/eriksjaastad/projects/Eros Mate/data/ai_data/cache/processed_images.jsonl"
-)
-MODEL_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/data/ai_data/models")
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SELECTION_LOG = PROJECT_ROOT / "data/training/selection_only_log.csv"
+EMBEDDINGS_CACHE = PROJECT_ROOT / "data/ai_data/cache/processed_images.jsonl"
+MODEL_DIR = PROJECT_ROOT / "data/ai_data/models"
 
 # Device
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -137,7 +134,7 @@ def normalize_path(path: str) -> str:
     p = Path(path)
 
     # If absolute, make relative to project root
-    project_root = Path("/Users/eriksjaastad/projects/Eros Mate")
+    project_root = PROJECT_ROOT
     if p.is_absolute():
         try:
             p = p.relative_to(project_root)
@@ -231,8 +228,8 @@ def load_training_data(embeddings_cache: dict) -> tuple[list[dict], list[dict]]:
 
             # Determine if this is an anomaly
             all_stages = [chosen_stage, *neg_stages]
-            max_stage = max(all_stages)
-            is_anomaly = chosen_stage < max_stage
+            max_stage = max(s for s in all_stages if s is not None)  # type: ignore[type-var]
+            is_anomaly = chosen_stage is not None and chosen_stage < max_stage
 
             case = {
                 "chosen_path": chosen_path_norm,
@@ -284,9 +281,7 @@ class RankingDataset(Dataset):
         anomaly_oversample_factor: int = 10,
     ):
         self.embeddings_cache = embeddings_cache
-        self.embeddings_dir = Path(
-            "/Users/eriksjaastad/projects/Eros Mate/data/ai_data/cache/embeddings"
-        )
+        self.embeddings_dir = PROJECT_ROOT / "data/ai_data/cache/embeddings"
 
         # Create pairwise comparisons
         self.pairs = []
@@ -317,11 +312,7 @@ class RankingDataset(Dataset):
     def load_embedding(self, image_path: str) -> np.ndarray:
         """Load embedding from cache."""
         emb_hash = self.embeddings_cache[image_path]
-        emb_file = (
-            Path("/Users/eriksjaastad/projects/Eros Mate")
-            / Path(emb_hash).parent
-            / f"{Path(emb_hash).name}"
-        )
+        emb_file = PROJECT_ROOT / Path(emb_hash).parent / f"{Path(emb_hash).name}"
         if not emb_file.exists():
             emb_file = self.embeddings_dir / f"{emb_hash}.npy"
         return np.load(emb_file)

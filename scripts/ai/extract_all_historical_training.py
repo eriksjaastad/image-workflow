@@ -31,14 +31,14 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 
-# Base directory
-BASE_DIR = Path("/Users/eriksjaastad/projects/Eros Mate")
+# Base directory - relative to script location
+BASE_DIR = Path(__file__).resolve().parents[2]
 TRAINING_DATA_DIR = BASE_DIR / "training data"
 OUTPUT_DIR = BASE_DIR / "data/training"
 
 # Project configurations from timesheet.csv
 # Format: (project_name, raw_dir, final_dir)
-PROJECTS: dict[str, Any] = [
+PROJECTS: list[tuple[str, Path, Path]] = [
     # Already processed:
     # ("mojo-1", TRAINING_DATA_DIR / "mojo1", TRAINING_DATA_DIR / "mojo1_final"),
     # To process (adjust these paths based on your actual directory structure):

@@ -41,7 +41,7 @@ def load_project_manifest(project_id: str) -> dict | None:
         return None
 
     with manifest_path.open("r") as f:
-        return json.load(f)
+        return json.load(f)  # type: ignore[no-any-return]
 
 
 def scan_images(directory: Path) -> list[Path]:
@@ -62,7 +62,7 @@ def find_groups(images: list[Path]) -> list[list[Path]]:
     # Group by timestamp and stage progression
     grouped = find_consecutive_stage_groups(sorted_images, min_group_size=2)
 
-    return grouped
+    return grouped  # type: ignore[no-any-return]
 
 
 def extract_training_data(
@@ -258,8 +258,8 @@ def main():
     if manifest:
         pass
 
-    # Define paths
-    project_root = Path("/Users/eriksjaastad/projects/Eros Mate")
+    # Define paths - relative to script location
+    project_root = Path(__file__).resolve().parents[2]
     raw_dir = project_root / "training data" / project_id
     final_dir = project_root / "training data" / f"{project_id}_final"
 

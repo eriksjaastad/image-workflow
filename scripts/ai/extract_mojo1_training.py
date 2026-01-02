@@ -25,10 +25,11 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 
-# Project configuration
-RAW_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/training data/mojo1")
-FINAL_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/training data/mojo1_final")
-OUTPUT_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/data/training")
+# Project configuration - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+RAW_DIR = PROJECT_ROOT / "training data/mojo1"
+FINAL_DIR = PROJECT_ROOT / "training data/mojo1_final"
+OUTPUT_DIR = PROJECT_ROOT / "data/training"
 
 # Project dates (from timesheet.csv)
 PROJECT_START = datetime(2025, 10, 1, tzinfo=UTC)

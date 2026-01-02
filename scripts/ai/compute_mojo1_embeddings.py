@@ -14,14 +14,11 @@ import torch
 from PIL import Image
 from tqdm import tqdm
 
-# Paths
-MOJO1_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/training data/mojo1")
-EMBEDDINGS_DIR = Path(
-    "/Users/eriksjaastad/projects/Eros Mate/data/ai_data/cache/embeddings"
-)
-CACHE_FILE = Path(
-    "/Users/eriksjaastad/projects/Eros Mate/data/ai_data/cache/processed_images.jsonl"
-)
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+MOJO1_DIR = PROJECT_ROOT / "training data/mojo1"
+EMBEDDINGS_DIR = PROJECT_ROOT / "data/ai_data/cache/embeddings"
+CACHE_FILE = PROJECT_ROOT / "data/ai_data/cache/processed_images.jsonl"
 
 
 def get_image_hash(image_path: Path) -> str:
@@ -44,9 +41,7 @@ def main():
     # Filter to unprocessed
     to_process = []
     for img_path in image_paths:
-        rel_path = str(
-            img_path.relative_to(Path("/Users/eriksjaastad/projects/Eros Mate"))
-        )
+        rel_path = str(img_path.relative_to(PROJECT_ROOT))
         if rel_path not in processed:
             to_process.append((img_path, rel_path))
 
@@ -86,11 +81,7 @@ def main():
                 # Update cache
                 cache_entry = {
                     "image_path": rel_path,
-                    "embedding_file": str(
-                        emb_file.relative_to(
-                            Path("/Users/eriksjaastad/projects/Eros Mate")
-                        )
-                    ),
+                    "embedding_file": str(emb_file.relative_to(PROJECT_ROOT)),
                     "hash": img_hash,
                 }
                 cache_f.write(json.dumps(cache_entry) + "\n")

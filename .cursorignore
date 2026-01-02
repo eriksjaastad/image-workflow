@@ -1,0 +1,39 @@
+# .cursorignore - image-workflow
+
+# Dependencies & Virtual Environments
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Production Image Directories (THOUSANDS of files)
+mojo1/
+mojo2/
+selected/
+crop/
+
+# AI Data & Caches (Large binary files)
+data/ai_data/
+data/cache/
+*.npy
+*.npz
+
+# Logs
+*.log
+logs/
+data/file_operations_logs/*.log
+
+# Temporary & Test Data
+sandbox/
+__delete_staging/
+tmp/
+temp/
+
+# OS Files
+.DS_Store
+
+# Git
+.git/
+

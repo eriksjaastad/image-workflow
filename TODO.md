@@ -1,8 +1,6 @@
-# Current TODO List
+# TODO
 
-**Status:** Active
-**Audience:** Developers
-**Policy:** This is the single authoritative TODO list. Do not create separate TODO docs; add sections here instead.
+**Policy:** Single source of truth. Don't create separate TODO files elsewhere.
 
 ## 📊 Token Cost Guidelines
 
@@ -28,6 +26,52 @@ When adding tasks, include estimated token cost and recommended AI agent:
 ---
 
 ## 🎯 Active Tasks (Ordered by Token Cost)
+
+### 🚨 **TOP PRIORITY: End-to-End Pipeline Validation (Monday)** 🔴 **HIGH PRIORITY**
+
+**Target Date:** Monday, December 9, 2025
+
+**Why This Is Critical:**
+- We've made MANY changes over the past 5-6 weeks
+- No idea if the full pipeline still works end-to-end
+- Real project work expected next week - cannot discover issues during production
+- Must validate BEFORE actual work arrives
+
+**Validation Plan:**
+
+1. **Set up sandbox test data**
+   - Create/use test images in `sandbox/` directory
+   - Include various scenarios: 2-up groups, 3-up groups, edge cases
+
+2. **Run through EVERY production script in order:**
+   - [ ] `scripts/00_start_project.py` - Initialize test project
+   - [ ] `scripts/01_ai_assisted_reviewer.py` - Selection phase
+   - [ ] `scripts/02_character_processor.py` - Character grouping
+   - [ ] `scripts/02_ai_desktop_multi_crop.py` - Cropping phase
+   - [ ] `scripts/03_web_character_sorter.py` - Sorting phase
+   - [ ] `scripts/04_character_check.py` - Final check
+   - [ ] `scripts/07_finish_project.py` - Delivery packaging
+
+3. **Test utility tools:**
+   - [ ] Run dashboard (`scripts/dashboard/run_dashboard.py`)
+   - [ ] Verify file operations logging
+   - [ ] Check FileTracker integration
+
+4. **Document any issues found:**
+   - Create list of bugs/issues to fix
+   - Prioritize by severity for production readiness
+
+**Files to Prepare:**
+- `sandbox/test_project/` - Test project directory
+- Test images (can copy from existing sandbox or create minimal set)
+
+**Success Criteria:**
+- All 7 scripts run without errors
+- Files move correctly between workflow stages
+- Dashboard shows accurate data
+- Ready for production work next week
+
+---
 
 ### 🚨 **URGENT: Enable rclone Cloud Backups** 🟡 **MEDIUM TOKEN COST**
 
@@ -69,6 +113,23 @@ When adding tasks, include estimated token cost and recommended AI agent:
 - Off-site backups protect against "computer falls in toilet" scenarios
 - Set it and forget it - runs automatically every night
 - Peace of mind knowing your data is safe in the cloud
+
+---
+
+### 📊 **FUTURE: Add Healthchecks.io Monitoring to Backups** 🟢 **LOW PRIORITY**
+
+**Status:** 💤 **DEFERRED** - Not currently working in this project
+
+**Goal:** Add health monitoring for backup cron jobs (when backups are re-enabled)
+
+**What:** 
+- Use Healthchecks.io to monitor backup cron jobs
+- Get alerts if backups don't run on schedule
+- Healthchecks.io account: https://healthchecks.io/projects/bea3ac8d-2c7d-4a11-b87c-14f409e13813/checks/
+
+**When to implement:** 
+- Only if/when backup cron jobs are re-enabled
+- Low priority - backups are currently disabled while not actively working in project
 
 ---
 

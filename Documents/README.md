@@ -5,7 +5,7 @@
 
 ## Daily Shortcuts
 
-- Current TODOs: `core/CURRENT_TODO_LIST.md`
+- Current TODOs: `../TODO.md` (root directory)
 - Knowledge Base: `reference/TECHNICAL_KNOWLEDGE_BASE.md`
 - Code Quality Rules: `reference/CODE_QUALITY_RULES.md`
 - Raptor Review Process: `../prompts/README.md`
@@ -34,7 +34,7 @@ This knowledge base documents the end-to-end image workflow automation system: t
 
 ## Core Documentation
 
-- `core/CURRENT_TODO_LIST.md`
+- `../TODO.md` (root directory)
 - `core/ARCHITECTURE_OVERVIEW.md`
 - `core/OPERATIONS_GUIDE.md`
 - `core/DISASTER_RECOVERY_GUIDE.md`

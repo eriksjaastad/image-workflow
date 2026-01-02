@@ -130,3 +130,25 @@ High-volume image processing pipeline that handles 10,000+ images per day throug
 
 - **2026-01-01 22:50**: analyze_mojo1_crops.py: .
 
+- **2026-01-01 22:52**: analyze_mojo1_crops.py: .
+
+- **2026-01-01 22:52**: compute_mojo1_embeddings.py: .
+
+- **2026-01-01 22:52**: extract_all_historical_training.py: .
+
+- **2026-01-01 22:52**: extract_mojo1_training.py: .
+
+- **2026-01-01 22:52**: extract_project_training.py: .
+
+- **2026-01-01 22:52**: test_models.py: .
+
+- **2026-01-01 22:52**: train_crop_proposer_v2.py: .
+
+- **2026-01-01 22:52**: train_ranker_v2.py: .
+
+- **2026-01-01 22:52**: train_ranker_v3.py: .
+
+- **2026-01-01 22:52**: recover_all_code.py: .
+
+- **2026-01-01 22:52**: recover_data_from_backup.py: .
+

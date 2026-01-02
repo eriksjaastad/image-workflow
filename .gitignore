@@ -193,3 +193,6 @@ TEST-aiko/**/*.yaml
 
 # Temporary backup of corrupted Git data
 .git_corrupted/
+
+# Temporary backup of corrupted Git data
+.git_corrupted/

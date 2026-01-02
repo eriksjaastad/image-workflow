@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 
 BACKUP = "backup/main-corrupted-20251025-144705"
-REPO = Path("/Users/eriksjaastad/projects/Eros Mate")
+REPO = Path(__file__).resolve().parents[2]
 
 # All missing code files (NOT test data)
 FILES = [

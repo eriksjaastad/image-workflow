@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 
 BACKUP_BRANCH = "backup/main-corrupted-20251025-144705"
-REPO_ROOT = Path("/Users/eriksjaastad/projects/Eros Mate")
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # Files and directories to recover
 FILES_TO_RECOVER = [

@@ -31,8 +31,8 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-# Paths
-PROJECT_ROOT = Path("/Users/eriksjaastad/projects/Eros Mate")
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SELECTION_LOG = PROJECT_ROOT / "data/training/selection_only_log.csv"
 ANOMALY_CSV = PROJECT_ROOT / "data/training/anomaly_cases.csv"
 EMBEDDINGS_CACHE = PROJECT_ROOT / "data/ai_data/cache/processed_images.jsonl"
@@ -93,7 +93,7 @@ def normalize_path(path: str) -> str:
     Normalize path to match embeddings cache format.
 
     Cache uses relative paths like: mojo2/_mixed/file.png
-    CSV has absolute paths like: /Users/.../Eros Mate/mojo2/_mixed/file.png
+    CSV has absolute paths like: /Users/.../image-workflow/mojo2/_mixed/file.png
     """
     p = Path(path)
 

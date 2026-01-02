@@ -13,8 +13,10 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-RAW_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/training data/mojo1")
-FINAL_DIR = Path("/Users/eriksjaastad/projects/Eros Mate/training data/mojo1_final")
+# Paths - relative to script location
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+RAW_DIR = PROJECT_ROOT / "training data/mojo1"
+FINAL_DIR = PROJECT_ROOT / "training data/mojo1_final"
 
 
 def parse_filename(filename: str) -> dict | None:
@@ -106,7 +108,7 @@ def main():
         # Group by days difference
         day_buckets: dict[str, int] = defaultdict(int)
         for case in cropped:
-            days = int(case["days_diff"])
+            days = int(case["days_diff"])  # type: ignore[call-overload]
             if days < 7:
                 day_buckets["0-7 days"] += 1
             elif days < 30:

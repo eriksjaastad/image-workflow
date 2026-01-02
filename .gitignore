@@ -190,3 +190,6 @@ dashboard_data_sample.json
 TEST-aiko/**/*.png
 TEST-aiko/**/*.yaml
 # === END PROJECT: TEST-aiko ===
+
+# Temporary backup of corrupted Git data
+.git_corrupted/

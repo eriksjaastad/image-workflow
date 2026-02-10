@@ -234,3 +234,7 @@ Simple script that scans directories and calculates:
 4. **Prioritize** based on actual pain points, not "nice to have"
 
 When an idea graduates to implementation, move it to a proper spec in `Documents/dashboard/`.
+
+## Related Documentation
+
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering

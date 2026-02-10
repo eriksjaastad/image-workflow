@@ -24,7 +24,7 @@ Directories cleaned:
 """
 
 import argparse
-import shutil
+from send2trash import send2trash
 import sys
 from pathlib import Path
 
@@ -180,7 +180,7 @@ def cleanup_sandbox(confirm: bool = True, dry_run: bool = False) -> int:
     print()
     for dir_path in existing_dirs:
         try:
-            shutil.rmtree(dir_path)
+            send2trash(str(dir_path))
             print(f"✓ Deleted {dir_path}")
         except (OSError, PermissionError) as e:
             print(f"✗ Failed to delete {dir_path}: {e}", file=sys.stderr)

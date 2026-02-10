@@ -85,3 +85,8 @@ See `Documents/DATA_DEEP_DIVE_COMPLETE.md` for comprehensive documentation.
 **Location of snapshots**: `snapshot/` directory in project root
 **Location of schemas**: `schema/` directory in project root
 
+
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+

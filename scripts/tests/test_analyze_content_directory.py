@@ -1,4 +1,4 @@
-import shutil
+from send2trash import send2trash
 import tempfile
 from pathlib import Path
 
@@ -32,4 +32,4 @@ def test_analyze_helpers_smoke():
         struct = mod.analyze_directory_structure(tmpdir)
         assert struct["total_files"] >= 3
     finally:
-        shutil.rmtree(tmpdir)
+        send2trash(str(tmpdir))

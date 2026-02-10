@@ -562,3 +562,6 @@ A: Bins are 15-min fixed. You can re-aggregate on read (in `bins_reader.py`) to 
 **Last Updated:** October 17, 2025  
 **Next Review:** After 30 days of pilot testing
 
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation

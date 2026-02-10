@@ -269,3 +269,6 @@ python scripts/process_crop_queue.py --speed 2.0
 - `CROP_QUEUE_SUMMARY.md` - Implementation summary and technical details
 - `.cursorrules` - Commit communication standards for collaboration
 - `scripts/tools/audit_files_vs_db.py` - Queue consistency auditing
+
+## Related Documentation
+

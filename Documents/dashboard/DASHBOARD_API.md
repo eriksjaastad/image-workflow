@@ -65,3 +65,6 @@ curl "http://127.0.0.1:8000/api/data/1H?lookback_days=1"
 - `core/OPERATIONS_GUIDE.md` — Running services and troubleshooting
 - `data/SCHEMA_REFERENCE.md` — Data sources that back the dashboard
 - `reference/TECHNICAL_KNOWLEDGE_BASE.md` — Patterns and utilities
+
+## Related Documentation
+

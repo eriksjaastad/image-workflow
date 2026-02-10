@@ -221,3 +221,10 @@ Total fixes: **11 items completed** across **7 main files** + **3 new utility mo
 
 The codebase is now ready for continued dashboard development with a solid foundation of safe, consistent patterns.
 
+## Related Documentation
+
+- [CODE_QUALITY_STANDARDS](../../../project-scaffolding/Documents/CODE_QUALITY_STANDARDS.md) - code standards
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [Safety Systems](patterns/safety-systems.md) - security

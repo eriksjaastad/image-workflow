@@ -8,7 +8,7 @@ to ensure the system we just built works correctly and prevents data loss.
 
 import gzip
 import json
-import shutil
+from send2trash import send2trash
 import sys
 import tempfile
 import unittest
@@ -74,7 +74,7 @@ class TestDataConsolidation(unittest.TestCase):
 
     def tearDown(self):
         """Clean up temporary files"""
-        shutil.rmtree(self.temp_dir)
+        send2trash(str(self.temp_dir))
 
     def test_consolidate_daily_data_basic(self):
         """Test basic daily data consolidation"""
@@ -498,7 +498,7 @@ class TestConsolidationIntegration(unittest.TestCase):
 
     def tearDown(self):
         """Clean up temporary files"""
-        shutil.rmtree(self.temp_dir)
+        send2trash(str(self.temp_dir))
 
     def test_end_to_end_consolidation_workflow(self):
         """Test complete consolidation workflow from logs to dashboard"""

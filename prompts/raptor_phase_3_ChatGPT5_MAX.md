@@ -36,3 +36,7 @@ Prefer specific, actionable comments over generalizations.
 Do not sugarcoat — the goal is reliability over speed.
 
 ---
+
+## Related Documentation
+
+- [README](README) - Image Workflow

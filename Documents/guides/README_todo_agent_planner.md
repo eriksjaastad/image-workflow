@@ -19,3 +19,8 @@ python todo_agent_planner.py --in TODO.md --out REPORT.md
 - Recommends **Cursor Plan** when keywords hint at design/spec/multi-stage work.
 
 You can tweak assumptions at the top of `todo_agent_planner.py` (COSTS, RULES, MODEL_THRESHOLDS).
+
+## Related Documentation
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

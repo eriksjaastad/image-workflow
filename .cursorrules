@@ -1,197 +1,214 @@
-# Project - Cursor AI Rules
+# Cursor Rules for image-workflow
 
-## 📝 Markdown & Documentation Standards
+# AGENTSYNC:START - Do not edit between markers
+# To modify synced rules: Edit .agentsync/rules/*.md, then run:
+# uv run $PROJECTS_ROOT/project-scaffolding/agentsync/sync_rules.py image-workflow
 
-### YAML Frontmatter (CRITICAL)
-- **ALWAYS preserve YAML frontmatter** when editing `.md` files
-- Every markdown file should have frontmatter with:
-  ```yaml
-  ---
-  tags:
-    - p/image-workflow
-    - type/workflow-tool
-    - domain/image-processing
-    - tech/python
-  status: #status/active
-  created: YYYY-MM-DD
-  ---
-  ```
+# image-workflow
 
-### Tag Taxonomy
-- Use **nested tags** for hierarchy: `#type/workflow-tool`, `#domain/image-processing`
-- Tag structure:
-  - `#p/image-workflow` - Project namespace
-  - `#type/workflow-tool` - This is a workflow automation tool
-  - `#domain/image-processing` - Image quality control and processing
-  - `#tech/python` - Technology stack
+> Brief description of the project's purpose
 
-### Obsidian Wikilinks
-- Use `[[image-workflow]]` to link to this project
-- Link to `[[00_Index_image-workflow]]` when referencing documentation
+## Tech Stack
 
----
+- **Language:** Python
+- **Frameworks:** None
 
-## 🚫 Context Window Management
+## Commands
 
-**NEVER waste context on:**
-- `node_modules/`, `__pycache__/`, `.git/`
-- `venv/` - Virtual environment  
-- `mojo1/`, `mojo2/` - Production image directories (thousands of PNG files)
-- `data/ai_data/` - AI embeddings and caches (large binary files)
-- `sandbox/` - Testing data
+- **Run:** `python main.py`
+- **Test:** `pytest`
 
-**When reading files:**
-- Use targeted reads with line ranges for large files
-- Prefer `codebase_search` over reading entire files
-- NEVER try to read thousands of PNG files
+# Workflow
 
----
+## Agent Hierarchy
 
-## 📚 Documentation References
+### 1. The Conductor (Erik)
+- **Role:** Human-in-the-Loop / Vision / Command
+- **Authority:** Final approval on all architecture, logic, and project direction
 
-**Before writing code, read these docs:**
+### 2. The Super Manager (Strategy & Context)
+- **Role:** Strategic Planner and Prompt Engineer
+- **Constraint:** STRICTLY PROHIBITED from writing code or using tools
+- **Mandate:** Drafts prompts with acceptance criteria as checklists
 
-- **Code Quality (REQUIRED):** `Documents/reference/CODE_QUALITY_RULES.md` - All Python coding standards, linting rules, modern typing
-- **Global Cursor Rules:** `cursor_global_rules_kit.md` - Session management, execution rules
+### 3. The Floor Manager (QA & Execution)
+- **Role:** Orchestrator, Quality Assurance Lead, File Operator
+- **Constraint:** STRICTLY PROHIBITED from generating logic or writing code
+- **Mandate:** Verify work against checklists, perform file operations
 
----
+### 4. The Workers (Local Models via Ollama)
+- **Role:** Primary Implementers of logic and code generation
+- **Mandate:** Generate code, report completion for inspection
 
-## 🚨 CRITICAL FILE SAFETY RULES - NEVER VIOLATE
+## Workflow Steps
 
-These rules are specific to this image-workflow project and protect production data.
+1. **Drafting:** Super Manager writes task prompt with acceptance criteria
+2. **Handoff:** Pass to Floor Manager
+3. **Execution:** Floor Manager delegates to Worker, provides context
+4. **Inspection:** Floor Manager checks each acceptance criteria item
+5. **Loop/Correction:** If fail, send back to Worker (max 3 attempts)
+6. **Finalization:** Task marked complete after sign-off
 
-### **Rule #1: NO FILE CONTENT MODIFICATIONS**
+**CRITICAL:** Only Workers write code. Super Manager and Floor Manager never generate code.
 
-- NEVER modify image files (PNG, JPG, JPEG, etc.) in-place
-- NEVER modify companion files (YAML, caption, txt, etc.) in-place
-- The ONLY exception: `04_desktop_multi_crop.py` may write cropped PNG files
-- All other scripts are READ-ONLY for file contents
+# Universal Constraints
 
-### **Rule #2: File Operations Allowed**
+## Never Do
 
-✅ **SAFE Operations:**
+- NEVER modify `.env` or `venv/`
+- NEVER install dependencies globally (use project-local venv, uv, pipx, or poetry)
+- NEVER hard-code API keys, secrets, or credentials (use `.env` and `os.getenv()`)
+- NEVER use absolute paths (e.g., `/Users/...`) - use relative paths or env variables
+- NEVER use `rm` for file deletion - use `trash` command instead
+- NEVER use `--no-verify` or `-n` with git commit/push - fix the hook issue, don't bypass it
 
-- Moving files (with companions): `move_file_with_all_companions()`
-- Deleting files (to Trash): `send2trash()` or `mv ~/.Trash/`
-- Reading files: `open(file, 'r')`, `Path.read_text()`
-- Creating NEW files: logs, reports, thumbnails in designated directories
-- Copying files: `shutil.copy()` to NEW locations only
+## Always Do
 
-❌ **FORBIDDEN Operations:**
+- ALWAYS update `EXTERNAL_RESOURCES.yaml` when adding external services
+- ALWAYS use retry logic and cost tracking for API calls
+- ALWAYS use `$HOME/.local/bin/uv run` for Python script execution in hooks/automation
 
-- `open(file, 'w')` on existing PNG/YAML/caption files (except crop tool)
-- `open(file, 'wb')` on existing images (except crop tool)
-- `PIL.Image.save()` overwriting existing files (except crop tool)
-- In-place modifications of any production image/companion files
-- `shutil.move()` with overwrite on existing files
+# Safety Rules
 
-### **Rule #3: Designated Safe Zones**
+## File Operations
 
-**Where NEW files CAN be created:**
+- **Trash, Don't Delete:** NEVER use `rm` or permanent deletion
+- Use `trash` CLI (preferred) or `send2trash` (Python)
+- Use `git restore` for reverting tracked files
 
-- `data/ai_data/` - AI training data, embeddings, caches
-- `data/file_operations_logs/` - Operation logs
-- `data/daily_summaries/` - Report files
-- `sandbox/` - Testing and experiments
-- `__delete_staging/` - Orphaned files awaiting manual review before deletion
-- Temporary directories created by scripts
+## Context Protocol
 
-**Where files CANNOT be modified:**
+If context is missing or a file is unknown:
+- **STOP** and request information from the Floor Manager
+- **DO NOT GUESS**
 
-- `mojo1/`, `mojo2/` - Production image directories
-- `selected/` - Selected images awaiting processing
-- `crop/` - Cropped images (except by crop tool creating them)
-- Any directory containing production images
+## Failure Protocol
 
-### **Rule #4: Move, Don't Modify**
+If Worker fails **3 times** on the same task:
+- Halt and alert the Conductor
+- Do not continue attempting
 
-- Philosophy: We MOVE files between directories, we DON'T change their contents
-- If you need to "update" a file, create a NEW version with different name
-- Exception: Crop tool creates NEW cropped versions (technically a new file)
+# AI-First Development Guidelines
 
-### **Rule #5: Companion File Integrity**
+## CLI Design
+- **Plain text output**: Avoid rich formatting (colors, bold) in default output to ensure easy parsing by AI agents.
+- **Single-line parseable formats**: For lists (like tasks), use single-line formats: `#<id> | <status> | <priority> | <text>`.
+- **JSON support**: Always provide a `--json` flag for structured output.
+- **Batch operations**: Support multiple IDs for commands like `show`, `start`, `done` to reduce round-trips.
 
-- When moving/copying/deleting images, ALWAYS handle ALL companion files together
-- Use `find_all_companion_files()` and `move_file_with_all_companions()`
-- NEVER orphan companion files
-- NEVER move image without its YAML/caption
+## File Operations
+- **Read before edit**: Always read the file content before performing a search-replace or write.
+- **Preserve custom content**: Use marker-based updates (e.g., `<!-- SCAFFOLD:START -->`) to preserve project-specific logic while updating governed sections.
+- **DNA Integrity**: Never use hardcoded absolute paths. Use relative paths or environment variables.
 
-### **Rule #6: Code Review Checklist**
+## Task Workflow
+- **State Management**: Use `./pt tasks start <id>` when beginning work and `./pt tasks done <id>` when finished.
+- **Context Awareness**: Use `./pt tasks show <id>` to read the full task prompt, including Overview, Execution, and Done Criteria.
+- **Traceability**: All major changes should be linked to a task ID in the project tracker.
 
-Before writing ANY file operation code, verify:
+## Communication
+- **Direct and Concise**: Avoid fluff in assistant responses.
+- **Proactive Planning**: Use `todo_write` to maintain a clear plan of action.
+- **Soulful Journaling**: Log strategic decisions and detours in the AI Journal for future context.
 
-1. ✅ Is this a move/delete operation? (Safe)
-2. ✅ Is this creating a NEW file in a safe zone? (Safe)
-3. ✅ Is this the crop tool writing a cropped image? (Safe)
-4. ❌ Is this modifying an existing production file? (FORBIDDEN)
+# Commit Message Task Linking
 
-### **Rule #7: Logging Requirements**
+## Rule: Include Task ID in Commits
 
-- ALL file operations MUST log via FileTracker
-- Format: `tracker.track_file_operation(operation, source, dest)`
-- Operations: 'move', 'delete', 'crop', 'copy', 'create'
-- This creates an audit trail for safety verification
+When committing work that completes or advances a tracked task, include the task ID in the commit message.
 
-### **Rule #8: Single TODO List Policy**
+## Format
 
-- Maintain ONE authoritative TODO document: `TODO.md` (root directory)
-- Do NOT create separate TODO lists elsewhere (no duplicates in Documents/, scripts/, etc.)
-- If a sub-area needs grouping, add a section/header inside the single TODO doc (e.g., "AI Automation")
-- When consolidating, move remaining items into the single doc and delete the extra file
-
----
-
-## 📋 Quick Reference - Safe vs Forbidden Patterns
-
-**Safe patterns:**
-
-```python
-# Moving files
-move_file_with_all_companions(image_path, target_dir)
-
-# Deleting files
-send2trash(file_path)
-
-# Reading files
-data = yaml.safe_load(open(yaml_path, 'r'))
-
-# Creating NEW files
-with open('data/reports/summary.json', 'w') as f:
-    json.dump(data, f)
+```
+type: description (#TASK_ID)
 ```
 
-**Forbidden patterns:**
+**Examples:**
+- `feat: Add versioning to agentsync (#4597)`
+- `fix: Validate_project false positives (#4598)`
+- `docs: Update 00_Index template (#4599)`
 
-```python
-# ❌ NEVER do these (except in crop tool):
-with open(existing_image.png, 'wb') as f:  # Overwriting image
-    f.write(data)
+## Multiple Tasks
 
-PIL.Image.save(existing_file.png)  # Overwriting image
-
-yaml.dump(data, open(existing.yaml, 'w'))  # Overwriting YAML
+If a commit addresses multiple tasks:
+```
+feat: Major cleanup and template updates (#4540, #4541)
 ```
 
----
+## Why This Matters
 
-## 🌿 Branching & Change Management
+- Enables automatic task-to-commit linking in project-tracker
+- Creates audit trail from kanban board to git history
+- Makes "what got done" visible without manual reconciliation
 
-### Rule #9: Branch-Based Development (CRITICAL)
-- **NEVER** push changes directly to the `main` branch.
-- **ALWAYS** create a new short-lived feature branch for every task or fix.
-- **ALWAYS** push the new branch to the remote repository.
-- Erik will review and merge the changes.
-- Branch naming convention: `feature/description` or `fix/description`.
+## When to Skip
 
----
+- Pure refactoring with no associated task
+- Typo fixes and trivial changes
+- Use your judgment - not every commit needs a task ID
 
-## 🛡️ When to Ask for Approval
+# Database Safety Rules
 
-If you're ever unsure whether a file operation is safe:
+## CRITICAL: Databases Are Stateful - Treat With Extreme Care
 
-1. Stop and ask Erik
-2. Explain what you want to do
-3. Wait for explicit approval
-4. Document the decision
+Databases contain accumulated work that cannot be recreated. One careless command can destroy hours or days of data.
 
-**Remember:** Data loss is permanent. When in doubt, DON'T.
+## Forbidden Operations
+
+**NEVER execute these without explicit user approval:**
+
+1. `DROP TABLE` - Destroys table and all data
+2. `DELETE FROM table` (without WHERE) - Deletes all rows
+3. `TRUNCATE TABLE` - Empties entire table
+4. `rm *.db` or `rm *.sqlite` - Deletes database file
+5. Recreating tables that contain data
+6. Any "reset", "init", or "recreate" that would wipe existing data
+
+## Required Practices
+
+### Before Any Schema Change
+```bash
+# 1. Check if table has data
+sqlite3 database.db "SELECT COUNT(*) FROM table_name;"
+
+# 2. If data exists, STOP and ask user
+# 3. Never auto-migrate tables with data
+```
+
+### For Migrations
+- Use `ALTER TABLE ADD COLUMN` (additive only)
+- Never drop columns or tables with data
+- If schema is incompatible, REFUSE and explain - don't auto-fix
+
+### For Deletions
+- Always use the application's API (e.g., `DatabaseManager.delete_task()`)
+- Never run raw SQL DELETE outside the application
+- The API creates backups automatically
+
+## If You Need to Reset a Database
+
+**DO NOT** just drop tables or delete the file.
+
+**DO:**
+1. Ask the user explicitly: "This will delete X rows. Proceed?"
+2. Create a backup first: `cp database.db database.db.backup`
+3. Export data: `./pt tasks export` (if available)
+4. Only then proceed with the reset
+
+## Why This Exists
+
+On 2026-01-27, an AI agent ran a migration that dropped the tasks table without backup, destroying 94 tasks. This rule exists to prevent that from ever happening again.
+
+## Quick Reference
+
+| Want to do... | Do this instead |
+|---------------|-----------------|
+| Add a column | `ALTER TABLE x ADD COLUMN y` |
+| Delete one row | Use app's delete method (has backup) |
+| Delete many rows | Ask user first, backup, then delete |
+| Change column type | Create new column, migrate data, drop old |
+| Reset database | Ask user, backup, export, then reset |
+| Fix schema issues | REFUSE and print manual instructions |
+
+# Source: .agentsync/rules/*.md
+# AGENTSYNC:END - Custom rules below this line are preserved

@@ -391,3 +391,7 @@ Before major cleanup:
 
 *Last Updated: October 16, 2025*  
 *Major updates: Document consolidation, AI training infrastructure, snapshot-based data pipeline*
+
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation

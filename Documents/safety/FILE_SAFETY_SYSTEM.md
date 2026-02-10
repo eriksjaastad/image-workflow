@@ -244,8 +244,15 @@ We can always fix code, but we can't recover lost or corrupted data. When in dou
 
 ## 🔗 Related Documentation
 
-- `.cursorrules` - AI coding rules
-- `scripts/tools/audit_file_safety.py` - Safety audit tool
-- `scripts/utils/companion_file_utils.py` - Safe file operations
-- `Documents/TECHNICAL_KNOWLEDGE_BASE.md` - File operation patterns
+- AI Architecture: [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md)
+- Dashboard Guide: [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md)
+- Tech Knowledge Base: [TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md)
+- Project Lifecycle: [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md)
+- .cursorrules - AI coding rules
 
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+## Related Documentation
+
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

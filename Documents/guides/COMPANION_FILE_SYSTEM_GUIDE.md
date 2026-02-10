@@ -301,3 +301,5 @@ deleted = safe_delete_paths([path1, path2], hard_delete=False)
 **Status:** Production-ready, fully tested  
 **Maintainer:** Centralized in `scripts/utils/companion_file_utils.py`
 
+## Related Documentation
+

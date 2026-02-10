@@ -87,3 +87,10 @@ less raptor_summary.txt
 ---
 
 *Designed for Erik’s image‑workflow‑scripts repo — continue reliability hardening at low cost.*
+
+## Related Documentation
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [README](README) - Image Workflow

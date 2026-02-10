@@ -89,3 +89,8 @@ python scripts/tools/tool_name.py --help
 Most tools support `--dry-run` or `--verbose` flags for safe testing.
 
 For production use, always review the tool's help output first to understand required parameters and effects.
+
+## Related Documentation
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [Project Scaffolding](../project-scaffolding/README.md) - Project Scaffolding

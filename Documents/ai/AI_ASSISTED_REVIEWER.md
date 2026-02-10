@@ -50,7 +50,5 @@ project/
 - Current tool is rule-based; integrate `train_ranker_v3.py` and crop proposer when ready.
 - Delete staging uses fast move; Trash step is manual.
 
-## Related Documents
-- Phase 3 spec: `Documents/AI_ASSISTED_REVIEWER_PHASE3_SPEC.md`
-- File routing spec: `Documents/AI_ASSISTED_REVIEWER_FILE_ROUTING_SPEC.md`
-- Training Guide: `Documents/ai/AI_TRAINING_GUIDE.md`
+## Related Documentation
+

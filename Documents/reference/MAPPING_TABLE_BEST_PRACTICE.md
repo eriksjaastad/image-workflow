@@ -182,3 +182,7 @@ projects = [
 
 **Remember:** A few minutes creating a mapping table can save hours of debugging. Always map first, run second.
 
+## Related Documentation
+
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [Safety Systems](patterns/safety-systems.md) - security

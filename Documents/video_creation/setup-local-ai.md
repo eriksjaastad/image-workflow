@@ -228,6 +228,110 @@ docker-compose up -d
 
 ---
 
+## Related Documentation
+
+- [README](../../../ai-model-scratch-build/README.md)
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Methodology for benchmarking.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - System architecture for video.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+
+## 🎯 Next Step: Running the Benchmark
+
+Once ComfyUI is running and models are installed:
+
+1. **Load workflow:** Download the model-specific workflow JSON from each model's Hugging Face page
+2. **Upload test keyframe:** Place your test image in `ComfyUI/input/`
+3. **Run each model:** Execute workflow, record times
+4. **Compare outputs:** Save videos to `output/` for side-by-side review
+
+**Automated benchmarking scripts** (Python API automation) can be added later, but manual testing is sufficient for the initial shootout.
+
+---
+
+## 📚 Reference Links
+
+- **ComfyUI Documentation:** https://github.com/comfyanonymous/ComfyUI
+- **Wan-AI Model Page:** https://huggingface.co/WanAI/Wan2.2-I2V-14B-fp16
+- **HunyuanVideo Model Page:** https://huggingface.co/hunyuanvideo/HunyuanVideo
+- **Mochi 1 Model Page:** https://huggingface.co/genmo/mochi-1-preview
+- **ComfyUI Manager:** https://github.com/ltdrdata/ComfyUI-Manager
+
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Overview of the video workflow.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Methodology for benchmarking.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - System architecture for video.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+## 🎯 Next Step: Running the Benchmark
+
+Once ComfyUI is running and models are installed:
+
+1. **Load workflow:** Download the model-specific workflow JSON from each model's Hugging Face page
+2. **Upload test keyframe:** Place your test image in `ComfyUI/input/`
+3. **Run each model:** Execute workflow, record times
+4. **Compare outputs:** Save videos to `output/` for side-by-side review
+
+**Automated benchmarking scripts** (Python API automation) can be added later, but manual testing is sufficient for the initial shootout.
+
+---
+
+## 📚 Reference Links
+
+- **ComfyUI Documentation:** https://github.com/comfyanonymous/ComfyUI
+- **Wan-AI Model Page:** https://huggingface.co/WanAI/Wan2.2-I2V-14B-fp16
+- **HunyuanVideo Model Page:** https://huggingface.co/hunyuanvideo/HunyuanVideo
+- **Mochi 1 Model Page:** https://huggingface.co/genmo/mochi-1-preview
+- **ComfyUI Manager:** https://github.com/ltdrdata/ComfyUI-Manager
+
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Overview of the video workflow.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Methodology for benchmarking.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - System architecture for video.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+## 🎯 Next Step: Running the Benchmark
+
+Once ComfyUI is running and models are installed:
+
+1. **Load workflow:** Download the model-specific workflow JSON from each model's Hugging Face page
+2. **Upload test keyframe:** Place your test image in `ComfyUI/input/`
+3. **Run each model:** Execute workflow, record times
+4. **Compare outputs:** Save videos to `output/` for side-by-side review
+
+**Automated benchmarking scripts** (Python API automation) can be added later, but manual testing is sufficient for the initial shootout.
+
+---
+
+## 📚 Reference Links
+
+- **ComfyUI Documentation:** https://github.com/comfyanonymous/ComfyUI
+- **Wan-AI Model Page:** https://huggingface.co/WanAI/Wan2.2-I2V-14B-fp16
+- **HunyuanVideo Model Page:** https://huggingface.co/hunyuanvideo/HunyuanVideo
+- **Mochi 1 Model Page:** https://huggingface.co/genmo/mochi-1-preview
+- **ComfyUI Manager:** https://github.com/ltdrdata/ComfyUI-Manager
+
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Overview of the video workflow.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Methodology for benchmarking.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - System architecture for video.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
 ## 🎯 Next Step: Running the Benchmark
 
 Once ComfyUI is running and models are installed:

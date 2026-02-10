@@ -48,7 +48,7 @@ A hardlink is like a "reference" to the same file on disk:
 ### 1. Preview What Would Be Backed Up (Dry Run)
 
 ```bash
-cd /Users/eriksjaastad/projects/image-workflow
+cd ..
 python scripts/backup/incremental_backup.py --dry-run
 ```
 
@@ -170,13 +170,13 @@ Potential savings: 91.7%
 
 ### Update Cron Job (if you want to re-enable backups)
 
-Edit: `/Users/eriksjaastad/projects/image-workflow/scripts/backup/setup_cron_backup.sh`
+Edit: `../scripts/backup/setup_cron_backup.sh`
 
 Change the backup script from `daily_backup.py` to `incremental_backup.py`:
 
 ```bash
 #!/bin/bash
-PROJECT_DIR="/Users/eriksjaastad/projects/image-workflow"
+PROJECT_DIR=".."
 DEST_DIR="$HOME/project-data-archives/image-workflow"
 PY_BIN="$PROJECT_DIR/.venv311/bin/python"
 
@@ -233,3 +233,8 @@ This keeps your backup directory lean and efficient.
 
 **TL;DR**: New backup system only transfers what changed, saving 90%+ bandwidth and disk space! 🎉
 
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [[backup_strategies]] - backup/recovery
+- [README](README) - Image Workflow

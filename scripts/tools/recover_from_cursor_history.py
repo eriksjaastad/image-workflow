@@ -10,15 +10,15 @@ from urllib.parse import unquote
 RECOVERIES = {
     # Oct 24 work
     "7587abfe": {
-        "resource": "file:///Users/eriksjaastad/projects/Eros%20Mate/scripts/ai/training_utils_v3.py",
+        "resource": "file://[USER_HOME]/projects/image-workflow/scripts/ai/training_utils_v3.py",
         "latest_file": "entries need checking",  # Check entries.json for latest
     },
     "-11ed10a6": {
-        "resource": "file:///Users/eriksjaastad/projects/Eros%20Mate/scripts/dashboard/current_project_dashboard.py",
+        "resource": "file://[USER_HOME]/projects/image-workflow/scripts/dashboard/current_project_dashboard.py",
         "latest_file": "XYij.py",  # Latest from our earlier check
     },
     "3ad46207": {
-        "resource": "file:///Users/eriksjaastad/projects/Eros%20Mate/scripts/dashboard/templates/current_project.html",
+        "resource": "file://[USER_HOME]/projects/image-workflow/scripts/dashboard/templates/current_project.html",
         "latest_file": "entries need checking",
     },
     # Oct 25 - already recovered 02_ai_desktop_multi_crop.py manually

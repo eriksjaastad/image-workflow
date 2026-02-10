@@ -185,3 +185,6 @@ You can edit `data/crop_queue/timing_patterns.json` to customize timing simulati
 ---
 
 **Have fun cropping faster than ever! 🚀**
+
+## Related Documentation
+

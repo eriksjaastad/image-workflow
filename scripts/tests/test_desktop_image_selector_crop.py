@@ -4,7 +4,7 @@ Comprehensive Tests for Desktop Image Selector Crop Tool
 Tests triplet detection, image loading, selection logic, and file operations
 """
 
-import shutil
+from send2trash import send2trash
 import subprocess
 import sys
 import tempfile
@@ -56,7 +56,7 @@ class DesktopImageSelectorCropTest:
     def cleanup(self):
         """Clean up test environment"""
         if self.temp_dir and self.temp_dir.exists():
-            shutil.rmtree(self.temp_dir)
+            send2trash(str(self.temp_dir))
             print("✓ Test environment cleaned up")
 
     def test_triplet_detection(self):

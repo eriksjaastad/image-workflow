@@ -49,3 +49,6 @@ session_id,directory,chosen_path,crop_x1,crop_y1,crop_x2,crop_y2,timestamp
 - Training Guide: `Documents/ai/AI_TRAINING_GUIDE.md`
 - Data Structure Rules: `Documents/AI_TRAINING_DATA_STRUCTURE.md`
 - Implementation Plan: `Documents/AI_PROJECT_IMPLEMENTATION_PLAN.md`
+
+## Related Documentation
+

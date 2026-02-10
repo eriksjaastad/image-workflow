@@ -98,6 +98,14 @@ Options:
 - Invalid crop dimensions → ensure logging uses actual image dimensions and normalization.
 
 ## Related Documents
-- AI Training Reference: `Documents/ai/AI_TRAINING_REFERENCE.md`
-- AI Project Plan: `Documents/AI_PROJECT_IMPLEMENTATION_PLAN.md`
-- Data Structure Rules: `Documents/AI_TRAINING_DATA_STRUCTURE.md`
+- AI Architecture: [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md)
+- Data Schema: [SCHEMA_REFERENCE](../data/SCHEMA_REFERENCE.md)
+- AI Training Reference: `Documents/ai/AI_TRAINING_REFERENCE.md` (Archived)
+- AI Project Plan: `Documents/AI_PROJECT_IMPLEMENTATION_PLAN.md` (Archived)
+- Data Structure Rules: `Documents/AI_TRAINING_DATA_STRUCTURE.md` (Archived)
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+## Related Documentation
+

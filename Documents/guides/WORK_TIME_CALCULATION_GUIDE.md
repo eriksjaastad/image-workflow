@@ -443,3 +443,5 @@ work_hours = round((work_minutes / 60.0) / 0.25) * 0.25
 *Last Updated: October 18, 2025*  
 *Related: `Documents/TECHNICAL_KNOWLEDGE_BASE.md` (lines 44-55)*
 
+## Related Documentation
+

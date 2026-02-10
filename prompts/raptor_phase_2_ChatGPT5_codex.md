@@ -36,3 +36,9 @@ OUTPUT FORMAT:
 Be concrete and code-centric—your goal is to raise confidence that no silent failures remain.
 
 ---
+
+## Related Documentation
+
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [README](README) - Image Workflow
+- [Project Scaffolding](../project-scaffolding/README.md) - Project Scaffolding

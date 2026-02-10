@@ -111,4 +111,7 @@ python -m scripts.process_crop_queue --yes --fast
 
 Status: Draft (delete once the process is stabilized and migrated into Cursor rules + PR template).
 
+## Related Documentation
 
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Safety Systems](patterns/safety-systems.md) - security

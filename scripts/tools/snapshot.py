@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
-import shutil
+from send2trash import send2trash
 import tarfile
 from pathlib import Path
 
@@ -65,7 +65,7 @@ def restore_snapshot(root: Path, in_path: Path) -> None:
             if entry.is_symlink() or entry.is_file():
                 entry.unlink(missing_ok=True)
             elif entry.is_dir():
-                shutil.rmtree(entry)
+                send2trash(str(entry))
         except Exception as e:
             print(f"Warning: failed to remove {entry}: {e}")
 

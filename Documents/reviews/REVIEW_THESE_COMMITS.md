@@ -88,3 +88,9 @@ All issues from your initial review have been addressed in these commits:
 **All critical issues from your initial review have been addressed.**
 
 Please review commits `a7d3a9d`, `95e6913`, and `6898d5c` to verify the fixes are implemented correctly!
+
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

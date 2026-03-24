@@ -4,7 +4,7 @@ Comprehensive Tests for Web Multi-Directory Viewer
 Tests crop/delete functionality, sticky header with live stats, and style guide compliance
 """
 
-import shutil
+from send2trash import send2trash
 import subprocess
 import sys
 import tempfile
@@ -102,7 +102,7 @@ class WebMultiDirectoryViewerTest:
 
         # Clean up test data
         if self.test_data_dir and self.test_data_dir.exists():
-            shutil.rmtree(self.test_data_dir)
+            send2trash(str(self.test_data_dir))
 
     def test_page_loads(self):
         """Test that the multi-directory viewer page loads correctly"""

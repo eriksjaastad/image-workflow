@@ -107,4 +107,8 @@ Great direction. With the above fixes:
 - We keep all queue/timing artifacts in safe zones and audit everything via FileTracker.
 - We add multi-layer dry-run validation to meet the “beyond production safe” bar.
 
+## Related Documentation
 
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

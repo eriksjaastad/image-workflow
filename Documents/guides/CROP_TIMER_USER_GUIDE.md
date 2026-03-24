@@ -33,4 +33,5 @@ Operate the crop timer safely with dry-run validation and human-like scheduling.
 - Empty queue: confirm record-only mode ran and wrote DB/CSV.
 - Dimension mismatch: the processor will rescale from normalized and warn.
 
+## Related Documentation
 

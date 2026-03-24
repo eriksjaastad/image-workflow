@@ -383,3 +383,57 @@ Sandbox mode provides a safe, isolated testing environment with:
 - FileTracker integration
 
 Use it for all development and testing to keep production data safe!
+
+
+- `scripts/utils/sandbox_mode.py` - Source code and implementation details
+- `scripts/tools/cleanup_sandbox.py` - Cleanup utility documentation
+- `scripts/examples/demo_with_sandbox.py` - Working examples
+- `testing/TESTS_GUIDE.md` - General testing guide
+- `core/PROJECT_LIFECYCLE_SCRIPTS.md` - Workflow scripts overview
+
+## Summary
+
+Sandbox mode provides a safe, isolated testing environment with:
+- Automatic directory isolation
+- Project ID validation (TEST- prefix)
+- Safety markers to prevent accidental deletion
+- Easy cleanup utilities
+- FileTracker integration
+
+Use it for all development and testing to keep production data safe!
+
+
+- `scripts/utils/sandbox_mode.py` - Source code and implementation details
+- `scripts/tools/cleanup_sandbox.py` - Cleanup utility documentation
+- `scripts/examples/demo_with_sandbox.py` - Working examples
+- `testing/TESTS_GUIDE.md` - General testing guide
+- `core/PROJECT_LIFECYCLE_SCRIPTS.md` - Workflow scripts overview
+
+## Summary
+
+Sandbox mode provides a safe, isolated testing environment with:
+- Automatic directory isolation
+- Project ID validation (TEST- prefix)
+- Safety markers to prevent accidental deletion
+- Easy cleanup utilities
+- FileTracker integration
+
+Use it for all development and testing to keep production data safe!
+
+
+- `scripts/utils/sandbox_mode.py` - Source code and implementation details
+- `scripts/tools/cleanup_sandbox.py` - Cleanup utility documentation
+- `scripts/examples/demo_with_sandbox.py` - Working examples
+- `testing/TESTS_GUIDE.md` - General testing guide
+- `core/PROJECT_LIFECYCLE_SCRIPTS.md` - Workflow scripts overview
+
+## Summary
+
+Sandbox mode provides a safe, isolated testing environment with:
+- Automatic directory isolation
+- Project ID validation (TEST- prefix)
+- Safety markers to prevent accidental deletion
+- Easy cleanup utilities
+- FileTracker integration
+
+Use it for all development and testing to keep production data safe!

@@ -136,3 +136,5 @@ When `--ai-assist` is enabled:
 - Feature cache: ~500MB for 14k images
 - Trained model: ~10MB
 
+## Related Documentation
+

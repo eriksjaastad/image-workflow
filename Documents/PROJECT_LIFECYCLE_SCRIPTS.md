@@ -229,12 +229,15 @@ The scripts create manifests matching this schema:
 
 ## 📚 Related Documentation
 
-- [Project Manifest Guide](../Documents/PROJECT_MANIFEST_GUIDE.md)
-- [Project Manifest CLI Spec](../Documents/SPEC_PROJECT_CLI.md)
-- [Dashboard README](./dashboard/README.md)
+- [PROJECT_MANIFEST_GUIDE](data/PROJECT_MANIFEST_GUIDE.md) - Detailed manifest schema.
+- [ARCHITECTURE_OVERVIEW](core/ARCHITECTURE_OVERVIEW.md) - System-wide architectural map.
 
 ---
 
 **Created**: October 2025  
 **Purpose**: Fix dashboard date filtering and standardize project lifecycle
 
+## Related Documentation
+
+- [PROJECT_KICKOFF_GUIDE](../../project-scaffolding/Documents/PROJECT_KICKOFF_GUIDE.md) - project setup
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering

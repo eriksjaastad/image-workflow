@@ -7,7 +7,7 @@ These tests verify that crop overlays are rendered correctly in the browser.
 
 ### 1. Automated Tests (Python)
 ```bash
-cd /Users/eriksjaastad/projects/Eros\ Mate
+cd ../..
 python scripts/tests/test_ai_assisted_reviewer.py
 ```
 
@@ -92,4 +92,8 @@ Any changes to overlay rendering should be:
 2. Tested with visual HTML tests
 3. Verified with automated Python tests
 4. Manually tested in actual reviewer UI
+
+
+## Related Documentation
+
 

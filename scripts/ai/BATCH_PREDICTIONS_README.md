@@ -13,7 +13,7 @@
 ## Quick Start
 
 ```bash
-cd /Users/eriksjaastad/projects/image-workflow
+cd ../..
 source .venv311/bin/activate
 
 # Run the batch script
@@ -150,4 +150,6 @@ Read the full documentation:
 ```
 
 Grab some coffee - the first few projects are fast, but the big ones take a while! ☕
+
+## Related Documentation
 

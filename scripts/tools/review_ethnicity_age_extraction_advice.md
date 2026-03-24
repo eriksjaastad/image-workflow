@@ -121,3 +121,7 @@ Your YAML’s prompt contains **“asian, in her early 40s”**; the scanner wil
 * The tool is designed to be flexible (group by character/ethnicity/age, prompt fallback, etc.), but **the index-based branch sneaks brittleness back in**. When prompts drift—even slightly—extraction flips between correct/incorrect, which *feels* like randomness. The mixed messages in comments (“pure keyword search” vs. index logic) are the tell.   
 
 If you want, paste the full `extract_descriptive_character_from_prompt` function and I’ll return an exact diff. But the drop-in above will remove the heaviest source of misses with minimal code churn.
+
+## Related Documentation
+
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering

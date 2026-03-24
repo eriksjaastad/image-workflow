@@ -109,4 +109,7 @@ Files reviewed:
 
 - This is very close. Fix the DB table name, port the safe‑zone check from main, and relocate the analytics sample output. After that, I’d consider it merge‑ready.
 
+## Related Documentation
 
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

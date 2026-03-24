@@ -93,7 +93,7 @@ def normalize_path(path: str) -> str:
     Normalize path to match embeddings cache format.
 
     Cache uses relative paths like: mojo2/_mixed/file.png
-    CSV has absolute paths like: /Users/.../image-workflow/mojo2/_mixed/file.png
+    CSV has absolute paths like: $PROJECTS_ROOT/image-workflow/mojo2/_mixed/file.png
     """
     p = Path(path)
 

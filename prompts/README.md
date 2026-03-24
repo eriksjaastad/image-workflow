@@ -289,3 +289,9 @@ echo "reviews/" >> .gitignore
 > 🪄 **Tip:**
 > You can re-run `make review` anytime for a blank template,
 > or use `./scripts/run_raptor.sh` for the full guided workflow with diffs and prompts.
+
+## Related Documentation
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

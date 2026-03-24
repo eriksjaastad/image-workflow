@@ -158,3 +158,6 @@ Final report: `data/ai_data/batch_predictions_summary_TIMESTAMP.json`
 2. Monitor progress in terminal
 3. Check summary report when complete
 4. Validate databases: `python scripts/ai/validate_all_databases.py`
+
+## Related Documentation
+

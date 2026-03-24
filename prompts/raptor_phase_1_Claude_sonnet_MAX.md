@@ -59,3 +59,9 @@ Be surgical, explicit, and opinionated—no vague advice.
 ```
 
 ---
+
+## Related Documentation
+
+- [CODE_QUALITY_STANDARDS](../../project-scaffolding/Documents/CODE_QUALITY_STANDARDS.md) - code standards
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [README](README) - Image Workflow

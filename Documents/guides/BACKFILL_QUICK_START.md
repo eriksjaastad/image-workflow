@@ -33,7 +33,7 @@ This guide describes the **3-phase backfill process** for reconstructing complet
 
 **Command:**
 ```bash
-cd /Users/eriksjaastad/projects/image-workflow
+cd ../..
 source .venv311/bin/activate
 
 python3 scripts/ai/backfill_project_phase1a_ai_predictions.py \
@@ -295,6 +295,3 @@ Before running Phase 2 (merge):
 
 ## Related Documentation
 
-- `Documents/ai/AI_TRAINING_REFERENCE.md` - Database schema
-- `Documents/ai/AI_TRAINING_GUIDE.md` - Training workflow
-- `Documents/safety/CURSOR_AI_RULES.md` - File safety rules

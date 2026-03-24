@@ -152,3 +152,7 @@ chrome_options = Options()
 - Style guide compliance verified
 
 This comprehensive test suite ensures that all web tools maintain high quality, consistent user experience, and robust functionality across all recent enhancements.
+
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation

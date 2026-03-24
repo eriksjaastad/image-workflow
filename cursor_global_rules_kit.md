@@ -258,3 +258,8 @@ Verify:
 - git show <short-sha> -- <path/to/file>
 ```
 
+## Related Documentation
+
+- [PROJECT_KICKOFF_GUIDE](../project-scaffolding/Documents/PROJECT_KICKOFF_GUIDE.md) - project setup
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [hypocrisynow/README](../ai-model-scratch-build/README.md) - Hypocrisy Now

@@ -11,10 +11,10 @@ This directory contains the complete planning documentation for pivoting your im
 
 | Document | Purpose | Read When |
 |----------|---------|-----------|
-| **[Image-to-Video Generation - System Audit and Blueprint.md](./Image-to-Video%20Generation%20-%20System%20Audit%20and%20Blueprint.md)** | Master technical plan mapping your existing image workflow to video generation | Planning overall strategy and understanding full system architecture |
-| **[Three-Model Video Generation Shootout Plan.md](./Three-Model%20Video%20Generation%20Shootout%20Plan.md)** | Step-by-step guide for benchmarking Wan-AI, HunyuanVideo, and Mochi 1 models | Before committing to hardware - run this shootout first |
-| **[setup-local-ai.md](./setup-local-ai.md)** | Hands-on ComfyUI setup guide with exact download commands and cloud GPU instructions | When actually running the shootout - practical implementation |
-| **[transition-to-video.md](./transition-to-video.md)** | Quality review of the blueprint identifying risks and optimizations | Reference for understanding strategic decisions and tradeoffs |
+| **[image-to-video-blueprint](image-to-video-blueprint.md)** | Master technical plan mapping your existing image workflow to video generation | Planning overall strategy and understanding full system architecture |
+| **[three-model-shootout-plan](three-model-shootout-plan.md)** | Step-by-step guide for benchmarking Wan-AI, HunyuanVideo, and Mochi 1 models | Before committing to hardware - run this shootout first |
+| **[setup-local-ai](setup-local-ai.md)** | Hands-on ComfyUI setup guide with exact download commands and cloud GPU instructions | When actually running the shootout - practical implementation |
+| **[transition-to-video](transition-to-video.md)** | Quality review of the blueprint identifying risks and optimizations | Reference for understanding strategic decisions and tradeoffs |
 
 ---
 
@@ -142,6 +142,638 @@ Your existing image-workflow provides exceptional foundation for video:
 | **FileTracker logging** | Video operation audit trail | 🟢 High - add video-specific operations |
 | **Desktop UI tools** | Motion definition interface | 🟢 High - fork existing crop tool |
 | **Batch processing workflows** | Video generation pipeline | 🟢 High - similar patterns |
+
+---
+
+## Related Documentation
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [README](README) - Image Workflow
+
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+## 📞 Decision Gates
+
+### Before Phase 0 (Model Shootout):
+- [ ] Cloud GPU budget approved ($50-150)
+- [ ] Test keyframe selected (high-quality, representative image)
+- [ ] 8-12 hours allocated for testing
+
+### Before Phase 1 (Prototype):
+- [ ] Winning model selected
+- [ ] Performance targets met (quality + speed acceptable)
+- [ ] Model-specific parameters documented
+
+### Before Phase 3 (Colocation Setup):
+- [ ] Target video volume confirmed (100/day? 1000/day?)
+- [ ] Colocation provider selected OR cloud GPU strategy finalized
+- [ ] Motion definition approach decided (manual/AI-suggested/automated)
+- [ ] Audio requirements clarified
+
+### Before Phase 5 (Production):
+- [ ] Pilot batch successful (100-500 videos delivered + accepted)
+- [ ] Cost per video validated against projections
+- [ ] Client acceptance rate >90%
+
+---
+
+## 🔗 External Dependencies
+
+| Dependency | Purpose | Alternatives |
+|------------|---------|--------------|
+| **ComfyUI** | Video model inference platform | Direct model integration (more complex) |
+| **Hugging Face** | Model weight hosting/downloads | Direct downloads from model repos |
+| **RunPod/Vast.ai/Lambda** | Cloud GPU rental | Local GPU purchase (higher upfront cost) |
+| **RIFE** | Frame interpolation | FILM (slower but smoother) |
+| **FFmpeg** | Video encoding/compression | Hardware encoders (NVENC) |
+
+---
+
+## 📝 Change Log
+
+### 2025-11-04: Documentation Review & Updates
+- ✅ Replaced SVD references with Wan-AI/HunyuanVideo/Mochi shootout approach
+- ✅ Added Phase 0 (Model Selection) to implementation roadmap
+- ✅ Updated frame interpolation strategy (GPU-accelerated RIFE)
+- ✅ Added objective metrics to shootout plan (SSIM, flash detection, VRAM tracking)
+- ✅ Completed Setup Local AI with exact download commands and cloud GPU instructions
+- ✅ Added Docker Compose configuration for consistent environments
+- ✅ Updated decision gates with specific thresholds and criteria
+- ✅ Created this README for document navigation
+
+---
+
+## 🚦 Next Actions
+
+1. **Review this README** - Ensure strategy aligns with business goals
+2. **Approve Phase 0 budget** - $50-150 for model shootout
+3. **Select test keyframe** - Representative of typical content
+4. **Run shootout** - Follow Setup Local AI guide
+5. **Make model decision** - Based on weighted scoring
+6. **Begin Phase 1** - Prototype with winning model
+
+---
+
+## 💡 Notes for Future Reference
+
+- **Estimated Implementation Time:** 8-12 weeks from Phase 0 start to production
+- **Team Size:** Can be implemented solo with documented guides
+- **Reversibility:** Each phase gates the next - can stop after shootout if models don't meet quality bar
+- **Scalability:** Linear - each additional GPU adds throughput proportionally
+
+---
+
+**Questions?** Refer to specific documents above, or review the Transition Review for strategic context.
+
+
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [OPERATIONS_GUIDE](../core/OPERATIONS_GUIDE.md) - Daily operational procedures.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [transition-to-video](transition-to-video.md) - Blueprint review and risks.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
 
 ---
 

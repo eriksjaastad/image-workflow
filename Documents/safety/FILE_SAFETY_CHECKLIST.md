@@ -127,8 +127,8 @@ grep '"operation": "crop"' data/file_operations_logs/*.log
 ## 📚 **Documentation**
 
 - **`.cursorrules`** - AI coding rules (in project root)
-- **`Documents/FILE_SAFETY_SYSTEM.md`** - Complete guide
-- **`Documents/TECHNICAL_KNOWLEDGE_BASE.md`** - Quick reference (top of file)
+- **[FILE_SAFETY_SYSTEM](FILE_SAFETY_SYSTEM.md)** - Complete guide
+- **[TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md)** - Quick reference (top of file)
 - **`scripts/tools/audit_file_safety.py`** - Safety audit tool
 - **`scripts/tests/test_file_safety_audit.py`** - Safety test
 
@@ -144,3 +144,7 @@ grep '"operation": "crop"' data/file_operations_logs/*.log
 ---
 
 **Last Updated:** October 20, 2025
+
+## Related Documentation
+
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review

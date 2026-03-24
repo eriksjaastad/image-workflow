@@ -19,7 +19,7 @@ If you lose your machine and need to recover from GitHub, here's **exactly** wha
 
 ### **1. All Code & Scripts**
 - ✅ `scripts/` - All tools (image selector, cropper, sorter, etc.)
-- ✅ `Documents/` - All documentation
+- ✅ `Documents/` - All documentation. See [README](../../../ai-model-scratch-build/README.md).
 - ✅ `.gitignore`, `requirements.txt`, etc.
 
 ### **2. Critical Infrastructure Files** (as of Oct 21, 2025)
@@ -234,7 +234,9 @@ python scripts/01_ai_assisted_reviewer.py --help  # Should work
 
 ---
 
-**Bottom Line:** As of Oct 21, 2025, your **infrastructure** (code, schemas, manifests, models) is safe on GitHub. Your **images and personal data** need separate backup strategy (external drive + cloud).
+## Related Documentation
 
-**Computer falls in toilet? You're OK!** (As long as images are backed up externally)
-
+- [ARCHITECTURE_OVERVIEW](ARCHITECTURE_OVERVIEW.md) - Where files live and how data flows.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Rules for protecting production data.
+- [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md) - Monitoring productivity and health.
+- [[backup_strategies]] - backup/recovery

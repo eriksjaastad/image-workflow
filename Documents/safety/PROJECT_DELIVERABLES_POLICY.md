@@ -75,3 +75,8 @@ Companions: If the client’s source included companions (e.g., `.yaml`, `.capti
 - Default dry-run; require `--commit` to write staging/zip.
 - Fail-closed: error if banned/unknown types unless `--allow-unknown` is passed.
 - Keep `data/` out of deliverables by design.
+
+
+## Related Documentation
+
+

@@ -66,3 +66,10 @@ INVOKE
    - Set agent = GPT-5 Codex → execute Phase B
    - Set agent = your preferred model → execute Phase C
 3. Review the combined output; only merge to main when **Phase 3 = ✅ Merge Safe (≥ 8/10)**.
+
+## Related Documentation
+
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [AI Team Orchestration](patterns/ai-team-orchestration.md) - orchestration
+- [README](README) - Image Workflow

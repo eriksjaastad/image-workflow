@@ -60,6 +60,13 @@ pytest scripts/tests/test_snapshot_data_integrity.py -v
 - Prefer smaller lookbacks for faster dashboard API local tests.
 
 ## Related Documents
-- `dashboard/DASHBOARD_GUIDE.md`
-- `dashboard/DASHBOARD_API.md`
-- `reference/TECHNICAL_KNOWLEDGE_BASE.md`
+- Dashboard Guide: [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md)
+- Dashboard API: [DASHBOARD_API](../dashboard/DASHBOARD_API.md)
+- Tech Knowledge Base: [TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md)
+- Architecture: [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md)
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+## Related Documentation
+

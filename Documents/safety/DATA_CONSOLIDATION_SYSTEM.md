@@ -199,7 +199,8 @@ data/snapshot/              →  Dashboard (primary source)
 
 ## Related Documentation
 
-- `Documents/safety/FILE_SAFETY_SYSTEM.md` - File operation safety rules
-- `Documents/data/` - Data pipeline documentation
-- `scripts/data_pipeline/README.md` - Snapshot pipeline details
-
+- [FILE_SAFETY_SYSTEM](FILE_SAFETY_SYSTEM.md) - File operation safety rules
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System design and data flows.
+- [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md) - User guide for the productivity dashboard.
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [README](README) - Image Workflow

@@ -10,7 +10,7 @@ Usage:
     python scripts/cleanup_logs.py --process-date $(date -d "2 days ago" +%Y%m%d)
 
 Cron Schedule:
-    0 2 * * * cd /Users/eriksjaastad/projects/Image\ Processing && python scripts/cleanup_logs.py --process-date $(date -d "2 days ago" +%Y%m%d) >> data/log_archives/cron_consolidation.log 2>&1
+    0 2 * * * cd [USER_HOME]/projects/image-workflow && python scripts/cleanup_logs.py --process-date $(date -d "2 days ago" +%Y%m%d) >> data/log_archives/cron_consolidation.log 2>&1
 
 This processes data from 2 days ago, ensuring no conflicts with current work.
 """

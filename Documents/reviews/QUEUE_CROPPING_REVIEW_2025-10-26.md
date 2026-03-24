@@ -117,4 +117,7 @@ Gaps to close:
 5) Interactive confirmation UX? Good; consider optional JSON preflight report output for audits.
 6) Biggest remaining risk? Broken FileTracker calls (`metadata` vs `notes`) causing runtime errors; and queue file race conditions.
 
+## Related Documentation
 
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [Safety Systems](patterns/safety-systems.md) - security

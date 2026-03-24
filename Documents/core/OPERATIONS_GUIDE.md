@@ -6,7 +6,7 @@ Last Updated: 2025-10-23
 Audience: AI agents (and Erik) running daily workflows.
 
 ## Principles
-- Safety first: follow `Documents/FILE_SAFETY_SYSTEM.md`.
+- Safety first: follow [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md).
 - Move, don’t modify; only the AI desktop multi-crop tool writes new images.
 - Keep snapshots fresh before dashboard sessions.
 - Cleanly start/stop servers; avoid orphaned processes.
@@ -70,14 +70,16 @@ curl "http://127.0.0.1:5001/api/data/D?lookback_days=7"
   - Use `send2trash` or `mv ~/.Trash/` and validate in Finder.
 
 ## Bulk Data Operations Protocol
-- Always generate an inspection report first (counts, sample rows with `repr()`, validation status). See `Documents/TECHNICAL_KNOWLEDGE_BASE.md`.
+- Always generate an inspection report first (counts, sample rows with `repr()`, validation status). See [TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md).
 
 ## Clean Shutdown
 - Stop Flask server with Ctrl+C; ensure subprocesses/threads terminate and no ports are held.
 - Avoid long-running background jobs without explicit purpose.
 
-## References
-- Architecture: `Documents/ARCHITECTURE_OVERVIEW.md`
-- Safety: `Documents/FILE_SAFETY_SYSTEM.md`
-- Dashboard: `Documents/DASHBOARD_GUIDE.md`
-- Tech KB: `Documents/TECHNICAL_KNOWLEDGE_BASE.md`
+## Related Documentation
+
+- [ARCHITECTURE_OVERVIEW](ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) - Core safety rules and audit tools.
+- [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md) - User guide for the productivity dashboard.
+- [TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md) - Patterns, bugs, and solutions.
+- [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md) - Standardized project start/finish.

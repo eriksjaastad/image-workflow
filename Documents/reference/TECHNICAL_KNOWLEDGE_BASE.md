@@ -18,7 +18,7 @@ Audience: AI assistants and tools operating in this repo
 - Never modify production images or companions; only `scripts/02_ai_desktop_multi_crop.py` creates NEW crops.
 - Writes allowed only to safe zones (e.g., `data/`, `sandbox/`, `Documents/`).
 - Use macOS Trash for deletions; avoid hard-delete. Log all file ops via FileTracker.
-- Follow `safety/FILE_SAFETY_SYSTEM.md`.
+- Follow [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md).
 
 ### Run/stop discipline
 
@@ -31,12 +31,14 @@ Audience: AI assistants and tools operating in this repo
 - Are companions handled together? Use companion utilities.
 - Are we creating new files (not overwriting)?
 - Will deletions go to Trash? Is FileTracker logging enabled?
+- See [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md) for the complete guide.
 
 ### Daily shortcuts
 
-- TODOs: `core/CURRENT_TODO_LIST.md`
-- Knowledge base (this file): `reference/TECHNICAL_KNOWLEDGE_BASE.md`
-- Project lifecycle scripts: `core/PROJECT_LIFECYCLE_SCRIPTS.md`
+- TODOs: `../TODO.md`
+- Dashboard: [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md)
+- Project lifecycle scripts: [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md)
+- Architecture: [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md)
 
 ---
 
@@ -2301,3 +2303,11 @@ def safe_delete(file_path):
 
 _Last Updated: October 16, 2025_
 _This file should be updated whenever new technical solutions are discovered or patterns are established._
+
+## Related Documentation
+
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md) - secrets management
+- [PROJECT_KICKOFF_GUIDE](../../../project-scaffolding/Documents/PROJECT_KICKOFF_GUIDE.md) - project setup
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management

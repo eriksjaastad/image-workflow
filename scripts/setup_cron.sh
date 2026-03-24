@@ -6,7 +6,7 @@
 # 2. NEW: Snapshot data pipeline (primary system)
 
 # Use the correct project directory path
-PROJECT_DIR="/Users/eriksjaastad/projects/image-workflow"
+PROJECT_DIR="[USER_HOME]/projects/image-workflow"
 
 # Legacy consolidation (kept for backward compatibility)
 CRON_LEGACY="0 2 * * * cd \"$PROJECT_DIR\" && python scripts/cleanup_logs.py --process-date \$(date -d \"2 days ago\" +%Y%m%d) >> data/log_archives/cron_consolidation.log 2>&1"

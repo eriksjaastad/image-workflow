@@ -425,3 +425,9 @@ When generating code:
 
 7. **Format & Lint:**
    - Assume `ruff format` + `ruff check --fix` will be run and write code that passes without needing `# noqa`.
+
+## Related Documentation
+
+- [CODE_QUALITY_STANDARDS](../../../project-scaffolding/Documents/CODE_QUALITY_STANDARDS.md) - code standards
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [Safety Systems](patterns/safety-systems.md) - security

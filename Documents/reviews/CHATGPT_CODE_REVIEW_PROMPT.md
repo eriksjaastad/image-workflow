@@ -121,3 +121,8 @@ A clear, actionable review that tells us:
 - Priority order for any remaining work
 
 **Please be thorough but concise. We want to ship this!**
+
+## Related Documentation
+
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

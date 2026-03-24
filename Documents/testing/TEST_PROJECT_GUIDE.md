@@ -459,3 +459,6 @@ After successful pipeline testing:
 
 **Remember:** Always use sandbox mode for testing! It's designed to keep your production data safe while giving you confidence in your workflow.
 
+## Related Documentation
+
+- [README](README) - Image Workflow

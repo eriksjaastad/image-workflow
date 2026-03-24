@@ -1,188 +1,224 @@
-# Documentation
+# image-workflow Documents
 
-**Last Updated:** 2025-10-31
-**Audience:** Developers, Operators
+*Auto-generated index. Last updated: 2026-01-24*
 
-## Daily Shortcuts
+## Overview
 
-- Current TODOs: `../TODO.md` (root directory)
-- Knowledge Base: `reference/TECHNICAL_KNOWLEDGE_BASE.md`
-- Code Quality Rules: `reference/CODE_QUALITY_RULES.md`
-- Raptor Review Process: `../prompts/README.md`
+- [INCREMENTAL BACKUP GUIDE](INCREMENTAL_BACKUP_GUIDE.md)
+- [PROJECT LIFECYCLE SCRIPTS](PROJECT_LIFECYCLE_SCRIPTS.md)
+- [README](README.md)
+- [REVIEWS AND GOVERNANCE PROTOCOL](REVIEWS_AND_GOVERNANCE_PROTOCOL.md)
 
-## Introduction
+## Ai
 
-This knowledge base documents the end-to-end image workflow automation system: tools, data, AI training, dashboards, and safety policies.
+- [AI ASSISTED REVIEWER](ai/AI_ASSISTED_REVIEWER.md)
+- [AI DOCUMENTS INDEX](ai/AI_DOCUMENTS_INDEX.md)
+- [AI TRAINING DATA ANALYSIS](ai/AI_TRAINING_DATA_ANALYSIS.md)
+- [AI TRAINING DATA STRUCTURE](ai/AI_TRAINING_DATA_STRUCTURE.md)
+- [AI TRAINING GUIDE](ai/AI_TRAINING_GUIDE.md)
+- [AI TRAINING REFERENCE](ai/AI_TRAINING_REFERENCE.md)
 
-> Policy: Whenever any document is edited, update its **Last Updated**, **Status**, and **Audience** metadata at the top.
+## Archives / Ai
 
-## Quick Start
+- [AI ANOMALY DETECTION OPTIONS](archives/ai/AI_ANOMALY_DETECTION_OPTIONS.md)
+- [AI ASSISTED REVIEWER BATCH PROCESSING DESIGN](archives/ai/AI_ASSISTED_REVIEWER_BATCH_PROCESSING_DESIGN.md)
+- [AI ASSISTED REVIEWER FILE ROUTING SPEC](archives/ai/AI_ASSISTED_REVIEWER_FILE_ROUTING_SPEC.md)
+- [AI ASSISTED REVIEWER IMPLEMENTATION SUMMARY](archives/ai/AI_ASSISTED_REVIEWER_IMPLEMENTATION_SUMMARY.md)
+- [AI ASSISTED REVIEWER PHASE3 SPEC](archives/ai/AI_ASSISTED_REVIEWER_PHASE3_SPEC.md)
+- [AI DATA COLLECTION LESSONS LEARNED](archives/ai/AI_DATA_COLLECTION_LESSONS_LEARNED.md)
+- [AI DOCUMENTATION SUMMARY](archives/ai/AI_DOCUMENTATION_SUMMARY.md)
+- [AI HISTORICAL DATA EXTRACTION PLAN](archives/ai/AI_HISTORICAL_DATA_EXTRACTION_PLAN.md)
+- [AI PHASE2 STATUS](archives/ai/AI_PHASE2_STATUS.md)
+- [AI PHASE3 COMPLETE SUMMARY](archives/ai/AI_PHASE3_COMPLETE_SUMMARY.md)
+- [AI PROJECT IMPLEMENTATION PLAN](archives/ai/AI_PROJECT_IMPLEMENTATION_PLAN.md)
+- [AI QUICK START](archives/ai/AI_QUICK_START.md)
+- [AI REVIEWER BATCH IMPLEMENTATION COMPLETE](archives/ai/AI_REVIEWER_BATCH_IMPLEMENTATION_COMPLETE.md)
+- [AI REVIEWER BATCH REFACTOR PLAN](archives/ai/AI_REVIEWER_BATCH_REFACTOR_PLAN.md)
+- [AI REVIEWER CLONE STRATEGY](archives/ai/AI_REVIEWER_CLONE_STRATEGY.md)
+- [AI REVIEWER REFACTOR 2025 10 22](archives/ai/AI_REVIEWER_REFACTOR_2025-10-22.md)
+- [AI REVIEWER VS WEB SELECTOR COMPARISON](archives/ai/AI_REVIEWER_VS_WEB_SELECTOR_COMPARISON.md)
+- [AI REVIEWER WEB SELECTOR PARITY TODO](archives/ai/AI_REVIEWER_WEB_SELECTOR_PARITY_TODO.md)
+- [AI SESSION SUMMARY 2025 10 20](archives/ai/AI_SESSION_SUMMARY_2025-10-20.md)
+- [AI TRAINING CROP AND RANKING](archives/ai/AI_TRAINING_CROP_AND_RANKING.md)
+- [AI TRAINING DECISIONS V3 IMPLEMENTATION](archives/ai/AI_TRAINING_DECISIONS_V3_IMPLEMENTATION.md)
+- [AI TRAINING FROM PAST PROJECTS](archives/ai/AI_TRAINING_FROM_PAST_PROJECTS.md)
+- [AI TRAINING PHASE2 QUICKSTART](archives/ai/AI_TRAINING_PHASE2_QUICKSTART.md)
+- [AI TRAINING PLAYBOOK](archives/ai/AI_TRAINING_PLAYBOOK.md)
+- [README](archives/ai/README.md)
 
-- New developer? Read `core/ARCHITECTURE_OVERVIEW.md` (5 min) and `core/PROJECT_LIFECYCLE_SCRIPTS.md` (5 min).
-- Start a new project: `core/PROJECT_LIFECYCLE_SCRIPTS.md`.
-- Train the AI: `ai/AI_TRAINING_GUIDE.md` (15–20 min).
-- Understand the data schema: `data/SCHEMA_REFERENCE.md` (10–15 min).
-- Run the dashboard: `dashboard/DASHBOARD_GUIDE.md` (5–10 min).
-- Run reliability review: `../prompts/README.md` (Raptor 3-phase review).
+## Archives / Dashboard
 
-## Start Here
+- [CURRENT PROJECT DASHBOARD](archives/dashboard/CURRENT_PROJECT_DASHBOARD.md)
+- [DASHBOARD BASELINE TEMPLATES](archives/dashboard/DASHBOARD_BASELINE_TEMPLATES.md)
+- [DASHBOARD BOTTLENECK ANALYSIS](archives/dashboard/DASHBOARD_BOTTLENECK_ANALYSIS.md)
+- [DASHBOARD PERFORMANCE IDEAS](archives/dashboard/DASHBOARD_PERFORMANCE_IDEAS.md)
+- [DASHBOARD PRODUCTIVITY TABLE SPEC](archives/dashboard/DASHBOARD_PRODUCTIVITY_TABLE_SPEC.md)
+- [DASHBOARD TOOL ORDER CONFIG](archives/dashboard/DASHBOARD_TOOL_ORDER_CONFIG.md)
+- [DATA PIPELINE PERFORMANCE ANALYSIS](archives/dashboard/DATA_PIPELINE_PERFORMANCE_ANALYSIS.md)
+- [TEST DASHBOARD](archives/dashboard/TEST_DASHBOARD.md)
 
-- If you're landing fresh or returning after a break:
-  - Read `core/ARCHITECTURE_OVERVIEW.md` for the system map
-  - Then skim `AI_DOCUMENTS_INDEX.md` for AI-specific pointers
-  - Daily driver links are in "Daily Shortcuts" above
+## Archives / Implementations
 
-## Core Documentation
+- [BINS IMPLEMENTATION SUMMARY](archives/implementations/BINS_IMPLEMENTATION_SUMMARY.md)
+- [CHARACTER PROCESSOR REFACTOR SUMMARY](archives/implementations/CHARACTER_PROCESSOR_REFACTOR_SUMMARY.md)
+- [PHASE1 COMPLETE SUMMARY](archives/implementations/PHASE1_COMPLETE_SUMMARY.md)
 
-- `../TODO.md` (root directory)
-- `core/ARCHITECTURE_OVERVIEW.md`
-- `core/OPERATIONS_GUIDE.md`
-- `core/DISASTER_RECOVERY_GUIDE.md`
-- `core/PROJECT_LIFECYCLE_SCRIPTS.md`
+## Archives / Misc
 
-## By Topic
+- [15 MINUTE BINS GUIDE](archives/misc/15_MINUTE_BINS_GUIDE.md)
+- [AUTO GROUPING GUIDE](archives/misc/AUTO_GROUPING_GUIDE.md)
+- [AUTOMATION REVIEWER SPEC](archives/misc/AUTOMATION_REVIEWER_SPEC.md)
+- [BACKFILL QUICK START](archives/misc/BACKFILL_QUICK_START.md)
+- [BACKUP RUNBOOK](archives/misc/BACKUP_RUNBOOK.md)
+- [BILLED VS ACTUAL TODO](archives/misc/BILLED_VS_ACTUAL_TODO.md)
+- [BINS IMPLEMENTATION SUMMARY](archives/misc/BINS_IMPLEMENTATION_SUMMARY.md)
+- [CASE STUDIES](archives/misc/CASE_STUDIES.md)
+- [CHARACTER PROCESSOR REFACTOR SUMMARY](archives/misc/CHARACTER_PROCESSOR_REFACTOR_SUMMARY.md)
+- [CORRUPTED ROWS INVESTIGATION 2025 10 21](archives/misc/CORRUPTED_ROWS_INVESTIGATION_2025-10-21.md)
+- [CROP TRAINING SCHEMA V2](archives/misc/CROP_TRAINING_SCHEMA_V2.md)
+- [DASHBOARD BASELINE TEMPLATES](archives/misc/DASHBOARD_BASELINE_TEMPLATES.md)
+- [DASHBOARD BOTTLENECK ANALYSIS](archives/misc/DASHBOARD_BOTTLENECK_ANALYSIS.md)
+- [DASHBOARD PERFORMANCE IDEAS](archives/misc/DASHBOARD_PERFORMANCE_IDEAS.md)
+- [DASHBOARD PRODUCTIVITY TABLE SPEC](archives/misc/DASHBOARD_PRODUCTIVITY_TABLE_SPEC.md)
+- [DASHBOARD TOOL ORDER CONFIG](archives/misc/DASHBOARD_TOOL_ORDER_CONFIG.md)
+- [DATA INFRASTRUCTURE INVESTIGATION 2025 10 21](archives/misc/DATA_INFRASTRUCTURE_INVESTIGATION_2025-10-21.md)
+- [DATA INTEGRITY ISSUES](archives/misc/DATA_INTEGRITY_ISSUES.md)
+- [DATA PIPELINE PERFORMANCE ANALYSIS](archives/misc/DATA_PIPELINE_PERFORMANCE_ANALYSIS.md)
+- [DEVELOPER ONBOARDING](archives/misc/DEVELOPER_ONBOARDING.md)
+- [DOCUMENTS CATEGORIZATION](archives/misc/DOCUMENTS_CATEGORIZATION.md)
+- [duplicates decision matrix](archives/misc/duplicates_decision_matrix.md)
+- [FEATURE SPECIFICATIONS](archives/misc/FEATURE_SPECIFICATIONS.md)
+- [GIT DATA TRACKING POLICY](archives/misc/GIT_DATA_TRACKING_POLICY.md)
+- [HANDOFF HISTORICAL BACKFILL 2025 10 22](archives/misc/HANDOFF_HISTORICAL_BACKFILL_2025-10-22.md)
+- [INLINE VALIDATION GUIDE](archives/misc/INLINE_VALIDATION_GUIDE.md)
+- [PERFORMANCE FIX DESKTOP MULTICROP](archives/misc/PERFORMANCE_FIX_DESKTOP_MULTICROP.md)
+- [PHASE1 COMPLETE SUMMARY](archives/misc/PHASE1_COMPLETE_SUMMARY.md)
+- [PROJECT ALLOWLIST SCHEMA](archives/misc/PROJECT_ALLOWLIST_SCHEMA.md)
+- [PROJECT DELIVERABLES POLICY](archives/misc/PROJECT_DELIVERABLES_POLICY.md)
+- [PROJECT DIRECTORY BREAKDOWN](archives/misc/PROJECT_DIRECTORY_BREAKDOWN.md)
+- [README](archives/misc/README.md)
+- [REPOSITORY CLEANUP GUIDE](archives/misc/REPOSITORY_CLEANUP_GUIDE.md)
+- [SCHEMA IMPLEMENTATION SUMMARY 2025 10 21](archives/misc/SCHEMA_IMPLEMENTATION_SUMMARY_2025-10-21.md)
+- [SESSION SUMMARY 2025 10 22 AFTERNOON](archives/misc/SESSION_SUMMARY_2025-10-22_AFTERNOON.md)
+- [SNAPSHOT SYSTEM INVESTIGATION 2025 10 21](archives/misc/SNAPSHOT_SYSTEM_INVESTIGATION_2025-10-21.md)
+- [TEST DASHBOARD](archives/misc/TEST_DASHBOARD.md)
+- [UX FIX CROP TOGGLE BUTTON](archives/misc/UX_FIX_CROP_TOGGLE_BUTTON.md)
+- [WORK TIME CALCULATION GUIDE](archives/misc/WORK_TIME_CALCULATION_GUIDE.md)
 
-### AI
+## Archives / Misc / Experiments
 
-- `ai/AI_TRAINING_GUIDE.md`
-- `ai/AI_TRAINING_REFERENCE.md`
-- `ai/AI_TRAINING_DATA_ANALYSIS.md` ← NEW: Training data breakdown
-- `ai/AI_TRAINING_DATA_STRUCTURE.md`
-- `ai/AI_ASSISTED_REVIEWER.md`
-- `ai/AI_DOCUMENTS_INDEX.md`
+- [automation reduction experiments](archives/misc/experiments/automation_reduction_experiments.md)
 
-### Dashboard
+## Archives / Sessions / 2025-10-21
 
-- `dashboard/DASHBOARD_GUIDE.md`
-- `dashboard/DASHBOARD_API.md`
-- `dashboard/dashboard-ideas.md`
+- [CORRUPTED ROWS INVESTIGATION 2025 10 21](archives/sessions/2025-10-21/CORRUPTED_ROWS_INVESTIGATION_2025-10-21.md)
+- [DATA INFRASTRUCTURE INVESTIGATION 2025 10 21](archives/sessions/2025-10-21/DATA_INFRASTRUCTURE_INVESTIGATION_2025-10-21.md)
+- [SCHEMA IMPLEMENTATION SUMMARY 2025 10 21](archives/sessions/2025-10-21/SCHEMA_IMPLEMENTATION_SUMMARY_2025-10-21.md)
+- [SNAPSHOT SYSTEM INVESTIGATION 2025 10 21](archives/sessions/2025-10-21/SNAPSHOT_SYSTEM_INVESTIGATION_2025-10-21.md)
 
-### Data
+## Archives / Sessions / 2025-10-22
 
-- `data/SCHEMA_REFERENCE.md`
-- `data/PROJECT_MANIFEST_GUIDE.md`
-- `data/CROP_TRAINING_SCHEMA_V2.md` (archived reference)
-- `data/GIT_DATA_TRACKING_POLICY.md` (archived reference)
+- [HANDOFF HISTORICAL BACKFILL 2025 10 22](archives/sessions/2025-10-22/HANDOFF_HISTORICAL_BACKFILL_2025-10-22.md)
+- [SESSION SUMMARY 2025 10 22 AFTERNOON](archives/sessions/2025-10-22/SESSION_SUMMARY_2025-10-22_AFTERNOON.md)
 
-### Guides
+## Archives / Sessions / 2025-10-26
 
-- `guides/AUTO_GROUPING_GUIDE.md`
-- `guides/COMPANION_FILE_SYSTEM_GUIDE.md`
-- `guides/INLINE_VALIDATION_GUIDE.md`
-- `guides/BACKFILL_QUICK_START.md`
-- `guides/WORK_TIME_CALCULATION_GUIDE.md` (archived)
-- `guides/15_MINUTE_BINS_GUIDE.md` (archived)
+- [AUTONOMOUS WORK SESSION SUMMARY](archives/sessions/2025-10-26/AUTONOMOUS_WORK_SESSION_SUMMARY.md)
 
-### Safety
+## Core
 
-- `safety/FILE_SAFETY_SYSTEM.md`
-- `safety/FILE_SAFETY_CHECKLIST.md` (planned)
-- `safety/PROJECT_DELIVERABLES_POLICY.md` (archived)
-- `safety/REPOSITORY_CLEANUP_GUIDE.md`
+- [ARCHITECTURE OVERVIEW](core/ARCHITECTURE_OVERVIEW.md)
+- [DISASTER RECOVERY GUIDE](core/DISASTER_RECOVERY_GUIDE.md)
+- [OPERATIONS GUIDE](core/OPERATIONS_GUIDE.md)
+- [PROJECT LIFECYCLE SCRIPTS](core/PROJECT_LIFECYCLE_SCRIPTS.md)
 
-### Reference
+## Dashboard
 
-- `reference/TECHNICAL_KNOWLEDGE_BASE.md`
-- `reference/CODE_QUALITY_RULES.md` ← NEW: Ruff/linting standards
-- `reference/FEATURE_SPECIFICATIONS.md` (archived)
-- `reference/WEB_STYLE_GUIDE.md`
-- `reference/CASE_STUDIES.md`
+- [dashboard ideas](dashboard/dashboard-ideas.md)
+- [DASHBOARD API](dashboard/DASHBOARD_API.md)
+- [DASHBOARD GUIDE](dashboard/DASHBOARD_GUIDE.md)
 
-### Testing
+## Data
 
-- `testing/TESTS_GUIDE.md`
-- `testing/SANDBOX_MODE_GUIDE.md` ← NEW: Safe testing with sandbox mode
+- [DATASET OVERVIEW](data/DATASET_OVERVIEW.md)
+- [GIT DATA TRACKING POLICY](data/GIT_DATA_TRACKING_POLICY.md)
+- [PROJECT ALLOWLIST SCHEMA](data/PROJECT_ALLOWLIST_SCHEMA.md)
+- [PROJECT MANIFEST GUIDE](data/PROJECT_MANIFEST_GUIDE.md)
+- [SCHEMA REFERENCE](data/SCHEMA_REFERENCE.md)
 
-### Reviews
+## Design
 
-- `reviews/` — Raptor review outputs (timestamped markdown files)
+- [PHASE 4 TRACKING](design/PHASE_4_TRACKING.md)
 
-## Root-Level Documentation
+## Examples
 
-Important files at repo root:
+- [SAMPLE REPORT](examples/SAMPLE_REPORT.md)
+- [SAMPLE TODO](examples/SAMPLE_TODO.md)
 
-- `../prompts/README.md` — Raptor 3-phase review workflow
-- `../.cursorrules` — Cursor AI rules (file safety, code standards)
-- `../cursor_global_rules_kit.md` — Global Cursor session management
-- `../pyproject.toml` — Ruff configuration (linting rules)
+## Guides
 
-## Archives
+- [15 MINUTE BINS GUIDE](guides/15_MINUTE_BINS_GUIDE.md)
+- [AI PREDICTIONS BATCH PLAN](guides/AI_PREDICTIONS_BATCH_PLAN.md)
+- [AI TO AI PR REVIEW WORKFLOW](guides/AI_TO_AI_PR_REVIEW_WORKFLOW.md)
+- [AUDIT FILES VS DB GUIDE](guides/AUDIT_FILES_VS_DB_GUIDE.md)
+- [BACKFILL QUICK START](guides/BACKFILL_QUICK_START.md)
+- [COMPANION FILE SYSTEM GUIDE](guides/COMPANION_FILE_SYSTEM_GUIDE.md)
+- [CROP QUEUE SUMMARY](guides/CROP_QUEUE_SUMMARY.md)
+- [CROP TIMER USER GUIDE](guides/CROP_TIMER_USER_GUIDE.md)
+- [ERROR HANDLING AND ALERTS](guides/ERROR_HANDLING_AND_ALERTS.md)
+- [INLINE VALIDATION GUIDE](guides/INLINE_VALIDATION_GUIDE.md)
+- [QUEUE MODE GUIDE](guides/QUEUE_MODE_GUIDE.md)
+- [QUEUE QUICKSTART AND ANALYZER GUIDE](guides/QUEUE_QUICKSTART_AND_ANALYZER_GUIDE.md)
+- [README](guides/README.md)
+- [README todo agent planner](guides/README_todo_agent_planner.md)
+- [WORK TIME CALCULATION GUIDE](guides/WORK_TIME_CALCULATION_GUIDE.md)
+- [ZIP DATABASE MAPPING](guides/ZIP_DATABASE_MAPPING.md)
 
-- `archives/ai/` — Superseded AI docs consolidated into the new AI section
-- `archives/sessions/` — Session summaries and investigations
-- `archives/implementations/` — Completed implementation summaries
-- `archives/misc/` — Other historical docs
+## Patterns
 
-### Archive Policy
+- [code review standard](patterns/code-review-standard.md)
+- [learning loop pattern](patterns/learning-loop-pattern.md)
 
-- Sessions (`archives/sessions/`): Keep 12 months; auto-delete older if not referenced by any non-archives doc.
-- AI (`archives/ai/`): Keep 6 months after consolidation; delete if fully captured in `ai/AI_TRAINING_GUIDE.md`, `ai/AI_TRAINING_REFERENCE.md`, or `ai/AI_ASSISTED_REVIEWER.md` and not referenced elsewhere.
-- Dashboard (`archives/dashboard/`): Keep 6 months; delete if not referenced.
-- Implementations (`archives/implementations/`): Keep indefinitely; optionally compress >12 months.
-- Misc (`archives/misc/`): Keep 3 months; delete if not referenced.
+## Reference
 
-Reference rule:
+- [CASE STUDIES](reference/CASE_STUDIES.md)
+- [CODE QUALITY RULES](reference/CODE_QUALITY_RULES.md)
+- [CROP TIMER IMPLEMENTATION PLAN](reference/CROP_TIMER_IMPLEMENTATION_PLAN.md)
+- [LOCAL MODEL LEARNINGS](reference/LOCAL_MODEL_LEARNINGS.md)
+- [MAPPING TABLE BEST PRACTICE](reference/MAPPING_TABLE_BEST_PRACTICE.md)
+- [TECHNICAL KNOWLEDGE BASE](reference/TECHNICAL_KNOWLEDGE_BASE.md)
+- [WEB STYLE GUIDE](reference/WEB_STYLE_GUIDE.md)
 
-- “Referenced” means linked from any document outside `archives/`. If referenced, keep.
+## Reviews
 
-Quarterly cleanup (review-first, no auto-deletes):
+- [CHATGPT CODE REVIEW PROMPT](reviews/CHATGPT_CODE_REVIEW_PROMPT.md)
+- [CLAUDE REVIEW EXTRACTION 2025 11 01](reviews/CLAUDE_REVIEW_EXTRACTION_2025-11-01.md)
+- [CODE REVIEW  claude improve cropping utility](reviews/CODE_REVIEW__claude_improve-cropping-utility.md)
+- [DASHBOARD FIXES SUMMARY 2025 11 01](reviews/DASHBOARD_FIXES_SUMMARY_2025-11-01.md)
+- [QUEUE CROPPING REVIEW 2025 10 26](reviews/QUEUE_CROPPING_REVIEW_2025-10-26.md)
+- [REVIEW claude queue dashboard 2025 10 26](reviews/REVIEW_claude_queue_dashboard_2025-10-26.md)
+- [REVIEW f5970b9 2025 10 26](reviews/REVIEW_f5970b9_2025-10-26.md)
+- [REVIEW THESE COMMITS](reviews/REVIEW_THESE_COMMITS.md)
 
-- Generate a candidate list of unreferenced docs older than their thresholds.
-- Script: `scripts/tools/generate_archive_cleanup_report.py` → writes to `data/daily_summaries/`
-- Review the list, then remove or move to Trash manually.
+## Safety
 
-## Contribution Guidelines
+- [DATA CONSOLIDATION SYSTEM](safety/DATA_CONSOLIDATION_SYSTEM.md)
+- [FILE SAFETY CHECKLIST](safety/FILE_SAFETY_CHECKLIST.md)
+- [FILE SAFETY SYSTEM](safety/FILE_SAFETY_SYSTEM.md)
+- [PROJECT DELIVERABLES POLICY](safety/PROJECT_DELIVERABLES_POLICY.md)
+- [REPOSITORY CLEANUP GUIDE](safety/REPOSITORY_CLEANUP_GUIDE.md)
 
-- Keep docs concise, accurate, and audience-aware.
-- Include metadata at the top (Last Updated, Status, Audience, Estimated Reading Time when relevant).
-- Cross-link related docs; use section anchors where helpful.
-- Archive superseded docs instead of deleting.
+## Testing
 
-## Collaboration Standards
+- [QUICKSTART TESTING](testing/QUICKSTART_TESTING.md)
+- [SANDBOX MODE GUIDE](testing/SANDBOX_MODE_GUIDE.md)
+- [TEST PROJECT GUIDE](testing/TEST_PROJECT_GUIDE.md)
+- [TESTS GUIDE](testing/TESTS_GUIDE.md)
 
-When working with multiple AI collaborators (Claude Code, ChatGPT in Cursor, etc.):
+## Video_Creation
 
-### Commit Communication Standard
-
-Always share commits using the format defined in `.cursorrules`. Required fields:
-
-- **Short and full commit SHA** - Short for readability, full for uniqueness
-- **Branch name** - Critical for multi-branch workflows
-- **Files modified** - With brief descriptions
-- **Summary bullets** - ≤80 chars each, max 3 bullets
-- **GitHub links** - Direct commit URL
-- **Verification commands** - Exact git commands to verify
-
-**Example:**
-
-```
-Commit: 09d979f (09d979f4e...)
-Branch: main
-
-Files (1 added):
-- Documents/todos/QUEUE_AUTOMATION_TODO_2025-10-26.md (task delegation)
-
-Summary:
-- Added shared TODO list for queue automation work split
-- Defined branch owners (ChatGPT vs Claude tasks)
-
-Links:
-- https://github.com/eriksjaastad/image-workflow-scripts/commit/09d979f4e
-
-Verify:
-- git show --name-only 09d979f
-- git show 09d979f -- Documents/todos/QUEUE_AUTOMATION_TODO_2025-10-26.md
-```
-
-**Why this matters:**
-
-- Eliminates "where is that commit?" confusion
-- Makes cross-tool collaboration smooth (browser Claude ↔ Cursor ChatGPT)
-- Creates searchable, verifiable conversation history
-- Teaches good git hygiene to all participants
-
-See `.cursorrules` for complete format specification, code reference guidelines, and more examples.
-
-## Index
-
-For a fuller list, see `ai/AI_DOCUMENTS_INDEX.md` and browse topical folders above.
+- [image to video blueprint](video_creation/image-to-video-blueprint.md)
+- [README](video_creation/README.md)
+- [setup local ai](video_creation/setup-local-ai.md)
+- [three model shootout plan](video_creation/three-model-shootout-plan.md)
+- [transition to video](video_creation/transition-to-video.md)

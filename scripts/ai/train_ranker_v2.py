@@ -55,8 +55,8 @@ def get_project_id(path: str) -> str:
     Each project is a different character.
 
     Examples:
-        /Users/.../mojo1/file.png → 'mojo1'
-        /Users/.../mojo2/_mixed/file.png → 'mojo2'
+        [absolute_path]/.../mojo1/file.png → 'mojo1'
+        [absolute_path]/.../mojo2/_mixed/file.png → 'mojo2'
         training data/mojo1/faces/file.png → 'mojo1'
     """
     parts = Path(path).parts

@@ -10,8 +10,8 @@ The review focuses on **critical technical assumptions and optimizations** to fu
 
 The modifications proposed in your audit represent a strategic competitive advantage:
 
-- **Temporal Pre-Filter (Tool 1):** The new `video_viability_score` is a **direct cost-saver**. By running this filter on your cheap **M4 Pro** first, you reject low-quality keyframes before committing expensive GPU time in the colocation rack. This is crucial for maximizing profit per hour.
-- **Camera Path Definition (Tool 2):** Transforming static crop coordinates into the **motion parameters** (`start_frame`, `end_frame`, `motion_type`) is the correct technical abstraction. This captures your **human expertise** (defining cinematic movement) and translates it directly into data for the AI model.
+- **Temporal Pre-Filter (Tool 1):** The new `video_viability_score` is a **direct cost-saver**. By running this filter on your cheap **M4 Pro** first, you reject low-quality keyframes before committing expensive GPU time in the colocation rack. This is crucial for maximizing profit per hour. See [image-to-video-blueprint](image-to-video-blueprint.md).
+- **Camera Path Definition (Tool 2):** Transforming static crop coordinates into the **motion parameters** (`start_frame`, `end_frame`, `motion_type`) is the correct technical abstraction. This captures your **human expertise** (defining cinematic movement) and translates it directly into data for the AI model. See [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md).
 
 ---
 
@@ -61,6 +61,83 @@ We have confirmed the technical strategy. The next steps are administrative and 
 | 4. **Do you need audio?** (Music, voiceover)                                 | Adds a layer of complexity (licensing, syncing) but can be integrated into the post-processing phase.                |
 
 Once I have the answers to these, I can begin drafting the specific Python/shell scripts for **Phase 1: Prototype** (the manifest generator and local SVD test).
+
+---
+
+## Related Documentation
+
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [README](../../../ai-model-scratch-build/README.md)
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [Safety Systems](patterns/safety-systems.md) - security
+
+## 📋 Document Status Summary
+
+| Document              | Status      | Completion | Notes                                                                                                                  |
+| --------------------- | ----------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Blueprint**         | ✅ Updated  | 100%       | SVD references replaced with Wan-AI/Hunyuan/Mochi. Phase 0 added. GPU-accelerated RIFE integrated.                     |
+| **Shootout Plan**     | ✅ Updated  | 100%       | Objective metrics added (SSIM, flash detection). Weighted scoring system with thresholds. Cost tracking added.         |
+| **Setup Local AI**    | ✅ Complete | 100%       | Exact download commands for all 3 models. Cloud GPU setup instructions (RunPod/Vast.ai/Lambda). Docker Compose config. |
+| **Transition Review** | ✅ Current  | 100%       | This document. All identified issues addressed in other documents.                                                     |
+
+**Next Action:** Execute Phase 0 (Model Shootout) using the Setup Local AI guide.
+
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Navigation for this directory.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+## 📋 Document Status Summary
+
+| Document              | Status      | Completion | Notes                                                                                                                  |
+| --------------------- | ----------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Blueprint**         | ✅ Updated  | 100%       | SVD references replaced with Wan-AI/Hunyuan/Mochi. Phase 0 added. GPU-accelerated RIFE integrated.                     |
+| **Shootout Plan**     | ✅ Updated  | 100%       | Objective metrics added (SSIM, flash detection). Weighted scoring system with thresholds. Cost tracking added.         |
+| **Setup Local AI**    | ✅ Complete | 100%       | Exact download commands for all 3 models. Cloud GPU setup instructions (RunPod/Vast.ai/Lambda). Docker Compose config. |
+| **Transition Review** | ✅ Current  | 100%       | This document. All identified issues addressed in other documents.                                                     |
+
+**Next Action:** Execute Phase 0 (Model Shootout) using the Setup Local AI guide.
+
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Navigation for this directory.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
+
+---
+
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+## 📋 Document Status Summary
+
+| Document              | Status      | Completion | Notes                                                                                                                  |
+| --------------------- | ----------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Blueprint**         | ✅ Updated  | 100%       | SVD references replaced with Wan-AI/Hunyuan/Mochi. Phase 0 added. GPU-accelerated RIFE integrated.                     |
+| **Shootout Plan**     | ✅ Updated  | 100%       | Objective metrics added (SSIM, flash detection). Weighted scoring system with thresholds. Cost tracking added.         |
+| **Setup Local AI**    | ✅ Complete | 100%       | Exact download commands for all 3 models. Cloud GPU setup instructions (RunPod/Vast.ai/Lambda). Docker Compose config. |
+| **Transition Review** | ✅ Current  | 100%       | This document. All identified issues addressed in other documents.                                                     |
+
+**Next Action:** Execute Phase 0 (Model Shootout) using the Setup Local AI guide.
+
+- [image-to-video-blueprint](image-to-video-blueprint.md) - Master technical plan.
+- [three-model-shootout-plan](three-model-shootout-plan.md) - Benchmarking methodology.
+- [setup-local-ai](setup-local-ai.md) - Technical setup guide.
+- [README](../../../ai-model-scratch-build/README.md) (Video Creation) - Navigation for this directory.
+- [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md) - System map and data flows.
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
 
 ---
 

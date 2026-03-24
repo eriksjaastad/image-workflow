@@ -25,3 +25,8 @@
 - Prefer **Haiku 4.5** unless the task clearly needs cross-module reasoning or design work.
 - Treat **Grok Code** as idea-dump/pseudocode; avoid iteration.
 - Use **Cursor Plan** only for genuinely ambiguous or multi-stage work.
+
+## Related Documentation
+
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models

@@ -52,7 +52,7 @@ File: `data/training/selection_only_log.csv`
 
 ```csv
 session_id,set_id,chosen_path,neg_paths,timestamp
-20251004_213737,group_8,/Users/.../mojo1/20250708_060711_stage2_upscaled.png,"[""/Users/.../mojo1/20250708_060558_stage1_generated.png""]",2025-10-05T01:43:47Z
+20251004_213737,group_8,[absolute_path]/.../mojo1/20250708_060711_stage2_upscaled.png,"[""[absolute_path]/.../mojo1/20250708_060558_stage1_generated.png""]",2025-10-05T01:43:47Z
 ```
 
 **What Each Row Represents:**
@@ -90,8 +90,8 @@ def get_project_id(path: str) -> str:
     Extract project ID from file path.
     
     Examples:
-        /Users/.../mojo1/file.png → 'mojo1'
-        /Users/.../mojo2/_mixed/file.png → 'mojo2'
+        [absolute_path]/.../mojo1/file.png → 'mojo1'
+        [absolute_path]/.../mojo2/_mixed/file.png → 'mojo2'
         training data/mojo1/faces/file.png → 'mojo1'
     """
     parts = Path(path).parts
@@ -420,11 +420,14 @@ for row in csv:
 
 ## Related Documents
 
-- **[AI_TRAINING_PHASE2_QUICKSTART.md](ai/AI_TRAINING_GUIDE.md)** - Implementation guide with code examples
-- **[AI_PROJECT_IMPLEMENTATION_PLAN.md](AI_PROJECT_IMPLEMENTATION_PLAN.md)** - Overall project plan
-- **[PROJECT_MANIFEST_GUIDE.md](data/PROJECT_MANIFEST_GUIDE.md)** - Project metadata structure
+- **[AI Training Guide](AI_TRAINING_GUIDE.md)** - Implementation guide with code examples
+- **[AI Project Implementation Plan](../archives/ai/AI_PROJECT_IMPLEMENTATION_PLAN.md)** - Overall project plan
+- **[Project Manifest Guide](../data/PROJECT_MANIFEST_GUIDE.md)** - Project metadata structure
 
 ---
 
 **Questions?** If anything in this document is unclear, update it immediately. This is a critical reference that prevents data corruption.
 
+## Related Documentation
+
+- [PROJECT_KICKOFF_GUIDE](../../../project-scaffolding/Documents/PROJECT_KICKOFF_GUIDE.md) - project setup

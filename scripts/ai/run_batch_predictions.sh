@@ -14,7 +14,7 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Paths
-WORKSPACE="/Users/eriksjaastad/projects/image-workflow"
+WORKSPACE="[USER_HOME]/projects/image-workflow"
 ORIGINAL_DIR="/Volumes/T7Shield/Eros/original"
 TMP_DIR="/tmp/ai_predictions_batch"
 DB_DIR="$WORKSPACE/data/training/ai_training_decisions"
@@ -27,7 +27,7 @@ CROP_MODEL="crop_proposer_v3.pt"  # Version 3 as requested
 
 # Activate Python environment
 cd "$WORKSPACE"
-source .venv311/bin/activate
+source "$WORKSPACE/.venv311/bin/activate"
 
 # Create directories
 mkdir -p "$TMP_DIR"

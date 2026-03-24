@@ -591,3 +591,9 @@ return jsonify({"error": str(e)}), 500  # Good
 
 Ready to proceed? 🚀
 
+## Related Documentation
+
+- [Code Review Anti-Patterns](Documents/reference/CODE_REVIEW_ANTI_PATTERNS.md) - code review
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [AI Model Cost Comparison](Documents/reference/MODEL_COST_COMPARISON.md) - AI models
+- [Safety Systems](patterns/safety-systems.md) - security

@@ -3,7 +3,7 @@
 **Status:** Active
 **Audience:** Developers
 
-Last Updated: 2025-10-23
+Last Updated: 2026-01-14
 
 ## Purpose
 
@@ -11,7 +11,7 @@ One-page map of the system: where code lives, how data flows, and the non-negoti
 
 ## Repository Map (authoritative)
 
-- `Documents/` — Specs, guides, policies (read: `../safety/FILE_SAFETY_SYSTEM.md`, `../dashboard/DASHBOARD_GUIDE.md`).
+- `Documents/` — Specs, guides, policies (read: [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md), [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md)).
 - `scripts/` — Executable code:
   - `dashboard/` — API + data engine + HTML template.
   - `data_pipeline/` — Extract → aggregate → snapshot jobs.
@@ -44,7 +44,7 @@ One-page map of the system: where code lives, how data flows, and the non-negoti
 - Raw ops: `data/file_operations_logs/*.log` (forensics).
 - Snapshots (primary): `data/snapshot/*` daily aggregates and derived sessions.
 - API: `scripts/dashboard/productivity_dashboard.py` serves `/api/data` to `dashboard_template.html`.
-- Contract: See “Data Layer & API Reference” in `Documents/DASHBOARD_GUIDE.md`.
+- Contract: See “Data Layer & API Reference” in [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md).
 
 ## Safety Invariants (must hold)
 
@@ -58,7 +58,7 @@ One-page map of the system: where code lives, how data flows, and the non-negoti
 
 - AI decisions schema: `data/schema/ai_training_decisions_v3.sql`.
 - Snapshot formats: `data/snapshot/*` (daily aggregates, derived sessions).
-- Consolidated reference (planned): `Documents/SCHEMA_REFERENCE.md`.
+- Consolidated reference: [SCHEMA_REFERENCE](../data/SCHEMA_REFERENCE.md).
 
 ## Operability Hooks
 
@@ -68,6 +68,15 @@ One-page map of the system: where code lives, how data flows, and the non-negoti
 
 ## Quick Links
 
-- FILE SAFETY: `Documents/FILE_SAFETY_SYSTEM.md`
-- DASHBOARD GUIDE: `Documents/DASHBOARD_GUIDE.md`
-- TECH KB: `Documents/TECHNICAL_KNOWLEDGE_BASE.md`
+- FILE SAFETY: [FILE_SAFETY_SYSTEM](../safety/FILE_SAFETY_SYSTEM.md)
+- DASHBOARD GUIDE: [DASHBOARD_GUIDE](../dashboard/DASHBOARD_GUIDE.md)
+- TECH KB: [TECHNICAL_KNOWLEDGE_BASE](../reference/TECHNICAL_KNOWLEDGE_BASE.md)
+- TRAINING: [AI_TRAINING_GUIDE](../ai/AI_TRAINING_GUIDE.md)
+
+---
+*See also: [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md) for secrets and [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) for layout.*
+
+## Related Documentation
+
+- [Safety Systems](patterns/safety-systems.md) - security
+- [README](README) - Image Workflow

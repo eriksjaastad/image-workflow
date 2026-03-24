@@ -261,3 +261,9 @@ This project demonstrates that systematic workflow analysis and targeted tool de
 *Total optimization time: 3 days*  
 *Performance improvement: 6-10x efficiency gain*
 
+## Related Documentation
+
+- [Automation Reliability](patterns/automation-reliability.md) - automation
+- [Cost Management](Documents/reference/MODEL_COST_COMPARISON.md) - cost management
+- [Tiered AI Sprint Planning](patterns/tiered-ai-sprint-planning.md) - prompt engineering
+- [README](README) - Image Workflow

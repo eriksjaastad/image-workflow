@@ -15,6 +15,7 @@
 2. [Dashboard Specification](#dashboard-specification)
 3. [Data Layer & API Reference](#data-layer--api-reference)
 4. [Troubleshooting](#troubleshooting)
+5. [Related Documentation](#related-documentation)
 
 ---
 
@@ -24,7 +25,7 @@
 
 ### 1. Install Dependencies
 ```bash
-cd /Users/eriksjaastad/projects/Eros\ Mate
+cd ../..
 pip install -r scripts/dashboard/requirements.txt
 ```
 
@@ -46,6 +47,17 @@ You should see:
 
 ### 3. Open the Dashboard
 Open `scripts/dashboard/dashboard_template.html` in your browser. The dashboard will automatically connect to the API and display your productivity metrics.
+
+---
+
+## 📊 Related Documentation
+- Architecture Overview: [ARCHITECTURE_OVERVIEW](../core/ARCHITECTURE_OVERVIEW.md)
+- API Reference: [DASHBOARD_API](DASHBOARD_API.md)
+- Data Schemas: [SCHEMA_REFERENCE](../data/SCHEMA_REFERENCE.md)
+- Project Lifecycle: [PROJECT_LIFECYCLE_SCRIPTS](../PROJECT_LIFECYCLE_SCRIPTS.md)
+
+---
+*See also: [PROJECT_STRUCTURE_STANDARDS](../../../project-scaffolding/Documents/PROJECT_STRUCTURE_STANDARDS.md) and [Doppler Secrets Management](Documents/reference/DOPPLER_SECRETS_MANAGEMENT.md).*
 
 ---
 
@@ -645,7 +657,7 @@ Tools report their timing method in `timing_data`:
 
 ### Run Tests
 ```bash
-cd /Users/eriksjaastad/projects/Eros\ Mate
+cd ../..
 python3 -m pytest scripts/tests/test_dashboard*.py -v
 python3 -m pytest scripts/tests/test_snapshot_data_integrity.py -v
 ```
@@ -693,4 +705,6 @@ python3 scripts/dashboard/tools/debug_project_data.py mojo2
 
 **Built with:** Python 3.11, Flask, Chart.js  
 **Status:** ✅ Production-ready
+
+## Related Documentation
 

@@ -1,29 +1,3 @@
-
-<!-- SCAFFOLD:START - Do not edit between markers -->
-# image-workflow
-
-Brief description of the project's purpose
-
-## Quick Start
-
-```bash
-# Setup
-pip install -r requirements.txt
-
-# Run
-python main.py
-```
-
-## Documentation
-
-See the `Documents/` directory for detailed documentation.
-
-## Status
-
-- **Current Phase:** Foundation
-- **Status:** #status/active
-
-<!-- SCAFFOLD:END - Custom content below is preserved -->
 # [PROJECT_NAME]
 
 [Brief 2-3 sentence description of the project.]
